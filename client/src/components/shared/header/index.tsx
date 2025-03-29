@@ -7,7 +7,7 @@ import Image from "next/image";
 
 const AppHeader = () => {
   return (
-    <header className="sticky left-0 top-0 z-[100] w-full bg-secondary font-lexend">
+    <header className="sticky left-0 top-0 z-[30] w-full bg-secondary font-lexend">
       <div className="flex items-center justify-between rounded-lg p-4 px-5">
         <div className="flex items-center gap-4">
           <SidebarTrigger className="-ml-1" />
