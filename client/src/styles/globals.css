@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root,
+  .app {
+    font-family: var(--font-inter), sans-serif;
+    height: 100vh;
+    width: 100%;
+    @apply font-lexend text-[16px];
+  }
+
+  html {
+    --font-inter: "Inter", sans-serif;
+  }
+
+  h1 {
+    @apply text-5xl font-semibold leading-tight;
+  }
+
+  h2 {
+    @apply text-4xl font-bold leading-snug;
+  }
+
+  h3 {
+    @apply text-3xl font-semibold leading-snug;
+  }
+
+  h4 {
+    @apply text-xl font-medium leading-snug;
+  }
+
+  h5 {
+    @apply text-lg font-medium leading-snug;
+  }
+
+  h6 {
+    @apply text-base font-medium leading-snug;
+  }
+}
+
+:root {
+  --color-warning: #ffd863;
+  --color-success: #a6ffbb;
+  --color-error: #ff6d6d;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+@layer utilities {
+  .page {
+    @apply lg:p-6 xl:p-4;
+  }
+
+  .padding {
+    @apply px-4 py-5;
+  }
+
+  .center {
+    @apply flex items-center justify-center;
+  }
+
+  .opacityBg {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.05), transparent);
+  }
+}

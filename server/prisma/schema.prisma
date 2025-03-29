@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String       @id @default(cuid())
+  email             String       @unique
+  password          String
+  firstName         String?
+  lastName          String?
+  role              GlobalRole   @default(ADMIN)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  inviteStatus      InviteStatus @default(PENDING)
+  isPasswordChanged Boolean      @default(false)
+
+  client Client?
+  member Member?
+
+  notifications Notification[]
+  comments      Comment[]
+  session       Session?
+  events        Event[]
+
+  @@map("Users")
+}
+
+model Client {
+  id                String   @id @default(cuid())
+  name              String
+  email             String   @unique
+  instagramId       String?
+  instagramPassword String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
+  events Event[]
+
+  @@map("Clients")
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
+  events EventMember[]
+
+  @@map("Members")
+}
+
+model Event {
+  id          String   @id @unique @default(cuid())
+  title       String   @unique
+  description String?
+  additional  String?
+  startTime   DateTime
+  endTime     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
+
+  adminId String?
+  admin   User?   @relation(fields: [adminId], references: [id])
+
+  members  EventMember[]
+  post     Post?
+  comments Comment[]
+
+  @@map("Events")
+}
+
+model EventMember {
+  id String @id @default(cuid())
+
+  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  eventId  String
+  memberId String
+
+  @@unique([eventId, memberId])
+}
+
+model Session {
+  id         String   @id @default(cuid()) // Changed from uuid() to cuid()
+  sessionKey String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String   @default("default message")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("Notifications")
+}
+
+model Post {
+  id          String    @id @unique @default(cuid())
+  title       String
+  subtitle    String?
+  mediaUrl    String?
+  additional  String?
+  hashtags    String?
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  scheduledAt DateTime?
+  eventId     String    @unique
+  event       Event?    @relation(fields: [eventId], references: [id])
+
+  postStatus        PostStatus @default(WORKING)
+  isConfirmByClient Boolean    @default(false)
+
+  @@map("Posts")
+}
+
+model Comment {
+  id          String      @id @default(cuid())
+  content     String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  commentedBy CommentedBy
+
+  userId String
+  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  eventId String?
+  event   Event?  @relation(fields: [eventId], references: [id])
+
+  @@map("Comments")
+}
+
+enum GlobalRole {
+  ADMIN
+  CLIENT
+  MEMBER
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+}
+
+enum MemberRole {
+  MEMBER
+}
+
+enum CommentedBy {
+  ADMIN
+  CLIENT
+}
+
+enum PostStatus {
+  PUBLISHED
+  UNPUBLISHED
+  SCHEDULED
+  WORKING
+  CONFIRMED
+}

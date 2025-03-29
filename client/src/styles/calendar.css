@@ -1,0 +1,39 @@
+.rbc-header {
+  @apply border-b-0 pb-4 text-sm font-bold uppercase text-primary dark:text-white;
+}
+
+.rbc-header + .rbc-header {
+  @apply border-l-0;
+}
+
+.rbc-button-link {
+  @apply rounded-full bg-primary p-1 text-xs font-medium text-white shadow-md dark:bg-gray-800;
+}
+
+.rbc-month-row {
+  @apply min-h-[180px] border-2 border-dark bg-secondary;
+}
+
+:not(.rbc-month-row ~ .rbc-month-row).rbc-month-row {
+  @apply rounded-t-md shadow-md;
+}
+
+.rbc-month-row:first-of-type {
+  @apply rounded-md;
+}
+
+.rbc-month-view {
+  @apply border-none bg-white text-primary;
+}
+
+.rbc-date-cell {
+  @apply bg-secondary p-2 font-bold text-primary dark:text-white;
+}
+
+.rbc-today {
+  @apply bg-primary font-extrabold text-white shadow-lg;
+}
+
+.rbc-off-range-bg {
+  @apply border-2 bg-purple-300 text-gray-500 opacity-80 dark:bg-gray-700 dark:text-gray-400;
+}
