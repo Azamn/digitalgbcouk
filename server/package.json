@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "dev": "NODE_OPTIONS=--no-deprecation tsx watch src/server.ts",
     "prisma:merge": "ts-node src/db/merge-prisma.ts",
