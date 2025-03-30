@@ -5,6 +5,9 @@ import App from "./app";
 import SocketServices from "./services/socket.io";
 const appInstance = new App();
 const expressApp = appInstance.getAppInstance();
+import 'module-alias/register';
+
+
 (() => {
   try {
     expressApp.get("/", (_req, res: Response) => {

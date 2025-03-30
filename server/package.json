@@ -5,6 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "NODE_OPTIONS=--no-deprecation tsx watch src/server.ts",
+    "start": "node -r module-alias/register dist/server.js",
     "prisma:merge": "ts-node src/db/merge-prisma.ts",
     "prisma:generate": "pnpm run prisma:merge && prisma generate",
     "prisma:migrate": "pnpm run prisma:merge && prisma migrate dev",
@@ -13,11 +14,14 @@
     "db:reset:seed": "prisma migrate reset --force --skip-generate --seed",
     "db:push": "prisma db push",
     "prisma:studio": "prisma studio",
-     "build": "tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "_moduleAliases": {
+  "@src": "dist"
+},
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
     "@prisma/client": "^6.1.0",
@@ -31,6 +35,7 @@
     "@types/multer": "^1.4.12",
     "@types/nodemailer": "^6.4.17",
     "@types/socket.io": "^3.0.2",
+    "add": "^2.0.6",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.0",
@@ -46,8 +51,10 @@
     "morgan": "^1.10.0",
     "multer": "1.4.5-lts.1",
     "nodemailer": "^6.9.16",
+    "pnpm": "^10.7.0",
     "prisma": "^6.0.1",
     "socket.io": "^4.8.1",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2"
   },
   "devDependencies": {
