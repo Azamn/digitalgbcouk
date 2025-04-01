@@ -4,8 +4,8 @@ import { appfonts } from "@/fonts";
 import AppProvider from "@/components/shared/providers/app-providers";
 
 export const metadata: Metadata = {
-  title: "SOCIAL MEDIA APP",
-  description: "A NEW GENERATION CODE EDITIOR SOFTWARE",
+  title: "Digitalgb",
+  icons: "/logo.png",
 };
 
 export default function RootLayout({

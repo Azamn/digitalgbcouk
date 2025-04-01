@@ -45,7 +45,7 @@ class App {
   }
   private initializeRoutes(): void {
     routes.forEach((route) => {
-      const fullPath = `/api/v1/${route.path}`;
+      const fullPath = `/${route.path}`;
       this.app.use(fullPath, route.router);
       console.log(`✅ Route registered: ${fullPath}`);
     });
