@@ -60,7 +60,11 @@ export const eventColumns: ColumnDef<EventData>[] = [
   {
     accessorKey: "admin.firstName",
     header: "Admin",
-    cell: ({ row }) => <div  className="bg-primary text-secondary size-10 center rounded-full">{row.original.admin.firstName.charAt(0)}</div>,
+    cell: ({ row }) => (
+      <div className="center size-10 rounded-full bg-primary text-secondary">
+        {row.original.admin.firstName.charAt(0)}
+      </div>
+    ),
   },
   {
     accessorKey: "startTime",
@@ -110,7 +114,7 @@ export const eventColumns: ColumnDef<EventData>[] = [
     accessorKey: "post.postStatus",
     header: "Post Status",
     cell: ({ row }) => {
-      const status = row.original.post.postStatus;
+      const status = row.original.post?.postStatus;
       const statusColors: Record<string, string> = {
         PUBLISHED: "bg-green-300",
         SCHEDULED: "bg-blue-300",
@@ -120,7 +124,7 @@ export const eventColumns: ColumnDef<EventData>[] = [
       };
       return (
         <span
-          className={`font-medium border border-primary text-sm text-primary p-2 rounded-3xl ${statusColors[status] || "text-gray-300"}`}
+          className={`rounded-3xl border border-primary p-2 text-sm font-medium text-primary ${statusColors[status] || "text-gray-300"}`}
         >
           {status}
         </span>
