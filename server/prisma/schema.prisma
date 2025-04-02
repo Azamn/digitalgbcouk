@@ -124,9 +124,9 @@ model Post {
   title       String
   subtitle    String?
   mediaUrl    String?
-  additional  String?
+  additional  String?   @db.VarChar(500)
   hashtags    String?
-  description String?
+  description String?   @db.VarChar(500)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   scheduledAt DateTime?

@@ -29,12 +29,13 @@ class App {
   private initializeMiddlewares(): void {
     this.app.use(
       cors({
-        origin: appEnvConfigs.NEXT_APP_URI || "http://localhost:3000",
+        origin: appEnvConfigs.NEXT_APP_URI,
         credentials: true,
         methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
       })
     );
+
     this.app.use(helmet());
     this.app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
     this.app.use(morgan("common"));

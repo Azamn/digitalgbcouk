@@ -22,7 +22,6 @@ export class PostController {
         const { title, subtitle, description, additional, hashtags, mediaUrl } =
           req.body;
 
-        console.log("Received data:", req.body);
 
         const missingFields = [
           "title",
@@ -38,7 +37,6 @@ export class PostController {
           );
         }
 
-        console.log("Processing Post Update...");
 
         const existingPost = await db.post.findUnique({
           where: { eventId: String(postEventId) },
