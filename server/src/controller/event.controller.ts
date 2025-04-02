@@ -68,9 +68,9 @@ export class EventController {
         },
       });
 
-      await SocketServices.NotifyUser(clientId, {
-        message: `${event.title} event started`,
-      });
+      // await SocketServices.NotifyUser(clientId, {
+      //   message: `${event.title} event started`,
+      // });
 
       res.status(201).json(new ApiResponse(201, "Event created succesfully"));
     }
