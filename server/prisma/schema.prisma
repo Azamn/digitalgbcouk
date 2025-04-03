@@ -121,7 +121,7 @@ model Notification {
 
 model Post {
   id          String    @id @unique @default(cuid())
-  title       String
+  title       String?
   subtitle    String?
   mediaUrl    String?
   additional  String?   @db.VarChar(500)

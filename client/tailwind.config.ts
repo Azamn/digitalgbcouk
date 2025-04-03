@@ -54,7 +54,7 @@ export default {
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
       },
       colors: {
-        primary: "#1C325B",
+        primary: "#522546",
         dark: "#001f3f",
         secondary: "#f2f8ff",
         warning: "var(--color-warning)",

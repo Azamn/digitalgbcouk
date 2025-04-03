@@ -1,5 +1,4 @@
 "use client";
-import { Post } from "@/server-api/types/api";
 
 export const isValidEmail = (email: string) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -19,12 +18,12 @@ export const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-export const intialPost: Post = {
+export const intialPost = {
   id: "1",
   title: "Golden Hour Serenity",
-  subtitle:
-    "Nature's masterpiece at sunset. Breathtaking views await!",
-  hashtags: "sunsetphotography, naturelover, mountainlake, peacefulmoments, travelgram, exploremore, getoutside, wilderness",
+  subtitle: "Nature's masterpiece at sunset. Breathtaking views await!",
+  hashtags:
+    "sunsetphotography, naturelover, mountainlake, peacefulmoments, travelgram, exploremore, getoutside, wilderness",
   description:
     "This stunning image captures the serene beauty of a mountain lake bathed in the golden light of sunset. The tranquil water reflects the surrounding pine trees and rugged cliffs, creating a picture-perfect scene that invites you to escape into the wild.  Experience the magic of nature's canvas.",
   additional:

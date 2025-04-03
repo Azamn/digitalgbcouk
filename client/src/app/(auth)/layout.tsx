@@ -1,7 +1,7 @@
 "use client";
+
 import DataLoader from "@/components/shared/loader/data-laoder";
 import { useAppSelector } from "@/store";
-import { GalleryVerticalEnd } from "lucide-react";
 import Image from "next/image";
 
 export default function RootAuthLayout({
@@ -11,33 +11,37 @@ export default function RootAuthLayout({
 }) {
   const { isAuthLoading } = useAppSelector((state) => state.global);
   if (isAuthLoading) return <DataLoader />;
+
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      {/* Left Side - Image Section */}
-      <div className="relative hidden lg:block">
+    <div className="relative flex min-h-screen items-center justify-center">
+      {/* Full-Screen SVG Background */}
+      <div className="absolute inset-0 -z-10">
         <Image
-          src="/auth.png"
-          alt="Authentication Background"
+          src="/Snow.svg"
+          alt="Background"
           layout="fill"
           objectFit="cover"
-          className="dark:brightness-[0.2] dark:grayscale"
+          className="opacity-30"
           priority
         />
       </div>
 
-      {/* Right Side - Authentication Form with Image Background */}
-      <div className="relative flex h-screen w-full items-center justify-center">
-        <div className="absolute inset-0 -z-10">
+      {/* Responsive Grid */}
+      <div className="grid w-full min-h-screen grid-cols-1 lg:grid-cols-2">
+        {/* Left Side - Image Section */}
+        <div className="hidden lg:flex items-center justify-center">
           <Image
-            src="/Snow.svg"
-            alt="Background"
-            layout="fill"
-            objectFit="cover"
-            className="opacity-30"
+            src="/auth.jpg"
+            alt="Authentication Background"
+            height={600}
+            width={600}
+            className="dark:brightness-[0.2]  object-cover"
             priority
           />
         </div>
-        {children}
+
+        {/* Right Side - Authentication Form */}
+        <div className="flex items-center justify-center p-6">{children}</div>
       </div>
     </div>
   );

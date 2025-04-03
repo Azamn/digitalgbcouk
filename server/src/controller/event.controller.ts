@@ -8,8 +8,7 @@ import {
   AsyncHandler,
 } from "@src/utils/server-functions";
 import { Request, Response } from "express";
-import SocketServices from "@src/services/socket.io";
-
+import { initialPost } from "@src/constant";
 export class EventController {
   public static GetallEventsDetails = AsyncHandler(
     async (_req: Request, res: Response): Promise<void> => {
@@ -54,25 +53,37 @@ export class EventController {
   public static CreateEvent = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { clientId } = req.params;
-      const { additional, description, endTime, startTime, title } = req.body;
+      const { additional, description, endTime, startTime, title, postData } =
+        req.body;
       const user = await db.user.CheckUserId(req);
-      const event = await db.event.create({
-        data: {
-          title,
-          startTime,
-          endTime,
-          description,
-          clientId,
-          additional,
-          adminId: user.id,
-        },
+
+      await db.$transaction(async (tx) => {
+        const event = await tx.event.create({
+          data: {
+            title,
+            startTime,
+            endTime,
+            description,
+            clientId,
+            additional,
+            adminId: user.id,
+          },
+        });
+
+        await tx.post.create({
+          data: {
+            eventId: event.id,
+            additional: initialPost.additional,
+            title: initialPost.title,
+            subtitle: initialPost.subtitle,
+            description: initialPost.description,
+            hashtags: initialPost.hashtags,
+            mediaUrl: initialPost.mediaUrl,
+          },
+        });
       });
 
-      // await SocketServices.NotifyUser(clientId, {
-      //   message: `${event.title} event started`,
-      // });
-
-      res.status(201).json(new ApiResponse(201, "Event created succesfully"));
+      res.status(201).json(new ApiResponse(201, "Event started succesfully"));
     }
   );
 
