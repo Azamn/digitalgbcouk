@@ -6,7 +6,7 @@ import DataLoader from "@/components/shared/loader/data-laoder";
 import {
   useGetEventsStatsForAdminQuery,
   useGetMonthlyEventForAdminQuery,
-} from "@/server-api/events-api";
+} from "@/backend/events-api";
 import React from "react";
 
 const Page = () => {

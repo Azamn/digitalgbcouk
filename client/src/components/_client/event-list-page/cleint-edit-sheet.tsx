@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
 import { Instagram } from "lucide-react";
-import { useUpdateClientInstagramMutation } from "@/server-api/events-api";
+import { useUpdateClientInstagramMutation } from "@/backend/events-api";
 
 interface InstagramEditFormData {
   instagramId: string;

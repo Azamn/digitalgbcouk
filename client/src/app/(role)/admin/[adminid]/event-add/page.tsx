@@ -21,8 +21,8 @@ import {
   SelectLabel,
   SelectItem,
 } from "@/components/ui/select";
-import { useGetSuggestionsQuery } from "@/server-api/participant.api";
-import { useCreateEventMutation } from "@/server-api/events-api";
+import { useGetSuggestionsQuery } from "@/backend/participant.api";
+import { useCreateEventMutation } from "@/backend/events-api";
 
 const CreateEvent = () => {
   const {

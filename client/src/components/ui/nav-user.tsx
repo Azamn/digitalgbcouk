@@ -20,7 +20,7 @@ import {
 import {
   useGetUserInfoQuery,
   useUserLogoutMutation,
-} from "@/server-api/auth-api";
+} from "@/backend/auth-api";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import { useRouter } from "next/navigation";
 

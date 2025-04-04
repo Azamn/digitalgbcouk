@@ -6,7 +6,7 @@ import {
   Share2,
 } from "lucide-react";
 import ConfirmButton from "./confirm-button";
-import { Post } from "@/server-api/types/api";
+import { Post } from "@/backend/types/api";
 
 const PostView = ({
   post,

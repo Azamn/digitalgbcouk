@@ -11,7 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ResizablePanelGroup, ResizablePanel } from "@/components/ui/resizable";
 
-import { Post } from "@/server-api/post-api";
+import { Post } from "@/backend/post-api";
 import CommentsSheet from "../comment-sheet";
 
 const PostPreviewResponsive = ({

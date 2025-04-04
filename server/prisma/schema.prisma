@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id                String       @id @default(cuid())
-  userName          String
+  userName          String       @unique
   email             String       @unique
   password          String
   role              GlobalRole   @default(ADMIN)
@@ -31,13 +31,10 @@ model User {
 
 model Client {
   id                String   @id @default(cuid())
-  userName          String
-  email             String   @unique
   instagramId       String?
   instagramPassword String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
@@ -48,16 +45,11 @@ model Client {
 
 model Member {
   id        String   @id @default(cuid())
-  userName  String
-  email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
-
   events EventMember[]
-
   @@map("Members")
 }
 

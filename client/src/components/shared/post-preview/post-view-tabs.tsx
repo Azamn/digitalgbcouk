@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PostPreview from "@/components/shared/post-preview/post-view";
-import { Post } from "@/server-api/types/api";
+import { Post } from "@/backend/types/api";
 import MobileView from "@/components/shared/post-preview/mobile-view";
 import { Monitor, Smartphone } from "lucide-react";
 import { motion } from "framer-motion";

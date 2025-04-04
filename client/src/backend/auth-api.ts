@@ -1,30 +1,25 @@
-import { SignUpType, LoginType, ChangePasswordType } from "@/schema";
 import ApiServices from "@/store/middleware";
-import { ApiResponse } from "@/server-api/types/api";
+import { ApiResponse } from "@/backend/types/api";
+import { SignUpType } from "@/app/(auth)/sign-up/schema";
+import { LoginType } from "@/app/(auth)/sign-in/schema";
 
 const AuthServices = ApiServices.injectEndpoints({
   endpoints: (build) => ({
-    signUpUser: build.mutation<ApiResponse, SignUpType>({
+    SignUp: build.mutation<ApiResponse, SignUpType>({
       query: (userData) => ({
         url: "/auth/sign-up",
         method: "POST",
         body: userData,
       }),
     }),
-    signInUser: build.mutation<ApiResponse, LoginType>({
+    SignIn: build.mutation<ApiResponse, LoginType>({
       query: (credentials) => ({
         url: "/auth/sign-in",
         method: "POST",
         body: credentials,
       }),
     }),
-    ChangePassword: build.mutation<ApiResponse, ChangePasswordType>({
-      query: (credentials) => ({
-        url: "/auth/change-password",
-        method: "POST",
-        body: credentials,
-      }),
-    }),
+
     UserLogout: build.mutation<ApiResponse, void>({
       query: () => ({
         url: "/auth/logout",
@@ -41,11 +36,10 @@ const AuthServices = ApiServices.injectEndpoints({
 });
 
 export const {
-  useSignUpUserMutation,
-  useSignInUserMutation,
-  useChangePasswordMutation,
   useGetUserInfoQuery,
   useUserLogoutMutation,
+  useSignInMutation,
+  useSignUpMutation,
 } = AuthServices;
 
 export interface UserType extends ApiResponse {
@@ -56,10 +50,6 @@ export interface UserType extends ApiResponse {
     email: string;
     role: string;
   };
-}
-
-interface UserSignupResponse extends ApiResponse {
-  result: Member;
 }
 
 export interface Member {

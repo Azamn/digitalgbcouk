@@ -2,7 +2,7 @@
 import React from "react";
 import DataLoader from "@/components/shared/loader/data-laoder";
 import MemberEventTable from "@/components/_member/event-table/event-table";
-import { useGetEventsDetailsForMembersQuery } from "@/server-api/events-api";
+import { useGetEventsDetailsForMembersQuery } from "@/backend/events-api";
 
 const EventPage = () => {
   const { data: event, isLoading } = useGetEventsDetailsForMembersQuery();

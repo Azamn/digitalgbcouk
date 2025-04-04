@@ -7,7 +7,7 @@ import {
   useGetMonthlyEventForAdminQuery,
   useGetEventsStatsForClientQuery,
   useGetEventsByDateQuery,
-} from "@/server-api/events-api";
+} from "@/backend/events-api";
 
 const Page = () => {
   const { data: monthlyData, isLoading: monthlyLoading } =

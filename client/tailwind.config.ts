@@ -12,6 +12,7 @@ export default {
         lexend: "var(--font-lexend)",
         spaceGrotesk: "var(--font-spaceGrotesk)",
         manrope: "var(--font-manrope)",
+        geist: "var(--font-geist)",
       },
       keyframes: {
         "accordion-down": {
@@ -53,6 +54,13 @@ export default {
         marquee: "marquee var(--duration) infinite linear",
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
       },
+      backgroundImage: {
+        "text-gradient-nature": "linear-gradient(to right, #22c55e, #ef4444)",
+        "text-gradient-sunset": "linear-gradient(to right, #eab308, #1e293b)",
+        "text-gradient-storm": "linear-gradient(to right, #3b82f6, #ef4444)",
+        "text-gradient-citrus": "linear-gradient(to right, #a3e635, #fde047)",
+        "text-gradient-midnight": "linear-gradient(to right, #522546, #001f3f)",
+      },
       colors: {
         primary: "#522546",
         dark: "#001f3f",
@@ -60,7 +68,6 @@ export default {
         warning: "#FFE893",
         success: "#B9ECD5",
         error: "#FFD6B5",
-        main: "#1e3a8a",
         purple: "#D6C5FF",
         normal: "#606060",
       },

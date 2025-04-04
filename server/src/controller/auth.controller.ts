@@ -12,8 +12,8 @@ import { Request, Response } from "express";
 export class UserAuthController {
   public static UserSignup = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { firstName, lastName, email, password } = req.body;
-      if (!firstName || !lastName || !email || !password) {
+      const { userName, email, password } = req.body;
+      if (!userName || !email || !password) {
         throw new ApiError(400, "All fields are required");
       }
 
@@ -34,34 +34,31 @@ export class UserAuthController {
 
       await db.user.create({
         data: {
-          firstName,
-          lastName,
+          userName,
           email,
           password: hashedPassword,
           isPasswordChanged: true,
         },
         select: {
           id: true,
-          firstName: true,
-          lastName: true,
+          userName: true,
           role: true,
         },
       });
 
-      res.status(201).json(new ApiResponse(201, "User created successfully"));
+      res.json(new ApiResponse(201, "Account created successfully"));
     }
   );
 
   public static UserSignin = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { email, password } = req.body;
+      const { userName, password } = req.body;
 
-      if (!email || !password) {
-        throw new ApiError(400, "Email and password are required");
-      }
+      if (!userName || !password)
+        throw new ApiError(400, "Username and password are required");
 
       const user = await db.user.findFirst({
-        where: { email },
+        where: { userName: userName },
         select: {
           id: true,
           role: true,
@@ -70,13 +67,7 @@ export class UserAuthController {
         },
       });
 
-      if (!user) {
-        throw new ApiError(404, "User not found");
-      }
-
-      if (!user.isPasswordChanged) {
-        throw new ApiError(403, "Please change your password");
-      }
+      if (!user) throw new ApiError(404, "User not found");
 
       const isPasswordCorrect = await AuthServices.verifyPassword(
         password,
@@ -100,52 +91,7 @@ export class UserAuthController {
         { name: "UserId", value: user.id },
       ]);
 
-      res
-        .status(200)
-        .json(new ApiResponse(200, "You have been logged in successfully"));
-    }
-  );
-
-  public static ChangePassword = AsyncHandler(
-    async (req: Request, res: Response): Promise<void> => {
-      const { email, oldPassword, newPassword } = req.body;
-      if (!email || !oldPassword || !newPassword) {
-        throw new ApiError(400, "All fields are required");
-      }
-
-      const user = await db.user.findUnique({
-        where: { email },
-      });
-
-      if (!user) {
-        throw new ApiError(404, "User not found");
-      }
-
-      // Determine if stored password is hashed
-      const isHashed =
-        user.password.startsWith("$2b$") || user.password.startsWith("$2a$");
-
-      let isPasswordValid = false;
-      if (isHashed) {
-        isPasswordValid = await AuthServices.verifyPassword(
-          oldPassword,
-          user.password
-        );
-      } else {
-        isPasswordValid = oldPassword === user.password;
-      }
-
-      if (!isPasswordValid) {
-        throw new ApiError(401, "Incorrect old password");
-      }
-
-      const hashedPassword = await AuthServices.hashPassword(newPassword);
-      await db.user.update({
-        where: { id: user.id },
-        data: { password: hashedPassword, isPasswordChanged: true },
-      });
-
-      res.json(new ApiResponse(200, "Password changed successfully"));
+      res.json(new ApiResponse(200, "You have been logged in successfully"));
     }
   );
 

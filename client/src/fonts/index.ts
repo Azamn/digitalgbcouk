@@ -5,6 +5,7 @@ import {
   Lexend,
   Space_Grotesk,
   Manrope,
+  Geist,
 } from "next/font/google";
 
 const inter = Inter({
@@ -36,5 +37,10 @@ const manrope = Manrope({
   weight: ["400", "600", "800"],
 });
 
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+  weight: ["400", "700"],
+});
 
-export const appfonts = `${inter.variable} ${poppins.variable} ${lexend.variable} ${manrope.variable} ${spaceGrotesk.variable} antialiased`;
+export const appfonts = `${inter.variable} ${poppins.variable} ${lexend.variable} ${manrope.variable} ${spaceGrotesk.variable} ${geist.variable} antialiased`;

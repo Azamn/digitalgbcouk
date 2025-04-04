@@ -2,7 +2,7 @@
 import React from "react";
 import DataLoader from "@/components/shared/loader/data-laoder";
 import EventTable from "@/components/_admin/events-list-page/event-table";
-import { useGetEventsDetailsQuery } from "@/server-api/events-api";
+import { useGetEventsDetailsQuery } from "@/backend/events-api";
 
 const EventPage = () => {
   const { data: event, isLoading } = useGetEventsDetailsQuery();

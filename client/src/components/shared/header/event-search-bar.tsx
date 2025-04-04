@@ -8,7 +8,7 @@ import { Search, Calendar, Users, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import useAuth from "@/hooks/use-auth";
-import { useGetEventByTextSearchQuery } from "@/server-api/events-api";
+import { useGetEventByTextSearchQuery } from "@/backend/events-api";
 
 interface SearchType {
   text: string;

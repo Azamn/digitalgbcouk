@@ -25,7 +25,7 @@ import Spinner from "@/components/ui/spinner";
 import { EventEditSheet } from "./event-edit-sheet";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/use-auth";
-import { useDeleteEventMutation } from "@/server-api/events-api";
+import { useDeleteEventMutation } from "@/backend/events-api";
 
 interface EventData {
   id: string;

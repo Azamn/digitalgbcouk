@@ -23,7 +23,7 @@ import {
 import {
   useDeleteParticipantMutation,
   useSendInviteToParticipantsMutation,
-} from "@/server-api/participant.api";
+} from "@/backend/participant.api";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import { ParticipantEditSheet } from "./participants-edit";
 import Spinner from "@/components/ui/spinner";

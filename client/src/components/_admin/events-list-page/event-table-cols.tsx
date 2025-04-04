@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/tooltip";
 import { EventActionsDropdown } from "./event-action-drop-down";
 import InviteEventModal from "./add-members";
-import { Events } from "@/server-api/events-api";
+import { Events } from "@/backend/events-api";
 
 export const eventColumns: ColumnDef<Events>[] = [
   {

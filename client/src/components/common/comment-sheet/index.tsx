@@ -27,7 +27,7 @@ import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
   useGetCommentsByEventQuery,
-} from "@/server-api/comment-api";
+} from "@/backend/comment-api";
 import Spinner from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 

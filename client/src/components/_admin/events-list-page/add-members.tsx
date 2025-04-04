@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/command";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
-import { useGetSuggestionsQuery } from "@/server-api/participant.api";
-import { useAddMembersToEventMutation } from "@/server-api/events-api";
+import { useGetSuggestionsQuery } from "@/backend/participant.api";
+import { useAddMembersToEventMutation } from "@/backend/events-api";
 
 interface Member {
   id: string;

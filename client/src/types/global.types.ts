@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/server-api/types/api";
+import { ApiResponse } from "@/backend/types/api";
 
 export interface MetaProps {
   title: string;

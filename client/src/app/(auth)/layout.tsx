@@ -17,7 +17,7 @@ export default function RootAuthLayout({
       {/* Full-Screen SVG Background */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/Snow.svg"
+          src="/mountain.svg"
           alt="Background"
           layout="fill"
           objectFit="cover"
@@ -31,7 +31,7 @@ export default function RootAuthLayout({
         {/* Left Side - Image Section */}
         <div className="hidden lg:flex items-center justify-center">
           <Image
-            src="/auth.jpg"
+            src="/auth.png"
             alt="Authentication Background"
             height={600}
             width={600}

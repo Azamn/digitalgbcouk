@@ -2,7 +2,7 @@
 import React from "react";
 import ClientTable from "@/components/_admin/client-page/table";
 import DataLoader from "@/components/shared/loader/data-laoder";
-import { useGetallMembersQuery } from "@/server-api/participant.api";
+import { useGetallMembersQuery } from "@/backend/participant.api";
 
 const Client = () => {
   const { data, isLoading } = useGetallMembersQuery();

@@ -9,7 +9,7 @@ import {
   useGetEventsByDateQuery,
   useGetEventsAssignedToMemberMonthlyQuery,
   useGetEventsStatsForMembersQuery,
-} from "@/server-api/events-api";
+} from "@/backend/events-api";
 import React from "react";
 
 const Page = () => {

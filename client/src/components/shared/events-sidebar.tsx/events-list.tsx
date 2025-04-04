@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { Event } from "@/server-api/types/api";
+import { Event } from "@/backend/types/api";
 import { FC } from "react";
 import Link from "next/link";
 import { useAppDispatch } from "@/store";

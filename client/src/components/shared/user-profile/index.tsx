@@ -1,5 +1,5 @@
 "use client";
-import { useGetUserInfoQuery } from "@/server-api/auth-api";
+import { useGetUserInfoQuery } from "@/backend/auth-api";
 import React from "react";
 
 const UserProfile = () => {

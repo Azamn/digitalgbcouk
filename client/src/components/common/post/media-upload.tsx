@@ -9,7 +9,7 @@ import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { PostEditType } from "@/schema";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useGetMedialUrlMutation } from "@/server-api/post-api";
+import { useGetMedialUrlMutation } from "@/backend/post-api";
 import Spinner from "@/components/ui/spinner";
 
 interface MediaUploadInterface {

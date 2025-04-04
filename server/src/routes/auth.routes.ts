@@ -6,7 +6,6 @@ const authRouter = Router();
 authRouter
   .post("/sign-up", UserAuthController.UserSignup)
   .post("/sign-in", UserAuthController.UserSignin)
-  .post("/change-password", UserAuthController.ChangePassword)
   .post("/logout", requireAuth(), UserAuthController.UserLogout)
   .get("/userinfo", requireAuth(), UserAuthController.GetUserInfo);
 

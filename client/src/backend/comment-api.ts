@@ -1,5 +1,5 @@
 import ApiServices from "@/store/middleware";
-import { ApiResponse } from "@/server-api/types/api";
+import { ApiResponse } from "@/backend/types/api";
 
 const CommentServices = ApiServices.injectEndpoints({
   endpoints: (build) => ({

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Button } from "@/components/ui/button"; // Assuming you have a button component
-import { Organizations } from "@/server-api/types/api";
+import { Organizations } from "@/backend/types/api";
 import { useAppDispatch } from "@/store";
 import { setOrgId } from "@/store/states";
 

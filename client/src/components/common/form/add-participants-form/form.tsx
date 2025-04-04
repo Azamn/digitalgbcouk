@@ -29,7 +29,7 @@ import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
 import FormField from "@/components/ui/form-field";
 import { createMemberSchema, CreateMemberType } from "@/schema";
-import { useCreateParticipantsMutation } from "@/server-api/participant.api";
+import { useCreateParticipantsMutation } from "@/backend/participant.api";
 
 export default function ParticipantCreate({
   onSuccess,

@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import FormField from "@/components/ui/form-field";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
-import { useEditParticipantMutation } from "@/server-api/participant.api";
+import { useEditParticipantMutation } from "@/backend/participant.api";
 
 export interface EditParticipantFormData {
   id: string;

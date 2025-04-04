@@ -15,7 +15,7 @@ import DateTimePicker from "@/components/date-time-picker";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { useEditEventMutation } from "@/server-api/events-api";
+import { useEditEventMutation } from "@/backend/events-api";
 
 export interface EditEventFormData {
   id: string;

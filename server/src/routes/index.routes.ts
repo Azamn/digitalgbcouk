@@ -9,20 +9,20 @@ export default [
     path: "auth",
     router: authRouter,
   },
-  {
-    path: "events",
-    router: eventRouter,
-  },
-  {
-    path: "posts",
-    router: postRouter,
-  },
-  {
-    path: "participants",
-    router: participantRouter,
-  },
-  {
-    path: "comments",
-    router: commentRouter,
-  },
+  // {
+  //   path: "events",
+  //   router: eventRouter,
+  // },
+  // {
+  //   path: "posts",
+  //   router: postRouter,
+  // },
+  // {
+  //   path: "participants",
+  //   router: participantRouter,
+  // },
+  // {
+  //   path: "comments",
+  //   router: commentRouter,
+  // },
 ];

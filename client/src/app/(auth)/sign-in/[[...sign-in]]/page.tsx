@@ -9,17 +9,17 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
 
 import FormField from "@/components/ui/form-field";
-import { loginSchema, LoginType } from "@/schema";
-import { useSignInUserMutation } from "@/server-api/auth-api";
+import { useSignInMutation } from "@/backend/auth-api";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
 import DataLoader from "@/components/shared/loader/data-laoder";
 import Link from "next/link";
 import { useAppDispatch } from "@/store";
 import { setIsAuthLoading } from "@/store/states";
+import { loginSchema, LoginType } from "../schema";
 
 const SignIn = () => {
   const {
@@ -28,12 +28,12 @@ const SignIn = () => {
     formState: { errors },
   } = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { userName: "", password: "" },
   });
 
   const router = useRouter();
   const { ErrorToast, SuccessToast } = useAppToasts();
-  const [Signin, { isLoading }] = useSignInUserMutation();
+  const [Signin, { isLoading }] = useSignInMutation();
   const dispatch = useAppDispatch();
   const onSubmit = async (data: LoginType) => {
     try {
@@ -61,26 +61,26 @@ const SignIn = () => {
     }
   };
   return (
-    <Card className="w-full max-w-md bg-secondary shadow-xl">
+    <Card className="w-full max-w-md py-8 bg-success shadow-none">
       <CardHeader className="space-y-1 pb-8">
-        <CardTitle className="text-center text-3xl font-bold tracking-tight">
-          Welcome back to DigiLab
+        <CardTitle className="text-center bg-text-gradient-midnight text-transparent bg-clip-text whitespace-nowrap text-3xl font-bold tracking-tight">
+          Welcome back to DigitalGb
         </CardTitle>
         <p className="text-muted-foreground text-center">
-          Sign in to your account
+          Log in to your account
         </p>
       </CardHeader>
 
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <FormField label="Email Address" error={errors.email?.message}>
+          <FormField label="Username" error={errors.userName?.message}>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-primary" />
+              <User className="absolute left-3 top-3 h-4 w-4 text-primary" />
               <Input
-                {...register("email")}
-                className="bg-white pl-9 focus:ring-2 focus:ring-black"
+                {...register("userName")}
+                 className="bg-white pl-9 rounded-full focus:ring-1 focus:ring-dark focus:transition-all"
                 type="email"
-                placeholder="john@example.com"
+                placeholder="john@example"
               />
             </div>
           </FormField>
@@ -91,22 +91,14 @@ const SignIn = () => {
               <Input
                 {...register("password")}
                 type="password"
-                className="bg-white pl-9 focus:ring-2 focus:ring-black"
+                className="bg-white pl-9 rounded-full focus:ring-1 focus:ring-dark focus:transition-all"
                 placeholder="••••••••"
               />
             </div>
-            <div className="text-muted-foreground mt-6 text-right text-sm">
-              <Link
-                href="/forgot-password"
-                className="text-blue-700 underline underline-offset-4 transition-colors hover:underline"
-              >
-                Change Password
-              </Link>
-            </div>
           </FormField>
 
-          <Button type="submit" className="w-full text-secondary">
-            {isLoading ? <Spinner /> : "Sign In"}
+          <Button type="submit" className="w-full bg-warning text-dark">
+            {!isLoading ? <Spinner /> : "LOG-IN"}
           </Button>
         </form>
       </CardContent>

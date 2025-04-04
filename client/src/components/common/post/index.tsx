@@ -13,7 +13,7 @@ import {
   Post,
   useGetPostByIdQuery,
   useUpdatePostMutation,
-} from "@/server-api/post-api";
+} from "@/backend/post-api";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import DataLoader from "@/components/shared/loader/data-laoder";
 import PostView from "./post-view";
