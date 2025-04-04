@@ -49,11 +49,9 @@ export function NavUser() {
     }
   };
 
-  const firstName = data?.result?.firstName || "User";
-  const lastName = data?.result?.lastName || "";
+  const userName = data?.result?.userName || "User";
   const email = data?.result?.email || "unknown@example.com";
-  const fullName = `${firstName} ${lastName}`.trim();
-  const initials = `${firstName[0] || ""}${lastName[0] || ""}`.toUpperCase();
+  const initials = `${userName[0]}`.toUpperCase();
 
   return (
     <>
@@ -72,7 +70,7 @@ export function NavUser() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{fullName}</span>
+                    <span className="truncate font-medium">{userName}</span>
                     <span className="text-muted-foreground truncate text-xs">
                       {email}
                     </span>
@@ -95,7 +93,7 @@ export function NavUser() {
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-medium">{fullName}</span>
+                      <span className="truncate font-medium">{userName}</span>
                       <span className="text-muted-foreground truncate text-xs">
                         {email}
                       </span>

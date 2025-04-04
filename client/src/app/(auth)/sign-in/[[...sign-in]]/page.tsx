@@ -61,9 +61,9 @@ const SignIn = () => {
     }
   };
   return (
-    <Card className="w-full max-w-md py-8 bg-success shadow-none">
+    <Card className="w-full max-w-md bg-success py-8 shadow-none">
       <CardHeader className="space-y-1 pb-8">
-        <CardTitle className="text-center bg-text-gradient-midnight text-transparent bg-clip-text whitespace-nowrap text-3xl font-bold tracking-tight">
+        <CardTitle className="bg-text-gradient-midnight whitespace-nowrap bg-clip-text text-center text-3xl font-bold tracking-tight text-transparent">
           Welcome back to DigitalGb
         </CardTitle>
         <p className="text-muted-foreground text-center">
@@ -78,7 +78,7 @@ const SignIn = () => {
               <User className="absolute left-3 top-3 h-4 w-4 text-primary" />
               <Input
                 {...register("userName")}
-                 className="bg-white pl-9 rounded-full focus:ring-1 focus:ring-dark focus:transition-all"
+                className="rounded-full bg-white pl-9 focus:ring-1 focus:ring-dark focus:transition-all"
                 type="email"
                 placeholder="john@example"
               />
@@ -91,14 +91,14 @@ const SignIn = () => {
               <Input
                 {...register("password")}
                 type="password"
-                className="bg-white pl-9 rounded-full focus:ring-1 focus:ring-dark focus:transition-all"
+                className="rounded-full bg-white pl-9 focus:ring-1 focus:ring-dark focus:transition-all"
                 placeholder="••••••••"
               />
             </div>
           </FormField>
 
           <Button type="submit" className="w-full bg-warning text-dark">
-            {!isLoading ? <Spinner /> : "LOG-IN"}
+            {isLoading ? <Spinner /> : "LOG-IN"}
           </Button>
         </form>
       </CardContent>

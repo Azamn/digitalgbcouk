@@ -17,8 +17,7 @@ export const db = new PrismaClient().$extends({
           select: {
             id: true,
             email: true,
-            firstName: true,
-            lastName: true,
+            userName: true,
             role: true,
           },
         });
