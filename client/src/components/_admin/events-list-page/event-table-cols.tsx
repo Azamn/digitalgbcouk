@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { EventActionsDropdown } from "./event-action-drop-down";
-import InviteEventModal from "./add-members";
+import InviteEventModal from "./add-client";
 import { Events } from "@/backend/events-api";
 
 export const eventColumns: ColumnDef<Events>[] = [

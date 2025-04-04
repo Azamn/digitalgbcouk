@@ -1,19 +1,22 @@
 "use client";
 
-import { Plus, UserPlus, Mail, Lock, Shield, X } from "lucide-react";
+import {
+  Plus,
+  UserPlus,
+  Mail,
+  Lock,
+  Shield,
+  X,
+  Instagram,
+  UserCircle,
+  Key,
+  User,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetFooter,
-  SheetClose,
-} from "@/components/ui/sheet";
+import { SheetFooter, SheetClose } from "@/components/ui/sheet";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,10 +31,12 @@ import {
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
 import FormField from "@/components/ui/form-field";
-import { createMemberSchema, CreateMemberType } from "@/schema";
-import { useCreateParticipantsMutation } from "@/backend/participant.api";
+import { useCreateClientMutation } from "@/backend/participant.api";
+import { createClientSchema, CreateClientType } from "./schema";
+import { useState } from "react";
+import { getRandomColor } from "@/helpers";
 
-export default function ParticipantCreate({
+export default function ClientCreateForm({
   onSuccess,
 }: {
   onSuccess: () => void;
@@ -44,18 +49,20 @@ export default function ParticipantCreate({
     formState: { errors },
     setValue,
     reset,
-  } = useForm<CreateMemberType>({
-    resolver: zodResolver(createMemberSchema),
+  } = useForm<CreateClientType>({
+    resolver: zodResolver(createClientSchema),
   });
 
-  const [createParticipant, { isLoading }] = useCreateParticipantsMutation();
+  const [createParticipant, { isLoading }] = useCreateClientMutation();
 
-  const onSubmit = async (payload: CreateMemberType) => {
+  const [SelectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
+
+  const onSubmit = async (payload: CreateClientType) => {
     try {
       const resp = await createParticipant(payload).unwrap();
       if (resp.status === "success") {
         SuccessToast({
-          title: `${payload.role.toLowerCase()} created Successfully `,
+          title: resp.message,
         });
         onSuccess();
         reset();
@@ -63,49 +70,77 @@ export default function ParticipantCreate({
         ErrorToast({ title: resp.message });
       }
     } catch (error) {
-      ErrorToast({ title: "Error Creating Participant" });
+      ErrorToast({ title: "Error creating participant" });
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-6 px-4 py-6"
+      className="flex h-full flex-1 flex-col gap-6 px-4"
     >
-      {/* First Name */}
-      <div className="flex w-full gap-x-2">
-        <FormField label="First Name">
-          <UserPlus className="absolute left-3 top-3 h-5 w-5 text-dark" />
+      {/* Username */}
+      <FormField label="Username">
+        <UserCircle  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Input
+          {...register("userName")}
+          placeholder="Username"
+          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+        />
+        {errors.userName && (
+          <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
+        )}
+      </FormField>
+      <FormField label="Username">
+        <UserCircle  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Input
+          {...register("userName")}
+          placeholder="Username"
+          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+        />
+        {errors.userName && (
+          <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
+        )}
+      </FormField>
+
+      <div className="flex flex-1 gap-x-2">
+        {/* Instagram ID */}
+        <FormField className="flex-1" label="Instagram ID">
+          <Instagram  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
           <Input
-            {...register("firstName")}
-            placeholder="John"
+            {...register("instagramId")}
+            placeholder="@john_instagram"
             className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
           />
-          {errors.firstName && (
+          {errors.instagramId && (
             <p className="mt-1 text-sm text-red-500">
-              {errors.firstName.message}
+              {errors.instagramId.message}
             </p>
           )}
         </FormField>
 
-        {/* Last Name */}
-        <FormField label="Last Name">
-          <UserPlus className="absolute left-3 top-3 h-5 w-5 text-dark" />
+        {/* Instagram Password */}
+        <FormField className="flex-1" label="Instagram Password">
+          <Key
+            className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
+          />
           <Input
-            {...register("lastName")}
-            placeholder="Doe"
+            type="password"
+            {...register("instagramPassword")}
+            placeholder="••••••"
             className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
           />
-          {errors.lastName && (
+          {errors.instagramPassword && (
             <p className="mt-1 text-sm text-red-500">
-              {errors.lastName.message}
+              {errors.instagramPassword.message}
             </p>
           )}
         </FormField>
       </div>
+
       {/* Email */}
       <FormField label="Email">
-        <Mail className="absolute left-3 top-3 h-5 w-5 text-dark" />
+        <Mail  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Input
           type="email"
           {...register("email")}
@@ -119,11 +154,11 @@ export default function ParticipantCreate({
 
       {/* Password */}
       <FormField label="Password">
-        <Lock className="absolute left-3 top-3 h-5 w-5 text-dark" />
+        <Lock  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Input
           type="password"
           {...register("password")}
-          placeholder="••••••••"
+          placeholder="••••••"
           className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
         />
         {errors.password && (
@@ -132,11 +167,11 @@ export default function ParticipantCreate({
       </FormField>
 
       {/* Role */}
-      <FormField label="Role">
-        <Shield className="absolute left-3 top-3 h-5 w-5 text-dark" />
+      <FormField label="Members">
+        <User  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Select
           onValueChange={(value) =>
-            setValue("role", value as CreateMemberType["role"])
+            setValue("memberId", value as CreateClientType["memberId"])
           }
         >
           <SelectTrigger className="rounded-lg border-2 border-dark bg-white pl-12 text-dark focus:ring-dark">
@@ -147,8 +182,8 @@ export default function ParticipantCreate({
             <SelectItem value="MEMBER">MEMBER</SelectItem>
           </SelectContent>
         </Select>
-        {errors.role && (
-          <p className="mt-1 text-sm text-red-500">{errors.role.message}</p>
+        {errors.memberId && (
+          <p className="mt-1 text-sm text-red-500">{errors.memberId.message}</p>
         )}
       </FormField>
 

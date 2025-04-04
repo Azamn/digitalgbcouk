@@ -1,22 +1,33 @@
-import { CreateMemberType } from "@/schema";
 import { EditParticipantFormData } from "@/components/common/data-table/participants-edit";
 import ApiServices from "@/store/middleware";
 import { ApiResponse } from "./types/api";
+import { CreateClientType } from "@/components/_admin/participants-page/client-table/add-client-form/schema";
+import { CreateMemberType } from "@/components/_admin/participants-page/member-table/add-member-form/schema";
 
 //  =========== /participants ============
 const AuthServices = ApiServices.injectEndpoints({
   endpoints: (build) => ({
-    CreateParticipants: build.mutation<ApiResponse, CreateMemberType>({
+    // Create Client
+    CreateClient: build.mutation<ApiResponse, CreateClientType>({
       query: (payload) => ({
-        url: "/participants",
+        url: "/participants/clients",
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: (result, error, { role }) => [
-        { type: "PARTICIPANTS", id: role },
-      ],
+      invalidatesTags: [{ type: "PARTICIPANTS", id: "CLIENT" }],
     }),
 
+    // Create Member
+    CreateMember: build.mutation<ApiResponse, CreateMemberType>({
+      query: (payload) => ({
+        url: "/participants/members",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: [{ type: "PARTICIPANTS", id: "MEMBER" }],
+    }),
+
+    // Get Clients
     GetallClients: build.query<ParticipantResponse, void>({
       query: () => ({
         url: "/participants/clients",
@@ -34,7 +45,8 @@ const AuthServices = ApiServices.injectEndpoints({
           : [{ type: "PARTICIPANTS", id: "CLIENT" }],
     }),
 
-    GetallMembers: build.query<ParticipantResponse, void>({
+    // Get Members
+    GetallMembers: build.query<GetAllMemberApiResponse, void>({
       query: () => ({
         url: "/participants/members",
         method: "GET",
@@ -51,35 +63,13 @@ const AuthServices = ApiServices.injectEndpoints({
           : [{ type: "PARTICIPANTS", id: "MEMBER" }],
     }),
 
-    DeleteParticipant: build.mutation<
-      ApiResponse,
-      { participantId: string; role: "CLIENT" | "MEMBER" }
-    >({
-      query: ({ participantId }) => ({
-        url: `/participants/${participantId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: (result, error, { role }) => [
-        { type: "PARTICIPANTS", id: role },
-      ],
-    }),
-
-    EditParticipant: build.mutation<ApiResponse, EditParticipantFormData>({
-      query: (payload) => ({
-        url: `/participants/${payload.id}`,
-        method: "PATCH",
-        body: payload,
-      }),
-      invalidatesTags: (result, error, { role }) => [
-        { type: "PARTICIPANTS", id: role },
-      ],
-    }),
-    SendInviteToParticipants: build.mutation<
+    // Send Invite to Client
+    SendInviteToClient: build.mutation<
       ApiResponse,
       SendInviteToParticipantsRequest
     >({
       query: (payload) => ({
-        url: `/participants/send/invite`,
+        url: `/participants/invite/client`,
         method: "POST",
         body: payload,
       }),
@@ -87,31 +77,39 @@ const AuthServices = ApiServices.injectEndpoints({
         { type: "PARTICIPANTS", id: role },
       ],
     }),
-    GetSuggestions: build.query<ParticipantSuggestionResponse, void>({
-      query: () => ({
-        url: "/participants/suggestion",
-        method: "GET",
-      }),
-      providesTags: (result) =>
-        result
-          ? [
-              { type: "CLIENT", id: "LIST" },
-              { type: "MEMBER", id: "LIST" },
-            ]
-          : [],
-    }),
   }),
 });
 
 export const {
-  useCreateParticipantsMutation,
-  useDeleteParticipantMutation,
+  useCreateClientMutation,
+  useCreateMemberMutation,
   useGetallClientsQuery,
   useGetallMembersQuery,
-  useEditParticipantMutation,
-  useSendInviteToParticipantsMutation,
-  useGetSuggestionsQuery,
+  useSendInviteToClientMutation,
 } = AuthServices;
+
+export interface GetAllClientApiResponse extends ApiResponse {}
+
+
+// ================= MEMBER =====================
+
+export interface CreatedMember {
+  id: string;
+  user: {
+    userName: string;
+    email: string;
+    createdAt: string;
+    inviteStatus: "PENDING" | "ACCEPTED";
+  };
+  client: {
+    user: {
+      userName: string;
+    };
+  }[];
+}
+export interface GetAllMemberApiResponse extends ApiResponse {
+  result: CreatedMember[];
+}
 
 export interface CreatedParticipant {
   id: string;

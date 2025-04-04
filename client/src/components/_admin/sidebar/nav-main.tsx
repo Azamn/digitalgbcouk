@@ -33,7 +33,7 @@ export function NavMain() {
       icon: <LayoutDashboard />,
       path: `/admin/${user?.id}/`,
     },
-    { name: "Client", icon: <Users />, path: `/admin/${user?.id}/clients` },
+    { name: "Participants", icon: <Users />, path: `/admin/${user?.id}/participants` },
     { name: "Members", icon: <UserPlus />, path: `/admin/${user?.id}/members` },
   ];
 

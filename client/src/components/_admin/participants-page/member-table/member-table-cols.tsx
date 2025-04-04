@@ -1,10 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ActionsDropdown } from "@/components/common/data-table/action-drop-down";
-import { CreatedParticipant } from "@/store/api-endpoints/participant.api";
+import { CreatedMember } from "@/backend/participant.api";
 
-export const participantColumns: ColumnDef<CreatedParticipant>[] = [
+export const memberColumns: ColumnDef<CreatedMember>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -36,55 +35,30 @@ export const participantColumns: ColumnDef<CreatedParticipant>[] = [
         onClick={column.getToggleSortingHandler()}
         className="flex items-center gap-2 font-medium"
       >
-        ID <ArrowUpDown className="size-4" />
+        Member ID <ArrowUpDown className="size-4" />
       </button>
     ),
     cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
   },
 
   {
-    accessorKey: "firstName",
+    accessorKey: "user.userName",
     header: ({ column }) => (
       <button
         onClick={column.getToggleSortingHandler()}
         className="flex items-center gap-2 font-medium"
       >
-        First Name <ArrowUpDown className="size-4" />
+        Name <ArrowUpDown className="size-4" />
       </button>
     ),
     cell: ({ row }) => {
-      const firstName = row.getValue("firstName") as string;
-
-      return (
-        <div className="flex items-center gap-2">
-          <span>{`${firstName}`}</span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "lastName",
-    header: ({ column }) => (
-      <button
-        onClick={column.getToggleSortingHandler()}
-        className="flex items-center gap-2 font-medium"
-      >
-        Last Name <ArrowUpDown className="size-4" />
-      </button>
-    ),
-    cell: ({ row }) => {
-      const lastName = row.original.lastName;
-
-      return (
-        <div className="flex items-center gap-2">
-          <span>{`${lastName}`}</span>
-        </div>
-      );
+      const name = row.original.user?.userName ?? "N/A";
+      return <div className="capitalize">{name}</div>;
     },
   },
 
   {
-    accessorKey: "email",
+    accessorKey: "user.email",
     header: ({ column }) => (
       <button
         onClick={column.getToggleSortingHandler()}
@@ -93,10 +67,11 @@ export const participantColumns: ColumnDef<CreatedParticipant>[] = [
         Email <ArrowUpDown className="size-4" />
       </button>
     ),
-    cell: ({ row }) => <div className="truncate">{row.getValue("email")}</div>,
+    cell: ({ row }) => row.original.user?.email ?? "—",
   },
+
   {
-    accessorKey: "inviteStatus",
+    accessorKey: "user.inviteStatus",
     header: ({ column }) => (
       <button
         onClick={column.getToggleSortingHandler()}
@@ -106,13 +81,13 @@ export const participantColumns: ColumnDef<CreatedParticipant>[] = [
       </button>
     ),
     cell: ({ row }) => {
-      const status = row.getValue("inviteStatus") as string;
+      const status = row.original.user?.inviteStatus;
       return (
         <span
           className={`rounded-full px-2 py-1 text-xs ${
             status === "ACCEPTED"
-              ? "bg-green-400 text-green-700"
-              : "bg-yellow-400 text-yellow-800"
+              ? "bg-green-400 text-green-800"
+              : "bg-yellow-300 text-yellow-800"
           }`}
         >
           {status}
@@ -122,48 +97,43 @@ export const participantColumns: ColumnDef<CreatedParticipant>[] = [
   },
 
   {
-    accessorKey: "createdAt",
+    accessorKey: "user.createdAt",
     header: ({ column }) => (
       <button
         onClick={column.getToggleSortingHandler()}
         className="flex items-center gap-2 font-medium"
       >
-        Created Date <ArrowUpDown className="size-4" />
+        Created At <ArrowUpDown className="size-4" />
       </button>
     ),
     cell: ({ row }) => {
-      const createdAt = row.getValue("createdAt") as string;
-      return (
-        <div>
-          {new Date(createdAt).toLocaleString("en-US", {
+      const createdAt = row.original.user?.createdAt;
+      return createdAt
+        ? new Date(createdAt).toLocaleString("en-US", {
             dateStyle: "medium",
             timeStyle: "short",
-          })}
-        </div>
-      );
+          })
+        : "—";
     },
   },
 
   {
-    id: "actions",
-    enableHiding: false,
+    accessorKey: "client",
+    header: () => <span>Client Name(s)</span>,
     cell: ({ row }) => {
-      const participant = row.original;
-      const participantdata = {
-        id: participant.id,
-        firstName: participant.firstName,
-        lastName: participant.lastName,
-        email: participant.email,
-        password: participant.password,
-        role: participant.role,
-      };
+      const clients = row.original.client || [];
       return (
-        <ActionsDropdown
-          participantdata={participantdata}
-          onEdit={async (data) => console.log("Editing:", data)}
-          onDelete={async () => console.log("Deleting:", participant.id)}
-          inviteStatus={participant.inviteStatus}
-        />
+        <div className="flex flex-col gap-1">
+          {clients.length > 0 ? (
+            clients.map((c, i) => (
+              <span key={i} className="text-sm text-muted-foreground">
+                {c.user?.userName ?? "Unknown"}
+              </span>
+            ))
+          ) : (
+            <span className="text-muted-foreground">No Clients</span>
+          )}
+        </div>
       );
     },
   },

@@ -14,8 +14,10 @@ import {
 
 import { Button } from "@/components/ui/button";
 import ParticipantCreate from "./form";
+import ClientCreateForm from "./form";
+import MemberCreateForm from "./form";
 
-export default function AddParticipantForm() {
+export default function AddMemberDialog() {
   const [open, setOpen] = React.useState(false);
 
   const handleSuccess = () => {
@@ -27,24 +29,23 @@ export default function AddParticipantForm() {
       {/* Trigger Button */}
       <DialogTrigger asChild>
         <Button
+          size="sm"
           variant="outline"
-          className="flex items-center gap-x-2 bg-dark text-sm text-secondary"
+          className="flex items-center gap-x-2 bg-warning  text-dark"
         >
-          <PlusCircle className="size-[14px]" /> Add new
+          <PlusCircle className="size-[14px]" /> Add Member
         </Button>
       </DialogTrigger>
 
       {/* Modal Content */}
-      <DialogContent className="max-w-lg rounded-lg border-2 border-dark bg-white bg-gradient-to-b">
+      <DialogContent className="max-w-lg rounded-lg border-2 border-dark bg-success bg-gradient-to-b">
         <DialogHeader>
-          <DialogTitle className="text-primary">
-            Create New Participant
-          </DialogTitle>
-          <DialogDescription>Add a new participant.</DialogDescription>
+          <DialogTitle className="text-primary">Create New Client</DialogTitle>
+          <DialogDescription>Add a new Client.</DialogDescription>
         </DialogHeader>
 
         <div className="h-auto overflow-y-auto pb-4">
-          <ParticipantCreate onSuccess={handleSuccess} />
+          <MemberCreateForm onSuccess={handleSuccess} />
         </div>
       </DialogContent>
     </Dialog>

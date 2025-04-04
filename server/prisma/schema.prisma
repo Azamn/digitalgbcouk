@@ -29,30 +29,6 @@ model User {
   @@map("Users")
 }
 
-model Client {
-  id                String   @id @default(cuid())
-  instagramId       String?
-  instagramPassword String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @unique
-
-  events Event[]
-
-  @@map("Clients")
-}
-
-model Member {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @unique
-  events EventMember[]
-  @@map("Members")
-}
-
 model Event {
   id          String   @id @unique @default(cuid())
   title       String   @unique
@@ -74,6 +50,39 @@ model Event {
   comments Comment[]
 
   @@map("Events")
+}
+
+model Client {
+  id                String   @id @default(cuid())
+  password          String
+  instagramId       String?
+  instagramPassword String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  allotedMember Member[]
+  events        Event[]
+
+  @@map("Clients")
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
+
+  events EventMember[]
+
+  @@map("Members")
 }
 
 model EventMember {

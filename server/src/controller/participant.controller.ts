@@ -11,57 +11,100 @@ import {
 import { Request, Response } from "express";
 
 export class ParticipantController {
-  public static CreateParticipants = AsyncHandler(
+  public static CreateClient = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { firstName, lastName, email, password, role } = req.body;
+      const {
+        userName,
+        instagramId,
+        instagramPassword,
+        email,
+        password,
+        memberId,
+      } = req.body;
 
-      if (await db.user.findUnique({ where: { email } })) {
-        throw new ApiError(400, "User already exists");
-      }
+      if (await db.user.findUnique({ where: { userName } }))
+        throw new ApiError(400, "Username already exists");
+
+      const hashedPassword = await AuthServices.hashPassword(password);
 
       await db.$transaction(async (tx) => {
-        const createdUser = await tx.user.create({
-          data: { firstName, lastName, email, password, role },
+        const client = await tx.user.create({
+          data: { userName, email, password: hashedPassword, role: "CLIENT" },
         });
 
-        if (role === "CLIENT") {
-          await tx.client.create({
-            data: {
-              name: `${firstName} ${lastName}`,
-              email,
-              userId: createdUser.id,
-            },
-          });
-        } else {
-          await tx.member.create({
-            data: {
-              name: `${firstName} ${lastName}`,
-              email,
-              userId: createdUser.id,
-            },
-          });
-        }
+        await tx.client.create({
+          data: {
+            instagramId,
+            instagramPassword,
+            userId: client.id,
+            password,
+          },
+        });
+
+        await tx.member.update({
+          where: {
+            id: memberId,
+          },
+          data: {
+            clientId: client.id,
+          },
+        });
       });
 
-      res.json(new ApiResponse(201, "Participant created successfully"));
+      res.json(new ApiResponse(201, "Client created successfully"));
+    }
+  );
+  public static CreateMember = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { userName, email, password } = req.body;
+
+      if (await db.user.findUnique({ where: { userName } }))
+        throw new ApiError(400, "Username already exists");
+
+      const hashedPassword = await AuthServices.hashPassword(password);
+
+      await db.$transaction(async (tx) => {
+        const member = await tx.user.create({
+          data: { userName, email, password: hashedPassword, role: "MEMBER" },
+        });
+
+        await tx.member.create({
+          data: { userId: member.id },
+        });
+      });
+
+      res.json(new ApiResponse(201, "Member created successfully"));
     }
   );
 
   public static GetAllClients = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const clients = await db.user.findMany({
+      const clients = await db.client.findMany({
         where: {
-          role: "CLIENT",
+          user: {
+            role: "CLIENT",
+          },
         },
         select: {
           id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          createdAt: true,
-          inviteStatus: true,
-          password: true,
-          role: true,
+          user: {
+            select: {
+              userName: true,
+              email: true,
+              createdAt: true,
+              inviteStatus: true,
+              password: true,
+            },
+          },
+          allotedMember: {
+            select: {
+              user: {
+                select: {
+                  userName: true,
+                },
+              },
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
@@ -73,20 +116,32 @@ export class ParticipantController {
   );
 
   public static GetAllMembers = AsyncHandler(
-    async (req: Request, res: Response): Promise<void> => {
-      const members = await db.user.findMany({
+    async (_: Request, res: Response): Promise<void> => {
+      const members = await db.member.findMany({
         where: {
-          role: "MEMBER",
+          user: {
+            role: "MEMBER",
+          },
         },
         select: {
           id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          createdAt: true,
-          inviteStatus: true,
-          role: true,
-          password: true,
+          user: {
+            select: {
+              userName: true,
+              email: true,
+              createdAt: true,
+              inviteStatus: true,
+            },
+          },
+          client: {
+            select: {
+              user: {
+                select: {
+                  userName: true,
+                },
+              },
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",
@@ -97,67 +152,7 @@ export class ParticipantController {
     }
   );
 
-  public static DeleteParticipant = AsyncHandler(
-    async (req: Request, res: Response): Promise<void> => {
-      const { participantId } = req.params;
-
-      if (!participantId) {
-        throw new ApiError(400, "Missing required parameters");
-      }
-
-      const user = await db.user.findUnique({
-        where: { id: participantId },
-      });
-
-      if (!user) throw new ApiError(404, "User not found");
-
-      await db.user.delete({ where: { id: participantId } });
-
-      res.json(
-        new ApiResponse(200, `${user.role.toLowerCase()} deleted successfully`)
-      );
-    }
-  );
-
-  public static EditParticipant = AsyncHandler(
-    async (req: Request, res: Response): Promise<void> => {
-      const { participantId } = req.params;
-      const { email, password, firstName, lastName, role } = req.body;
-      const isUser = await db.user.findUnique({ where: { id: participantId } });
-      if (!isUser) {
-        throw new ApiError(400, "User do not exists");
-      }
-
-      const result = await db.$transaction(async (tx) => {
-        const updatedUser = await tx.user.update({
-          where: {
-            id: participantId,
-          },
-          data: { email, password, firstName, lastName },
-        });
-
-        role === "CLIENT"
-          ? tx.client.update({
-              where: { id: updatedUser.id },
-              data: { name: `${firstName} ${lastName}`, email },
-            })
-          : tx.member.update({
-              where: { id: updatedUser.id },
-              data: { name: `${firstName} ${lastName}`, email },
-            });
-
-        return { role: updatedUser.role };
-      });
-
-      res.json(
-        new ApiResponse(
-          200,
-          `${result.role.toLocaleLowerCase()} updated successfully`
-        )
-      );
-    }
-  );
-  public static SendInviteToParticipants = AsyncHandler(
+  public static SendInviteToClient = AsyncHandler(
     AsyncHandler(async (req: Request, res: Response): Promise<void> => {
       const { id, email, password, role } = req.body;
       const Role = role.charAt(0) + role.slice(1).toLowerCase();
@@ -175,50 +170,6 @@ export class ParticipantController {
         Role,
       });
       res.json(new ApiResponse(200, `Invite sent to ${Role} successfully`));
-    })
-  );
-
-  public static GetSuggestions = AsyncHandler(
-    AsyncHandler(async (req: Request, res: Response): Promise<void> => {
-      const [clients, members] = await Promise.all([
-        db.client.findMany({
-          where: {
-            user: {
-              inviteStatus: "ACCEPTED",
-              role: "CLIENT",
-            },
-          },
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        }),
-        db.member.findMany({
-          where: {
-            user: {
-              inviteStatus: "ACCEPTED",
-              role: "MEMBER",
-            },
-          },
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        }),
-      ]);
-
-      res.json(
-        new ApiResponse(
-          200,
-          "Client and member suggestions retrieved successfully",
-          {
-            clients,
-            members,
-          }
-        )
-      );
     })
   );
 }

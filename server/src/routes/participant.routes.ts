@@ -5,12 +5,10 @@ import { requireAuth } from "@src/middleware/auth.middleware";
 const participantRouter = Router();
 
 participantRouter
-  .post("/", requireAuth(), ParticipantController.CreateParticipants)
   .get("/clients", requireAuth(), ParticipantController.GetAllClients)
+  .post("/clients", requireAuth(), ParticipantController.CreateClient)
   .get("/members", requireAuth(), ParticipantController.GetAllMembers)
-  .delete("/:participantId", requireAuth(), ParticipantController.DeleteParticipant)
-  .patch("/:participantId", requireAuth(), ParticipantController.EditParticipant)
-  .post("/send/invite", requireAuth(), ParticipantController.SendInviteToParticipants)
-  .get("/suggestion", requireAuth(), ParticipantController.GetSuggestions)
-  
+  .post("/members", requireAuth(), ParticipantController.CreateMember)
+  .post("/invite/client", requireAuth(), ParticipantController.SendInviteToClient)
+
 export default participantRouter;

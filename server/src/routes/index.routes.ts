@@ -17,10 +17,10 @@ export default [
   //   path: "posts",
   //   router: postRouter,
   // },
-  // {
-  //   path: "participants",
-  //   router: participantRouter,
-  // },
+  {
+    path: "participants",
+    router: participantRouter,
+  },
   // {
   //   path: "comments",
   //   router: commentRouter,
