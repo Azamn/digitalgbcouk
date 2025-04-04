@@ -9,10 +9,9 @@ datasource db {
 
 model User {
   id                String       @id @default(cuid())
+  userName          String
   email             String       @unique
   password          String
-  firstName         String?
-  lastName          String?
   role              GlobalRole   @default(ADMIN)
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
@@ -32,7 +31,7 @@ model User {
 
 model Client {
   id                String   @id @default(cuid())
-  name              String
+  userName          String
   email             String   @unique
   instagramId       String?
   instagramPassword String?
@@ -49,7 +48,7 @@ model Client {
 
 model Member {
   id        String   @id @default(cuid())
-  name      String
+  userName  String
   email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -98,7 +97,7 @@ model EventMember {
 }
 
 model Session {
-  id         String   @id @default(cuid()) // Changed from uuid() to cuid()
+  id         String   @id @default(cuid())
   sessionKey String   @unique
   expiresAt  DateTime
   createdAt  DateTime @default(now())
