@@ -153,7 +153,7 @@ export class ParticipantController {
   );
 
   public static SendInviteToClient = AsyncHandler(
-    AsyncHandler(async (req: Request, res: Response): Promise<void> => {
+    async (req: Request, res: Response): Promise<void> => {
       const { id, email, password, role } = req.body;
       const Role = role.charAt(0) + role.slice(1).toLowerCase();
       const isParticipant = await db.user.findUnique({
@@ -170,6 +170,46 @@ export class ParticipantController {
         Role,
       });
       res.json(new ApiResponse(200, `Invite sent to ${Role} successfully`));
-    })
+    }
+  );
+
+  public static DeleteMember = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { id } = req.params;
+      const member = await db.member.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (!member) {
+        throw new ApiError(404, "Member not found");
+      }
+      await db.member.delete({
+        where: {
+          id,
+        },
+      });
+      res.json(new ApiResponse(200, "Member deleted successfully"));
+    }
+  );
+
+  public DeleteClient = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { id } = req.params;
+      const member = await db.client.findFirst({
+        where: {
+          id,
+        },
+      });
+      if (!member) {
+        throw new ApiError(404, "Clinet not found");
+      }
+      await db.client.delete({
+        where: {
+          id,
+        },
+      });
+      res.json(new ApiResponse(200, "Member deleted successfully"));
+    }
   );
 }
