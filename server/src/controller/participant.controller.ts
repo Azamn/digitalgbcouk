@@ -1,3 +1,4 @@
+import { appEnvConfigs } from "@src/configs";
 import { db } from "@src/db";
 import { GlobalUtils } from "@src/global";
 import AuthServices from "@src/services/auth";
@@ -22,38 +23,74 @@ export class ParticipantController {
         memberId,
       } = req.body;
 
-      if (await db.user.findUnique({ where: { userName } }))
-        throw new ApiError(400, "Username already exists");
+      try {
+        if (!Array.isArray(memberId) || memberId.length === 0) {
+          throw new ApiError(400, "memberId must be a non-empty array");
+        }
 
-      const hashedPassword = await AuthServices.hashPassword(password);
+        const existingUser = await db.user.findUnique({ where: { userName } });
+        if (existingUser) {
+          throw new ApiError(400, "Username already exists");
+        }
 
-      await db.$transaction(async (tx) => {
-        const client = await tx.user.create({
-          data: { userName, email, password: hashedPassword, role: "CLIENT" },
+        const hashedPassword = await AuthServices.hashPassword(password);
+
+        await db.$transaction(async (tx) => {
+          const user = await tx.user.create({
+            data: {
+              userName,
+              email,
+              password: hashedPassword,
+              role: "CLIENT",
+            },
+          });
+
+          const client = await tx.client.create({
+            data: {
+              instagramId,
+              instagramPassword,
+              userId: user.id,
+              password,
+            },
+          });
+
+          // ✅ Create many MemberOnClient entries for the relationship
+          await Promise.all(
+            memberId.map(async (id: string) => {
+              await tx.memberOnClient.create({
+                data: {
+                  clientId: client.id,
+                  memberId: id,
+                },
+              });
+            })
+          );
+
+          await tx.post.create({
+            data: {
+              mediaUrl: `${appEnvConfigs.NEXT_APP_URI}/welcome/welcome-post.png`,
+              content: `🌟 Welcome to Planable! 🌟
+  
+  This is a placeholder post to give you a little tour of what Planable can do for your social media planning and collaboration.
+  
+  Welcome aboard, and let’s make your social media management smooth and effective!
+  
+  #Planable #Welcome #SocialMediaManagement`,
+              clientId: client.id,
+            },
+          });
+
+          console.log("✅ Transaction completed");
         });
 
-        await tx.client.create({
-          data: {
-            instagramId,
-            instagramPassword,
-            userId: client.id,
-            password,
-          },
-        });
-
-        await tx.member.update({
-          where: {
-            id: memberId,
-          },
-          data: {
-            clientId: client.id,
-          },
-        });
-      });
-
-      res.json(new ApiResponse(201, "Client created successfully"));
+        res.json(new ApiResponse(201, "Client created successfully"));
+      } catch (err) {
+        console.error("❌ Error in CreateClient:", err);
+        throw new ApiError(500, "Failed to create client");
+      }
     }
   );
+
   public static CreateMember = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { userName, email, password } = req.body;
@@ -69,7 +106,7 @@ export class ParticipantController {
         });
 
         await tx.member.create({
-          data: { userId: member.id },
+          data: { userId: member.id, password },
         });
       });
 
@@ -91,16 +128,21 @@ export class ParticipantController {
             select: {
               userName: true,
               email: true,
-              createdAt: true,
               inviteStatus: true,
-              password: true,
             },
           },
-          allotedMember: {
+          password: true,
+          instagramId: true,
+          instagramPassword: true,
+          members: {
             select: {
-              user: {
+              member: {
                 select: {
-                  userName: true,
+                  user: {
+                    select: {
+                      userName: true,
+                    },
+                  },
                 },
               },
             },
@@ -133,11 +175,16 @@ export class ParticipantController {
               inviteStatus: true,
             },
           },
-          client: {
+          password: true,
+          clients: {
             select: {
-              user: {
+              client: {
                 select: {
-                  userName: true,
+                  user: {
+                    select: {
+                      userName: true,
+                    },
+                  },
                 },
               },
             },
@@ -193,7 +240,7 @@ export class ParticipantController {
     }
   );
 
-  public DeleteClient = AsyncHandler(
+  public static DeleteClient = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { id } = req.params;
       const member = await db.client.findFirst({

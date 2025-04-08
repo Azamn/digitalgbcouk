@@ -1,46 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { CreatedMember } from "@/backend/participant.api";
 
 export const memberColumns: ColumnDef<CreatedMember>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        className="ml-4 bg-white text-dark"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="ml-4"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <button
-        onClick={column.getToggleSortingHandler()}
-        className="flex items-center gap-2 font-medium"
-      >
-        Member ID <ArrowUpDown className="size-4" />
-      </button>
-    ),
-    cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
-  },
-
   {
     accessorKey: "user.userName",
     header: ({ column }) => (
@@ -68,6 +30,19 @@ export const memberColumns: ColumnDef<CreatedMember>[] = [
       </button>
     ),
     cell: ({ row }) => row.original.user?.email ?? "—",
+  },
+
+  {
+    accessorKey: "password",
+    header: ({ column }) => (
+      <button
+        onClick={column.getToggleSortingHandler()}
+        className="flex items-center gap-2 font-medium"
+      >
+        Password <ArrowUpDown className="size-4" />
+      </button>
+    ),
+    cell: ({ row }) => row.original.password ?? "XXXXXXXX",
   },
 
   {
@@ -118,16 +93,16 @@ export const memberColumns: ColumnDef<CreatedMember>[] = [
   },
 
   {
-    accessorKey: "client",
+    accessorKey: "clients", // ✅ fixed from `client` to `clients`
     header: () => <span>Client Name(s)</span>,
     cell: ({ row }) => {
-      const clients = row.original.client || [];
+      const clients = row.original.clients || [];
       return (
         <div className="flex flex-col gap-1">
           {clients.length > 0 ? (
             clients.map((c, i) => (
-              <span key={i} className="text-sm text-muted-foreground">
-                {c.user?.userName ?? "Unknown"}
+              <span key={i} className="text-muted-foreground text-sm">
+                {c.client?.user?.userName ?? "Unknown"}
               </span>
             ))
           ) : (

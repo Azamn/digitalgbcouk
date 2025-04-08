@@ -8,6 +8,7 @@ import { Server } from "http";
 import { appEnvConfigs } from "./configs";
 import { ApiError } from "./utils/server-functions";
 import routes from "./routes/index.routes";
+import path from "path";
 
 interface AppOptions {
   port?: number;
@@ -43,6 +44,8 @@ class App {
     this.app.use(express.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(express.static(path.join(__dirname, 'public')));
+
   }
   private initializeRoutes(): void {
     routes.forEach((route) => {

@@ -24,78 +24,53 @@ model User {
   notifications Notification[]
   comments      Comment[]
   session       Session?
-  events        Event[]
 
   @@map("Users")
 }
 
-model Event {
-  id          String   @id @unique @default(cuid())
-  title       String   @unique
-  description String?
-  additional  String?
-  startTime   DateTime
-  endTime     DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  clientId String?
-  client   Client? @relation(fields: [clientId], references: [id])
-
-  adminId String?
-  admin   User?   @relation(fields: [adminId], references: [id])
-
-  members  EventMember[]
-  post     Post?
-  comments Comment[]
-
-  @@map("Events")
-}
-
 model Client {
-  id                String   @id @default(cuid())
+  id                String          @id @default(cuid())
   password          String
   instagramId       String?
   instagramPassword String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  allotedMember Member[]
-  events        Event[]
+  members MemberOnClient[]
+  post    Post[]
 
   @@map("Clients")
 }
 
 model Member {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String            @id @default(cuid())
+  password  String
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  clientId String?
-  client   Client? @relation(fields: [clientId], references: [id])
-
-  events EventMember[]
+  clients MemberOnClient[]
 
   @@map("Members")
 }
 
-model EventMember {
-  id String @id @default(cuid())
+model MemberOnClient {
+  id        String   @id @default(cuid())
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId  String
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  memberId  String
 
-  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  assignedAt DateTime @default(now())
 
-  eventId  String
-  memberId String
-
-  @@unique([eventId, memberId])
+  @@unique([clientId, memberId]) // prevent duplicate assignments
 }
+
 
 model Session {
   id         String   @id @default(cuid())
@@ -121,20 +96,18 @@ model Notification {
 
 model Post {
   id          String    @id @unique @default(cuid())
-  title       String?
-  subtitle    String?
-  mediaUrl    String?
-  additional  String?   @db.VarChar(500)
-  hashtags    String?
-  description String?   @db.VarChar(500)
+  content     String    @db.VarChar(500)
+  mediaUrl    String    @db.VarChar(300)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   scheduledAt DateTime?
-  eventId     String    @unique
-  event       Event?    @relation(fields: [eventId], references: [id])
 
-  postStatus        PostStatus @default(WORKING)
-  isConfirmByClient Boolean    @default(false)
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  postStatus          PostStatus @default(WORKING)
+  isConfirmedByClient Boolean    @default(false)
+  Comment             Comment[]
 
   @@map("Posts")
 }
@@ -149,8 +122,8 @@ model Comment {
   userId String
   user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  eventId String?
-  event   Event?  @relation(fields: [eventId], references: [id])
+  postId String?
+  post   Post?   @relation(fields: [postId], references: [id])
 
   @@map("Comments")
 }

@@ -28,7 +28,8 @@ export default function AddClientSheet() {
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center gap-x-2 bg-warning text-sm text-dark"
+          size={"sm"}
+          className="flex items-center gap-x-2 bg-warning text-dark"
         >
           <PlusCircle className="size-[14px]" /> Add Client
         </Button>
@@ -37,7 +38,7 @@ export default function AddClientSheet() {
       {/* Sheet Content */}
       <SheetContent
         side="right"
-        className="h-full !w-[600px] !max-w-[600px] bg-success rounded-l-xl sm:!w-[650px]"
+        className="h-full !w-[600px] !max-w-[600px] rounded-l-xl bg-gradient-to-b from-white via-blue-100 to to-purple sm:!w-[650px]"
       >
         <SheetHeader>
           <SheetTitle className="text-primary">Create New Client</SheetTitle>
@@ -45,7 +46,7 @@ export default function AddClientSheet() {
             Add a new client to your dashboard.
           </SheetDescription>
         </SheetHeader>
-        <div className="mt-6 max-h-[calc(100vh-160px)] p-5 overflow-y-auto">
+        <div className="mt-6 max-h-[calc(100vh-160px)] overflow-y-auto p-5">
           <ClientCreateForm onSuccess={handleSuccess} />
         </div>
       </SheetContent>

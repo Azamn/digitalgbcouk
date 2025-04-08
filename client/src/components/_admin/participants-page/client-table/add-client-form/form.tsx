@@ -1,23 +1,19 @@
-"use client";
-
 import {
-  Plus,
-  UserPlus,
   Mail,
   Lock,
-  Shield,
+  Key,
   X,
   Instagram,
   UserCircle,
-  Key,
+  Check,
   User,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useEffect, useState } from "react";
 
 import { SheetFooter, SheetClose } from "@/components/ui/sheet";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,10 +27,17 @@ import {
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
 import FormField from "@/components/ui/form-field";
-import { useCreateClientMutation } from "@/backend/participant.api";
+import {
+  useCreateClientMutation,
+  useGetallMembersQuery,
+} from "@/backend/participant.api";
 import { createClientSchema, CreateClientType } from "./schema";
-import { useState } from "react";
 import { getRandomColor } from "@/helpers";
+
+interface SelectedMembersType {
+  id: string;
+  name: string;
+}
 
 export default function ClientCreateForm({
   onSuccess,
@@ -49,23 +52,51 @@ export default function ClientCreateForm({
     formState: { errors },
     setValue,
     reset,
+    watch,
   } = useForm<CreateClientType>({
     resolver: zodResolver(createClientSchema),
+    defaultValues: {
+      memberId: [],
+    },
   });
 
+  const [selectedMembers, setSelectedMembers] = useState<SelectedMembersType[]>(
+    [],
+  );
   const [createParticipant, { isLoading }] = useCreateClientMutation();
+  const { data: Members } = useGetallMembersQuery();
 
-  const [SelectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
+  // Update form value when selected members change
+  useEffect(() => {
+    setValue(
+      "memberId",
+      selectedMembers.map((m) => m.id),
+    );
+  }, [selectedMembers, setValue]);
+
+  const handleMemberSelect = (memberId: string) => {
+    const member = Members?.result.find((m) => m.id === memberId);
+    if (!member) return;
+
+    setSelectedMembers((prev) => {
+      const isSelected = prev.some((m) => m.id === memberId);
+      if (isSelected) {
+        return prev.filter((m) => m.id !== memberId);
+      }
+      return [...prev, { id: memberId, name: member.user.userName }];
+    });
+  };
 
   const onSubmit = async (payload: CreateClientType) => {
+    console.log("🚀 ~ onSubmit ~ payload:", payload)
     try {
       const resp = await createParticipant(payload).unwrap();
+      console.log("🚀 ~ onSubmit ~ resp:", resp)
       if (resp.status === "success") {
-        SuccessToast({
-          title: resp.message,
-        });
+        SuccessToast({ title: resp.message });
         onSuccess();
         reset();
+        setSelectedMembers([]);
       } else {
         ErrorToast({ title: resp.message });
       }
@@ -81,22 +112,13 @@ export default function ClientCreateForm({
     >
       {/* Username */}
       <FormField label="Username">
-        <UserCircle  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
-        <Input
-          {...register("userName")}
-          placeholder="Username"
-          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+        <UserCircle
+          className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
         />
-        {errors.userName && (
-          <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
-        )}
-      </FormField>
-      <FormField label="Username">
-        <UserCircle  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Input
           {...register("userName")}
           placeholder="Username"
-          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60"
         />
         {errors.userName && (
           <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
@@ -106,11 +128,13 @@ export default function ClientCreateForm({
       <div className="flex flex-1 gap-x-2">
         {/* Instagram ID */}
         <FormField className="flex-1" label="Instagram ID">
-          <Instagram  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+          <Instagram
+            className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
+          />
           <Input
             {...register("instagramId")}
             placeholder="@john_instagram"
-            className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+            className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
           />
           {errors.instagramId && (
             <p className="mt-1 text-sm text-red-500">
@@ -128,7 +152,7 @@ export default function ClientCreateForm({
             type="password"
             {...register("instagramPassword")}
             placeholder="••••••"
-            className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+            className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
           />
           {errors.instagramPassword && (
             <p className="mt-1 text-sm text-red-500">
@@ -140,12 +164,12 @@ export default function ClientCreateForm({
 
       {/* Email */}
       <FormField label="Email">
-        <Mail  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Mail className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Input
           type="email"
           {...register("email")}
           placeholder="john@example.com"
-          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
         />
         {errors.email && (
           <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
@@ -154,38 +178,65 @@ export default function ClientCreateForm({
 
       {/* Password */}
       <FormField label="Password">
-        <Lock  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Lock className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Input
           type="password"
           {...register("password")}
           placeholder="••••••"
-          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
         />
         {errors.password && (
           <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
         )}
       </FormField>
 
-      {/* Role */}
+      {/* Members */}
       <FormField label="Members">
-        <User  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
-        <Select
-          onValueChange={(value) =>
-            setValue("memberId", value as CreateClientType["memberId"])
-          }
-        >
-          <SelectTrigger className="rounded-lg border-2 border-dark bg-white pl-12 text-dark focus:ring-dark">
-            <SelectValue placeholder="Select Role" />
+        <User className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Select onValueChange={handleMemberSelect} value="">
+          <SelectTrigger className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark">
+            <SelectValue placeholder="Select a member to add" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="CLIENT">CLIENT</SelectItem>
-            <SelectItem value="MEMBER">MEMBER</SelectItem>
+            {Members?.result
+              ?.filter((m) => !selectedMembers.some((s) => s.id === m.id))
+              .map((member) => (
+                <SelectItem key={member.id} value={member.id}>
+                  <div className="flex items-center gap-x-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                      {member.user.userName.charAt(0).toUpperCase()}
+                    </span>
+                    {member.user.userName}
+                  </div>
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
         {errors.memberId && (
           <p className="mt-1 text-sm text-red-500">{errors.memberId.message}</p>
         )}
       </FormField>
+
+      <div className="mb-2 flex flex-wrap gap-2">
+        {selectedMembers.map((member) => (
+          <div
+            key={member.id}
+            className="flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-white"
+          >
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-sm font-bold text-primary">
+              {member.name.charAt(0).toUpperCase()}
+            </span>
+            <span>{member.name}</span>
+            <button
+              type="button"
+              onClick={() => handleMemberSelect(member.id)}
+              className="hover:bg-primary-dark rounded-full p-1"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        ))}
+      </div>
 
       {/* Actions */}
       <SheetFooter className="flex justify-end gap-4 pt-6">
@@ -194,7 +245,6 @@ export default function ClientCreateForm({
             Cancel
           </Button>
         </SheetClose>
-
         <Button
           type="submit"
           className="w-[140px] rounded-md bg-primary px-6 py-2 text-white"

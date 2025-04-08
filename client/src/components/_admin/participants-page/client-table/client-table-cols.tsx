@@ -1,175 +1,90 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
-// import { ActionsDropdown } from "@/components/common/data-table/action-drop-down";
-import { CreatedParticipant } from "@/store/api-endpoints/participant.api";
+import { CreatedClient } from "@/backend/participant.api";
 
-export const participantColumns: ColumnDef<CreatedParticipant>[] = [
+export const participantColumns: ColumnDef<CreatedClient>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        className="ml-4 bg-white text-dark"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="ml-4"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-
-  {
-    accessorKey: "id",
+    accessorKey: "user.userName",
     header: ({ column }) => (
       <button
         onClick={column.getToggleSortingHandler()}
-        className="flex items-center gap-2 font-medium"
+        className="flex items-center gap-1 font-medium"
       >
-        ID <ArrowUpDown className="size-4" />
+        Username <ArrowUpDown className="size-4" />
       </button>
     ),
-    cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
+    cell: ({ row }) => <span>{row.original.user.userName}</span>,
   },
 
   {
-    accessorKey: "firstName",
+    accessorKey: "user.email",
     header: ({ column }) => (
       <button
         onClick={column.getToggleSortingHandler()}
-        className="flex items-center gap-2 font-medium"
-      >
-        First Name <ArrowUpDown className="size-4" />
-      </button>
-    ),
-    cell: ({ row }) => {
-      const firstName = row.getValue("firstName") as string;
-
-      return (
-        <div className="flex items-center gap-2">
-          <span>{`${firstName}`}</span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "lastName",
-    header: ({ column }) => (
-      <button
-        onClick={column.getToggleSortingHandler()}
-        className="flex items-center gap-2 font-medium"
-      >
-        Last Name <ArrowUpDown className="size-4" />
-      </button>
-    ),
-    cell: ({ row }) => {
-      const lastName = row.original.lastName;
-
-      return (
-        <div className="flex items-center gap-2">
-          <span>{`${lastName}`}</span>
-        </div>
-      );
-    },
-  },
-
-  {
-    accessorKey: "email",
-    header: ({ column }) => (
-      <button
-        onClick={column.getToggleSortingHandler()}
-        className="flex items-center gap-2 font-medium"
+        className="flex items-center gap-1 font-medium"
       >
         Email <ArrowUpDown className="size-4" />
       </button>
     ),
-    cell: ({ row }) => <div className="truncate">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "inviteStatus",
-    header: ({ column }) => (
-      <button
-        onClick={column.getToggleSortingHandler()}
-        className="flex items-center gap-2 font-medium"
-      >
-        Status <ArrowUpDown className="size-4" />
-      </button>
+    cell: ({ row }) => (
+      <span className="truncate text-sm text-gray-700">
+        {row.original.user.email}
+      </span>
     ),
-    cell: ({ row }) => {
-      const status = row.getValue("inviteStatus") as string;
-      return (
-        <span
-          className={`rounded-full px-2 py-1 text-xs ${
-            status === "ACCEPTED"
-              ? "bg-green-400 text-green-700"
-              : "bg-yellow-400 text-yellow-800"
-          }`}
-        >
-          {status}
-        </span>
-      );
-    },
   },
 
   {
-    accessorKey: "createdAt",
-    header: ({ column }) => (
-      <button
-        onClick={column.getToggleSortingHandler()}
-        className="flex items-center gap-2 font-medium"
-      >
-        Created Date <ArrowUpDown className="size-4" />
-      </button>
+    accessorKey: "password",
+    header: "Password",
+    cell: ({ row }) => <span>{row.original.password}</span>,
+  },
+
+  {
+    accessorKey: "instagramId",
+    header: "Instagram ID",
+    cell: ({ row }) => (
+      <span className="text-sm text-blue-700">{row.original.instagramId}</span>
     ),
+  },
+
+  {
+    accessorKey: "instagramPassword",
+    header: "Instagram Password",
+    cell: ({ row }) => <span>{row.original.instagramPassword}</span>,
+  },
+
+  {
+    id: "assignedMembers",
+    header: "Assigned Members",
     cell: ({ row }) => {
-      const createdAt = row.getValue("createdAt") as string;
+      const members = row.original.members;
+
       return (
-        <div>
-          {new Date(createdAt).toLocaleString("en-US", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })}
+        <div className="flex gap-2 flex-wrap">
+          {members?.length > 0 ? (
+            members.map((m, idx) => {
+              const userName = m.member.user.userName;
+              const initials = userName
+                .split(" ")
+                .map((word) => word[0]?.toUpperCase())
+                .join("")
+                .slice(0, 2);
+
+              return (
+                <div
+                  key={idx}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white shadow"
+                  title={userName}
+                >
+                  {initials}
+                </div>
+              );
+            })
+          ) : (
+            <span className="text-xs italic text-gray-400">No members</span>
+          )}
         </div>
       );
     },
   },
-
-  // {
-  //   id: "actions",
-  //   enableHiding: false,
-  //   cell: ({ row }) => {
-  //     const participant = row.original;
-  //     const participantdata = {
-  //       id: participant.id,
-  //       firstName: participant.firstName,
-  //       lastName: participant.lastName,
-  //       email: participant.email,
-  //       password: participant.password,
-  //       role: participant.role,
-  //     };
-  //     return (
-  //      // <ActionsDropdown
-  //       //   participantdata={participantdata}
-  //       //   onEdit={async (data) => console.log("Editing:", data)}
-  //       //   onDelete={async () => console.log("Deleting:", participant.id)}
-  //       //   inviteStatus={participant.inviteStatus}
-  //       // />  // <ActionsDropdown
-  //       //   participantdata={participantdata}
-  //       //   onEdit={async (data) => console.log("Editing:", data)}
-  //       //   onDelete={async () => console.log("Deleting:", participant.id)}
-  //       //   inviteStatus={participant.inviteStatus}
-  //       // />
-  //     );
-  //   },
-  // },
 ];

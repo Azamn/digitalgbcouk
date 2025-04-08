@@ -12,7 +12,9 @@ export const createClientSchema = z.object({
     .regex(/[A-Z]/, "Password must include an uppercase letter")
     .regex(/[0-9]/, "Password must include a number")
     .regex(/[^a-zA-Z0-9]/, "Password must include a special character"),
-  memberId: z.string().min(1, "Member is required"),
+  memberId: z
+    .array(z.string().min(1, "Each member ID must be a non-empty string"))
+    .min(1, "At least one Member is required"),
 });
 
 export type CreateClientType = z.infer<typeof createClientSchema>;

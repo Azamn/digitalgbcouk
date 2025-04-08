@@ -5,7 +5,7 @@ import { CreateClientType } from "@/components/_admin/participants-page/client-t
 import { CreateMemberType } from "@/components/_admin/participants-page/member-table/add-member-form/schema";
 
 //  =========== /participants ============
-const AuthServices = ApiServices.injectEndpoints({
+const ParticipantServices = ApiServices.injectEndpoints({
   endpoints: (build) => ({
     // Create Client
     CreateClient: build.mutation<ApiResponse, CreateClientType>({
@@ -28,7 +28,7 @@ const AuthServices = ApiServices.injectEndpoints({
     }),
 
     // Get Clients
-    GetallClients: build.query<ParticipantResponse, void>({
+    GetallClients: build.query<GetAllClientApiResponse, void>({
       query: () => ({
         url: "/participants/clients",
         method: "GET",
@@ -86,10 +86,31 @@ export const {
   useGetallClientsQuery,
   useGetallMembersQuery,
   useSendInviteToClientMutation,
-} = AuthServices;
+} = ParticipantServices;
 
-export interface GetAllClientApiResponse extends ApiResponse {}
+export interface CreatedClient {
+  id: string;
+  user: {
+    userName: string;
+    email: string;
+    inviteStatus: "PENDING" | "ACCEPTED";
+    password: string;
+  };
+  members: {
+    member: {
+      user: {
+        userName: string;
+      };
+    };
+  }[];
+  password: string;
+  instagramId: string;
+  instagramPassword: string;
+}
 
+export interface GetAllClientApiResponse extends ApiResponse {
+  result: CreatedClient[];
+}
 
 // ================= MEMBER =====================
 
@@ -101,29 +122,18 @@ export interface CreatedMember {
     createdAt: string;
     inviteStatus: "PENDING" | "ACCEPTED";
   };
-  client: {
-    user: {
-      userName: string;
+  clients: {
+    client: {
+      user: {
+        userName: string;
+      };
     };
   }[];
+  password: string;
 }
+
 export interface GetAllMemberApiResponse extends ApiResponse {
   result: CreatedMember[];
-}
-
-export interface CreatedParticipant {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  role: "CLIENT" | "MEMBER";
-  inviteStatus: "PENDING" | "ACCEPTED";
-  createdAt: string;
-}
-
-interface ParticipantResponse extends ApiResponse {
-  result: CreatedParticipant[] | null;
 }
 
 interface SendInviteToParticipantsRequest {

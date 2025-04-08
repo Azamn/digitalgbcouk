@@ -54,11 +54,13 @@ export default function MemberCreateForm({
     >
       {/* Username */}
       <FormField label="Username">
-        <UserCircle  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <UserCircle
+          className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
+        />
         <Input
           {...register("userName")}
           placeholder="Username"
-          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
         />
         {errors.userName && (
           <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
@@ -67,12 +69,12 @@ export default function MemberCreateForm({
 
       {/* Email */}
       <FormField label="Email">
-        <Mail  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Mail className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Input
           type="email"
           {...register("email")}
           placeholder="example@email.com"
-          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
         />
         {errors.email && (
           <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
@@ -81,12 +83,12 @@ export default function MemberCreateForm({
 
       {/* Password */}
       <FormField label="Password">
-        <Lock  className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Lock className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Input
           type="password"
           {...register("password")}
           placeholder="••••••••"
-          className="rounded-lg border-2 border-dark bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
         />
         {errors.password && (
           <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>

@@ -31,14 +31,14 @@ export default function AddMemberDialog() {
         <Button
           size="sm"
           variant="outline"
-          className="flex items-center gap-x-2 bg-warning  text-dark"
+          className="flex items-center gap-x-2 bg-warning text-dark"
         >
           <PlusCircle className="size-[14px]" /> Add Member
         </Button>
       </DialogTrigger>
 
       {/* Modal Content */}
-      <DialogContent className="max-w-lg rounded-lg border-2 border-dark bg-success bg-gradient-to-b">
+      <DialogContent className="to max-w-lg rounded-lg border-2 border-dark bg-gradient-to-b from-white via-blue-100 to-purple">
         <DialogHeader>
           <DialogTitle className="text-primary">Create New Client</DialogTitle>
           <DialogDescription>Add a new Client.</DialogDescription>

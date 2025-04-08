@@ -264,7 +264,7 @@ export function TableShell<TData, TValue>({
 
 const EmptyState = () => {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 px-6 py-16 text-center">
+    <div className="flex max-h-[800px] min-h-[600px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 px-6 py-16 text-center">
       <div className="rounded-full bg-gray-100 p-3">
         <Search className="h-6 w-6 text-gray-400" />
       </div>
