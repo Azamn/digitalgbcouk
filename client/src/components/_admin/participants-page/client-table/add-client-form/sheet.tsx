@@ -38,7 +38,7 @@ export default function AddClientSheet() {
       {/* Sheet Content */}
       <SheetContent
         side="right"
-        className="h-full !w-[600px] !max-w-[600px] rounded-l-xl bg-gradient-to-b from-white via-blue-100 to to-purple sm:!w-[650px]"
+        className="h-full !w-[600px] !max-w-[600px] rounded-l-xl bg-purple sm:!w-[650px]"
       >
         <SheetHeader>
           <SheetTitle className="text-primary">Create New Client</SheetTitle>

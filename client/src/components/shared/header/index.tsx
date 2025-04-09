@@ -1,16 +1,16 @@
 import React, { FC } from "react";
 import UserProfile from "@/components/shared/user-profile";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Target } from "lucide-react";
 import EventSearchbar from "./event-search-bar";
 import Image from "next/image";
+import { AppSidebarSheet } from "@/components/_admin/sidebar/app-sidebar-sheet";
 
 const AppHeader = () => {
   return (
     <header className="sticky left-0 top-0 z-[30] w-full bg-secondary font-lexend">
       <div className="flex items-center justify-between rounded-lg p-4 px-5">
         <div className="flex items-center gap-4">
-          <SidebarTrigger className="-ml-1" />
+          <AppSidebarSheet  />
           <div className="inline-flex items-center">
             <Image
               src="/logo.png"
@@ -19,7 +19,9 @@ const AppHeader = () => {
               height={32}
               className="h-8 w-8"
             />
-            <span className="ml-2 text-2xl font-bold text-dark">Digital GB</span>
+            <span className="ml-2 text-2xl font-bold text-dark">
+              Digital GB
+            </span>
           </div>
         </div>
         <EventSearchbar />

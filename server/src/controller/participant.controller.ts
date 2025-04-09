@@ -68,7 +68,7 @@ export class ParticipantController {
 
           await tx.post.create({
             data: {
-              mediaUrl: `${appEnvConfigs.NEXT_APP_URI}/welcome/welcome-post.png`,
+              mediaUrl: "https://digitalgb.in/image.png",
               content: `🌟 Welcome to Planable! 🌟
   
   This is a placeholder post to give you a little tour of what Planable can do for your social media planning and collaboration.

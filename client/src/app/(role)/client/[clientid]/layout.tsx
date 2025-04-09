@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/_admin/sidebar/app-sidebar";
+import { AppSidebar } from "@/components/_admin/sidebar/app-sidebar-sheet";
 import { ClientAppSidebar } from "@/components/_client/sidebar/client-app-sidebar";
 import AppHeader from "@/components/shared/header";
 import {
