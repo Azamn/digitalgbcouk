@@ -117,8 +117,6 @@ model Comment {
   content     String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  commentedBy CommentedBy
-
   userId String
   user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -143,10 +141,6 @@ enum MemberRole {
   MEMBER
 }
 
-enum CommentedBy {
-  ADMIN
-  CLIENT
-}
 
 enum PostStatus {
   PUBLISHED

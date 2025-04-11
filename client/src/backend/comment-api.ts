@@ -5,31 +5,31 @@ const CommentServices = ApiServices.injectEndpoints({
   endpoints: (build) => ({
     createComment: build.mutation<
       ApiResponse,
-      { postEventId: string; content: string }
+      { postId: string; content: string }
     >({
-      query: ({ postEventId, content }) => ({
-        url: `/comments/create/${postEventId}`,
+      query: ({ postId, content }) => ({
+        url: `/comments/${postId}`,
         method: "POST",
         body: { content },
       }),
-      invalidatesTags: (result, error, { postEventId }) => [
-        { type: "COMMENT", id: postEventId },
+      invalidatesTags: (result, error, { postId }) => [
+        { type: "COMMENT", id: postId },
       ],
     }),
 
-    getCommentsByEvent: build.query<CommentResponse, { postEventId: string }>({
-      query: ({ postEventId }) => ({
-        url: `/comments/event/${postEventId}`,
+    getComments: build.query<CommentResponse, { postId: string }>({
+      query: ({ postId }) => ({
+        url: `/comments/${postId}`,
         method: "GET",
       }),
-      providesTags: (result, error, { postEventId }) => [
-        { type: "COMMENT", id: postEventId },
+      providesTags: (result, error, { postId }) => [
+        { type: "COMMENT", id: postId },
       ],
     }),
 
     deleteComment: build.mutation<ApiResponse, { commentId: string }>({
       query: ({ commentId }) => ({
-        url: `/comments/event/${commentId}`,
+        url: `/comments/${commentId}`,
         method: "DELETE",
       }),
       invalidatesTags: [{ type: "COMMENT" }],
@@ -40,8 +40,8 @@ const CommentServices = ApiServices.injectEndpoints({
 
 export const {
   useCreateCommentMutation,
-  useGetCommentsByEventQuery,
   useDeleteCommentMutation,
+  useGetCommentsQuery,
 } = CommentServices;
 
 export default CommentServices;
@@ -52,9 +52,7 @@ export interface CommentResponse extends ApiResponse {
     content: string;
     createdAt: string;
     user: {
-      id: string;
-      firstName: string;
+      userName: string;
     };
-    commentedBy: "ADMIN" | "CLIENT";
   }[];
 }

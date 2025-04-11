@@ -109,6 +109,7 @@ export class PostController {
       }
     }
   );
+
   public static TimeSchedule = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { scheduledAt, postId } = req.body;

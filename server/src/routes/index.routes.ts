@@ -21,8 +21,8 @@ export default [
     path: "participants",
     router: participantRouter,
   },
-  // {
-  //   path: "comments",
-  //   router: commentRouter,
-  // },
+  {
+    path: "comments",
+    router: commentRouter,
+  },
 ];

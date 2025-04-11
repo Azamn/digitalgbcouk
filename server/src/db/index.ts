@@ -27,16 +27,5 @@ export const db = new PrismaClient().$extends({
         return user;
       },
     },
-    event: {
-      async CheckEventById(id: string) {
-        const event = await db.event.findUnique({
-          where: { id },
-        });
-        if (!event) {
-          throw new ApiError(404, "Event not found");
-        }
-        return event;
-      },
-    },
   },
 });
