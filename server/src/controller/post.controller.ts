@@ -83,6 +83,15 @@ export class PostController {
             mediaUrl: true,
             isConfirmedByClient: true,
             scheduledAt: true,
+            client: {
+              select: {
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
           },
           orderBy: {
             createdAt: "desc",

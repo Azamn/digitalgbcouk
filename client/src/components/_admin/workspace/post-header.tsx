@@ -8,6 +8,7 @@ import PostViewModal from "./post-view-modal";
 import { useSchedulePostMutation } from "@/backend/post-api";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import { PostTypeProps } from "@/types/global.types";
+import { useGetUserInfoQuery } from "@/backend/auth-api";
 
 interface PostProps {
   postData: PostTypeProps;
@@ -51,7 +52,7 @@ const PostHeader: FC<PostProps> = ({ postData }) => {
 
         <div className="text-muted-foreground flex items-center gap-2 text-sm">
           <span className="font-medium text-black">
-            shivam850anand@gmail.com
+            {postData.client.user.email || "xyz@gmail.com"}
           </span>
           <span className="mx-1 text-gray-400">•</span>
           <DateTimePicker12h value={datetime} onChange={setDatetime} />

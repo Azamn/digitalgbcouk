@@ -63,5 +63,10 @@ interface PostResposne extends ApiResponse {
     mediaUrl: string;
     isConfirmedByClient: boolean;
     scheduledAt: string;
+    client : {
+      user : {
+        email : string
+      }
+    }
   }[];
 }

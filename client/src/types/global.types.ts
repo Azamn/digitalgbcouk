@@ -14,4 +14,9 @@ export interface PostTypeProps {
   mediaUrl: string;
   isConfirmedByClient: boolean;
   scheduledAt: string;
+  client: {
+    user: {
+      email: string;
+    };
+  };
 }
