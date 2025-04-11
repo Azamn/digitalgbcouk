@@ -1,17 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Pencil, Upload, X } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { FC } from "react";
 import PostHeader from "./post-header";
-
-const PostCard = () => {
+import { PostTypeProps } from "@/types/global.types";
+interface PostProps {
+  postData: PostTypeProps;
+}
+const PostCard: FC<PostProps> = ({ postData }) => {
   return (
-    <div className="flex flex-col">
-      <PostHeader />
+    <div key={`post-${postData.id}`} className="flex flex-col pb-5">
+      <PostHeader postData={postData} />
       <div className="mx-auto max-w-lg overflow-hidden rounded border bg-white shadow-sm">
         <div className="group relative">
           <Image
-            src="https://digitalgb.in/image.png"
+            src={postData.mediaUrl || "https://digitalgb.in/image.png"}
             alt="PostCard Image"
             width={470}
             height={500}
@@ -47,21 +50,7 @@ const PostCard = () => {
         </div>
 
         {/* Text content */}
-        <div className="space-y-2 p-4">
-          <h2 className="text-xl font-bold">👋 Welcome</h2>
-          <p>🌟 Welcome to Planable! 🌟</p>
-          <p className="text-muted-foreground text-sm">
-            This is a placeholder PostCard to give you a little tour of what
-            Planable can do for your social media planning and collaboration.
-          </p>
-          <p className="text-muted-foreground text-sm">
-            Welcome aboard, and let’s make your social media management smooth
-            and effective!
-          </p>
-          <div className="text-sm font-medium text-blue-600">
-            #Planable #Welcome #SocialMediaManagement
-          </div>
-        </div>
+        <div className="space-y-2 p-4 text-sm">{postData.content}</div>
       </div>
     </div>
   );

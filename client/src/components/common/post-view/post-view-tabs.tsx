@@ -1,32 +1,35 @@
-import React, { useState } from "react";
-import PostPreview from "@/components/shared/post-preview/post-view";
-import { Post } from "@/backend/types/api";
-import MobileView from "@/components/shared/post-preview/mobile-view";
-import { Monitor, Smartphone } from "lucide-react";
+"use client";
+
+import React, { FC, useState } from "react";
+import PostPreview from "@/components/common/post-view/post-view";
+import MobileView from "@/components/common/post-view/mobile-view";
+import { Monitor, Smartphone, MessageSquareText, X } from "lucide-react";
 import { motion } from "framer-motion";
 
-// Shadcn UI components
+// Shadcn UI Components
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-
-const PostViewTabs = ({
-  post,
-  role,
-}: {
-  post: Post;
-  role?: "CLIENT" | "ADMIN" | "MEMBER";
-}) => {
+import { PostTypeProps } from "@/types/global.types";
+interface PostProps {
+  postData: PostTypeProps;
+}
+const PostViewTabs: FC<PostProps> = ({ postData }) => {
   const [confirmed, setConfirmed] = useState(false);
+  const [activeTab, setActiveTab] = useState<"browser" | "mobile">("browser");
 
   const handleConfirm = () => {
     setConfirmed((prev) => !prev);
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start py-10">
-      {/* Tabs Container */}
-      <Tabs defaultValue="browser" className="w-full max-w-[1200px]">
-        {/* Tabs Navigation */}
-        <TabsList className="bg-muted mx-auto mb-6 flex w-[400px] justify-center rounded-lg p-1 shadow-sm">
+    <div className="flex min-h-screen flex-col items-center justify-start px-8 py-6">
+      {/* Toggle Tabs */}
+      <Tabs
+        defaultValue="browser"
+        value={activeTab}
+        onValueChange={(val) => setActiveTab(val as "browser" | "mobile")}
+        className="w-full max-w-[1000px]"
+      >
+        <TabsList className="mx-auto mb-4 flex w-[350px] justify-center rounded-lg bg-gray-100 p-1 shadow">
           <TabsTrigger
             value="browser"
             className="flex flex-1 items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-primary data-[state=active]:text-secondary"
@@ -44,7 +47,7 @@ const PostViewTabs = ({
           </TabsTrigger>
         </TabsList>
 
-        {/* Browser View Content */}
+        {/* Tabs Content */}
         <TabsContent value="browser" asChild>
           <motion.div
             key="browser"
@@ -52,18 +55,12 @@ const PostViewTabs = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 30 }}
             transition={{ duration: 0.3 }}
-            className="overflow-hidden rounded-xl shadow-md"
+            className="overflow-hidden rounded-xl"
           >
-            <PostPreview
-              post={post}
-              confirmed={confirmed}
-              role={role}
-              onConfirm={handleConfirm}
-            />
+            <PostPreview postData={postData} />
           </motion.div>
         </TabsContent>
 
-        {/* Mobile View Content */}
         <TabsContent value="mobile" asChild>
           <motion.div
             key="mobile"
@@ -74,12 +71,7 @@ const PostViewTabs = ({
             className="flex justify-center overflow-hidden"
           >
             <MobileView>
-              <PostPreview
-                post={post}
-                confirmed={confirmed}
-                role={role}
-                onConfirm={handleConfirm}
-              />
+              <PostPreview postData={postData} />
             </MobileView>
           </motion.div>
         </TabsContent>

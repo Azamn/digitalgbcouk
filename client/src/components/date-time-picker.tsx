@@ -93,7 +93,7 @@ export function DateTimePicker12h({
           {getFormatted()}
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto rounded-xl border p-0 shadow-lg">
+      <PopoverContent className="w-auto bg-white rounded-xl border p-0 shadow-lg">
         <div className="sm:flex">
           <Calendar
             mode="single"

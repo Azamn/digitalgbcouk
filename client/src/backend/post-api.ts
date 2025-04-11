@@ -4,75 +4,64 @@ import { ApiResponse } from "./types/api";
 
 const PostServices = ApiServices.injectEndpoints({
   endpoints: (build) => ({
-    GetMedialUrl: build.mutation<MediaResponse, FormData>({
+    GetAiHelp: build.mutation<MediaResponse, FormData>({
       query: (formData) => ({
-        url: "/posts/media-url",
+        url: "/posts/getaihelp",
         method: "POST",
         body: formData,
       }),
     }),
 
-    updatePost: build.mutation<ApiResponse, PostEditType>({
-      query: ({ postEventId, ...body }) => ({
-        url: `/posts/event/${postEventId}`,
-        method: "PATCH",
-        body,
+    CreatePost: build.mutation<
+      ApiResponse,
+      { clientId: string; formData: FormData }
+    >({
+      query: ({ clientId, formData }) => ({
+        url: `/posts/${clientId}`,
+        method: "POST",
+        body: formData,
       }),
-      invalidatesTags: (result, error, { postEventId }) => [
-        { type: "POST", id: postEventId },
-      ],
+    }),
+    SchedulePost: build.mutation<
+      ApiResponse,
+      { postId: string; scheduledAt: string }
+    >({
+      query: (payload) => ({
+        url: `/posts/schedule`,
+        method: "POST",
+        body: payload,
+      }),
     }),
 
-    getPostById: build.query<PostResponse, { postEventId: string }>({
-      query: ({ postEventId }) => ({
-        url: `/posts/event/${postEventId}`,
+    GetAllPosts: build.query<PostResposne, { clientId: string }>({
+      query: (params) => ({
+        url: `/posts/${params.clientId}`,
         method: "GET",
       }),
-      providesTags: (result, error, { postEventId }) => [
-        { type: "POST", id: postEventId },
-      ],
-    }),
-    confirmPostByClient: build.mutation({
-      query: (postId: string) => ({
-        url: `/posts/confirm-client/${postId}`,
-        method: "POST",
-      }),
-      invalidatesTags: ["POST"],
     }),
   }),
   overrideExisting: false,
 });
 
 export const {
-  useGetPostByIdQuery,
-  useConfirmPostByClientMutation,
-  useGetMedialUrlMutation,
-  useUpdatePostMutation,
+  useGetAiHelpMutation,
+  useCreatePostMutation,
+  useGetAllPostsQuery,
+  useSchedulePostMutation,
 } = PostServices;
 
 interface MediaResponse extends ApiResponse {
   result: {
-    imageUrl: string;
-    ai?: {
-      title: string;
-      hashtags: string;
-      description: string;
-      subtitle: string;
-      additional: string;
-    };
+    content: string;
   };
 }
 
-export interface Post {
-  id: string;
-  title: string;
-  hashtags: string;
-  description: string;
-  subtitle: string;
-  additional: string;
-  mediaUrl: string;
-}
-
-export interface PostResponse extends ApiResponse {
-  result: Post;
+interface PostResposne extends ApiResponse {
+  result: {
+    id: string;
+    content: string;
+    mediaUrl: string;
+    isConfirmedByClient: boolean;
+    scheduledAt: string;
+  }[];
 }

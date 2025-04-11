@@ -8,24 +8,10 @@ export interface MetaProps {
   robots?: string;
 }
 
- 
-export interface UserType extends ApiResponse {
-  result: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-  };
-}
-
-export interface NotificationPayloadType {
-  message: string;
-  notificationType:
-    | "ADDED_TO_NEW_ORGANIZATION"
-    | "ADDED_TO_NEW_EVENT"
-    | "PUBLISHED_BY_ADMIN"
-    | "NEW_EVENT_CREATED_BY_ADMIN"
-    | "EVENT_CONFIRM_BY_CLIENT";
-  createdAt?: string;
+export interface PostTypeProps {
+  id: string;
+  content: string;
+  mediaUrl: string;
+  isConfirmedByClient: boolean;
+  scheduledAt: string;
 }

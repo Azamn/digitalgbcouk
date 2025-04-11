@@ -10,7 +10,7 @@ const config = {
   },
 
   images: {
-    domains: ["digitalgb.in"],
+    domains: ["digitalgb.in","res.cloudinary.com"],
   },
 };
 

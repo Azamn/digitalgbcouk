@@ -13,10 +13,10 @@ export default [
   //   path: "events",
   //   router: eventRouter,
   // },
-  // {
-  //   path: "posts",
-  //   router: postRouter,
-  // },
+  {
+    path: "posts",
+    router: postRouter,
+  },
   {
     path: "participants",
     router: participantRouter,

@@ -1,193 +1,117 @@
 import { db } from "@src/db";
 import { GlobalUtils } from "@src/global";
 import { ScanImage } from "@src/services/ai";
+import CloudinaryService from "@src/services/cloudinary";
 import {
   ApiError,
   ApiResponse,
   AsyncHandler,
 } from "@src/utils/server-functions";
 import { Request, Response } from "express";
-
+import fs from "fs";
 export class PostController {
-  public static UpdatePost = AsyncHandler(
+  public static GetAiContent = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
+      console.log(req.file);
+
+      if (!req.file || !req.file.path) {
+        throw new ApiError(400, "No file uploaded or file path is missing");
+      }
+
       try {
-        await db.user.CheckUserId(req);
-        const { postEventId } = req.params;
+        const fileBuffer = await fs.promises.readFile(req.file.path);
 
-        if (!postEventId || typeof postEventId !== "string") {
-          throw new ApiError(400, "Invalid postEventId: " + postEventId);
+        console.log("File buffer successfully read");
+
+        const postContent = await ScanImage(fileBuffer, req.file.mimetype);
+
+        if (!postContent) {
+          throw new ApiError(500, "Failed to generate Instagram post content");
         }
 
-        const { title, subtitle, description, additional, hashtags, mediaUrl } =
-          req.body;
+        res.json(new ApiResponse(200, postContent.content));
+      } catch (error) {
+        console.error("Error reading the file:", error);
+        throw new ApiError(
+          500,
+          "Failed to read uploaded file or generate post content"
+        );
+      }
+    }
+  );
 
+  public static CreatePost = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { content } = req.body;
+      const { clientId } = req.params;
 
-        const missingFields = [
-          "title",
-          "subtitle",
-          "description",
-          "mediaUrl",
-        ].filter((field) => !req.body[field]);
+      const mediaUrl = await GlobalUtils.getImageUrl(req);
 
-        if (missingFields.length > 0) {
-          throw new ApiError(
-            400,
-            `Missing required fields: ${missingFields.join(", ")}`
-          );
-        }
+      if (!mediaUrl) {
+        throw new ApiError(400, "Media URL is missing or invalid");
+      }
 
-
-        const existingPost = await db.post.findUnique({
-          where: { eventId: String(postEventId) },
+      try {
+        await db.post.create({
+          data: {
+            clientId,
+            mediaUrl,
+            content,
+          },
         });
 
-        let post;
-        if (existingPost) {
-          post = await db.post.update({
-            where: { eventId: String(postEventId) },
-            data: {
-              title,
-              subtitle,
-              description,
-              additional,
-              hashtags: hashtags ? hashtags.split(" ").join(", ") : "", // ✅ Store as comma-separated string
-              mediaUrl,
-            },
-          });
-        } else {
-          post = await db.post.create({
-            data: {
-              eventId: String(postEventId),
-              title,
-              subtitle,
-              description,
-              additional,
-              hashtags: hashtags ? hashtags.split(" ").join(", ") : "", // ✅ Store as comma-separated string
-              mediaUrl,
-            },
-          });
-        }
-
-        console.log("Post saved:", post);
-        res.json(new ApiResponse(200, "Post updated successfully", post));
+        res.json(new ApiResponse(200, "Post created succesfully"));
       } catch (error) {
-        console.error("Error updating post:", error);
-        res.status(500).json({ message: "Database error", error });
+        console.error("Error creating post:", error);
+        throw new ApiError(500, "Failed to create the post");
       }
     }
   );
 
-  public static GetPostByEventId = AsyncHandler(
+  public static GetAllposts = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      await db.user.CheckUserId(req);
-      const { postEventId } = req.params;
+      const { clientId } = req.params;
 
-      const postInfo = await db.post.findFirst({
-        where: {
-          eventId: postEventId as string,
-        },
-        select: {
-          id: true,
-          title: true,
-          hashtags: true,
-          description: true,
-          subtitle: true,
-          additional: true,
-          mediaUrl: true,
-        },
-      });
-      if (!postInfo) {
-        throw new ApiError(404, "Post not found");
-      }
-      res.json(new ApiResponse(200, "Post fetched", postInfo));
-    }
-  );
-  public static GetMediaUrl = AsyncHandler(
-    async (req: Request, res: Response) => {
       try {
-        await db.user.CheckUserId(req);
+        const posts = await db.post.findMany({
+          where: {
+            clientId,
+          },
+          select: {
+            id: true,
+            content: true,
+            mediaUrl: true,
+            isConfirmedByClient: true,
+            scheduledAt: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
 
-        const imageUrl = await GlobalUtils.getImageUrl(req);
-        if (!imageUrl) {
-          throw new ApiError(400, "No image URL found");
+        if (posts.length === 0) {
+          throw new ApiError(404, "No posts found for this client");
         }
 
-        const aiHelp = Boolean(req.body?.aiHelp);
-        let aiData = null;
-
-        if (aiHelp) {
-          try {
-            aiData = await ScanImage(imageUrl);
-          } catch (error) {
-            console.error("Error scanning image:", error);
-            aiData = null;
-          }
-        }
-
-        res.json(
-          new ApiResponse(200, "MEDIA URL FOUND", {
-            imageUrl,
-            ...(aiData !== null && { ai: aiData }),
-          })
-        );
+        res.json(new ApiResponse(200, "Fetched all post", posts));
       } catch (error) {
-        console.error("Error in GetMediaUrl:", error);
-        throw new ApiError(500, "Internal Server Error");
+        console.error("Error retrieving posts:", error);
+        throw new ApiError(500, "Failed to retrieve posts");
       }
     }
   );
-
-  public static SendInviteToAskForPublish = AsyncHandler(
-    async (req: Request, res: Response) => {
-      await db.user.CheckUserId(req);
-      const { postEventId } = req.params;
-
-      const post = await db.post.findUnique({
-        where: { eventId: postEventId },
+  public static TimeSchedule = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { scheduledAt, postId } = req.body;
+      await db.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          scheduledAt,
+        },
       });
-
-      if (!post) {
-        throw new ApiError(404, "Post not found");
-      }
-
-      const updatedPost = await db.post.update({
-        where: { id: post.id },
-        data: { postStatus: "UNPUBLISHED" },
-      });
-
-      res.json(
-        new ApiResponse(
-          200,
-          "Post sent for asking for publish successfully",
-          updatedPost
-        )
-      );
+      res.json(new ApiResponse(200, "Post is schedueld succesfully"));
     }
   );
-
-  public static AcceptPublishRequest = AsyncHandler(
-    async (req: Request, res: Response) => {
-      await db.user.CheckUserId(req);
-      const { postEventId } = req.params;
-
-      const post = await db.post.findUnique({
-        where: { eventId: postEventId },
-      });
-
-      if (!post) {
-        throw new ApiError(404, "Post not found");
-      }
-
-      const updatedPost = await db.post.update({
-        where: { id: post.id },
-        data: { isConfirmByClient: true, postStatus: "CONFIRMED" },
-      });
-
-      res.json(
-        new ApiResponse(200, "Post published successfully", updatedPost)
-      );
-    }
-  );
-  
 }

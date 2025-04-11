@@ -5,10 +5,9 @@ import { upload } from "@src/middleware/multer.middleware";
 import { requireAuth } from "@src/middleware/auth.middleware";
 
 postRouter
-.post("/media-url",requireAuth(), upload.single("media"), PostController.GetMediaUrl)
-.patch("/event/:postEventId",requireAuth(), PostController.UpdatePost)
-.get("/event/:postEventId",requireAuth(), PostController.GetPostByEventId)
-.patch("/client/request/:postEventId",requireAuth(), PostController.SendInviteToAskForPublish)
-.patch("/client/accept/:postEventId",requireAuth(), PostController.AcceptPublishRequest)
+.post("/getaihelp",requireAuth(), upload.single("image"), PostController.GetAiContent)
+.post("/:clientId",requireAuth(), upload.single("image"), PostController.CreatePost)
+.get("/:clientId",requireAuth(),  PostController.GetAllposts)
+.get("/schedule",requireAuth(),  PostController.TimeSchedule)
 
 export default postRouter;
