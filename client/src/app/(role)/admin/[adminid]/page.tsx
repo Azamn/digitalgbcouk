@@ -8,12 +8,17 @@ import {
   useGetMonthlyEventForAdminQuery,
 } from "@/backend/events-api";
 import React from "react";
+import {
+  useGetAdminStatsQuery,
+  useGetPostsCreatedMonthlyQuery,
+} from "@/backend/post-api";
+import ClientGrid from "@/components/_admin/dashboard/client-grid";
 
 const Page = () => {
-  const { data: statsData, isLoading: statsLoading } =
-    useGetEventsStatsForAdminQuery();
-  const { data: eventsData, isLoading: eventsLoading } =
-    useGetMonthlyEventForAdminQuery();
+  const { data: statsData, isLoading: statsLoading } = useGetAdminStatsQuery();
+  const { data: postsData, isLoading: eventsLoading } =
+    useGetPostsCreatedMonthlyQuery();
+  console.log("🚀 ~ Page ~ postsData:", postsData);
   if (statsLoading || eventsLoading) return <DataLoader />;
 
   return (
@@ -22,13 +27,15 @@ const Page = () => {
         {/* Stats Cards */}
         <StatsCards
           totalClients={Number(statsData?.result.totalClients || 0)}
-          totalEvents={Number(statsData?.result.totalEvents || 0)}
           totalMembers={Number(statsData?.result.totalMembers || 0)}
-          totalPosts={Number(statsData?.result.totalPosts || 0)}
+          totalPostsCreated={Number(statsData?.result.totalPostsCreated || 0)}
+          totalPostsPublished={Number(
+            statsData?.result.totalPostsPublished || 0,
+          )}
         />
-
+        <ClientGrid />
         {/* Chart with event data */}
-        <ClientStatsChart eventData={eventsData?.result} />
+        <ClientStatsChart eventData={postsData?.result} />
       </div>
     </div>
   );

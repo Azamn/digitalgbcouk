@@ -61,7 +61,7 @@ const SignIn = () => {
     }
   };
   return (
-    <Card className="w-full max-w-md bg-success py-8 shadow-none">
+    <Card className="w-full max-w-md bg-white py-8 shadow-none">
       <CardHeader className="space-y-1 pb-8">
         <CardTitle className="bg-text-gradient-midnight whitespace-nowrap bg-clip-text text-center text-3xl font-bold tracking-tight text-transparent">
           Welcome back to DigitalGb

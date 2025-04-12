@@ -174,7 +174,7 @@ export class EventController {
   public static GetEventStatsForAdmin = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const user = await db.user.CheckUserId(req);
-      const [totalPosts, totalEvents, totalMembers, totalClients] =
+      const [TotalPostsCreated, TotalPostPublished , totalMembers, totalClients] =
         await Promise.all([
           db.post.count({
             where: {

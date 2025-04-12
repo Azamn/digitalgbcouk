@@ -1,27 +1,43 @@
 "use client";
 
-import { Users, Calendar, FileText, UserPlus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Users,
+  Calendar,
+  FileText,
+  UserPlus,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { NumberTicker } from "@/components/ui/magicui/number-ticker";
 import { MagicCard } from "@/components/magicui/magic-card";
 
 interface StatsProps {
-  totalEvents?: number;
-  totalClients?: number;
-  totalMembers?: number;
-  totalPosts?: number;
+  totalPostsCreated: number;
+  totalPostsPublished: number;
+  totalMembers: number;
+  totalClients: number;
 }
 
 export default function StatsCards({
-  totalEvents = 0,
-  totalClients = 0,
-  totalMembers = 0,
-  totalPosts = 0,
+  totalPostsCreated,
+  totalPostsPublished,
+  totalMembers,
+  totalClients,
 }: StatsProps) {
   const stats = [
     {
-      title: "Total Events",
-      value: totalEvents,
+      title: "Total Posts Created",
+      value: totalPostsCreated,
+      icon: FileText,
+      gradient: "bg-gradient-to-r from-[#E9D5FF] to-[#D8B4FE]", // Light Purple → Soft Violet
+    },
+    {
+      title: "Total Posts Published",
+      value: totalPostsPublished,
       icon: Calendar,
       gradient: "bg-gradient-to-r from-[#FEE2E2] to-[#FBCFE8]", // Light Red → Soft Pink
     },
@@ -36,12 +52,6 @@ export default function StatsCards({
       value: totalMembers,
       icon: UserPlus,
       gradient: "bg-gradient-to-r from-[#DBEAFE] to-[#BFDBFE]", // Light Blue → Soft Cyan
-    },
-    {
-      title: "Total Posts",
-      value: totalPosts,
-      icon: FileText,
-      gradient: "bg-gradient-to-r from-[#E9D5FF] to-[#D8B4FE]", // Light Purple → Soft Violet
     },
   ];
 

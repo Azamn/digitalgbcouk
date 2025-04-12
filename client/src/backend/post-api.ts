@@ -2,8 +2,11 @@ import { PostEditType } from "@/schema";
 import ApiServices from "@/store/middleware";
 import { ApiResponse } from "./types/api";
 
-const PostServices = ApiServices.injectEndpoints({
+const PostServices = ApiServices.enhanceEndpoints({
+  addTagTypes: ["POST"],
+}).injectEndpoints({
   endpoints: (build) => ({
+    // 🔍 AI Help
     GetAiHelp: build.mutation<MediaResponse, FormData>({
       query: (formData) => ({
         url: "/posts/getaihelp",
@@ -12,6 +15,7 @@ const PostServices = ApiServices.injectEndpoints({
       }),
     }),
 
+    // ➕ Create Post
     CreatePost: build.mutation<
       ApiResponse,
       { clientId: string; formData: FormData }
@@ -21,7 +25,10 @@ const PostServices = ApiServices.injectEndpoints({
         method: "POST",
         body: formData,
       }),
+      invalidatesTags: [{ type: "POST", id: "LISTS" }],
     }),
+
+    // 📅 Schedule Post
     SchedulePost: build.mutation<
       ApiResponse,
       { postId: string; scheduledAt: string }
@@ -31,11 +38,28 @@ const PostServices = ApiServices.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: [{ type: "POST", id: "LISTS" }],
     }),
 
+    // 📦 Get All Posts (by client)
     GetAllPosts: build.query<PostResposne, { clientId: string }>({
-      query: (params) => ({
-        url: `/posts/${params.clientId}`,
+      query: ({ clientId }) => ({
+        url: `/posts/${clientId}`,
+        method: "GET",
+      }),
+      providesTags: [{ type: "POST", id: "LISTS" }],
+    }),
+
+    GetAdminStats: build.query<GetPostStataResponseAdmin, void>({
+      query: () => ({
+        url: "/posts/stats/admin",
+        method: "GET",
+      }),
+    }),
+
+    GetPostsCreatedMonthly: build.query<GetMonthlyPostResponse, void>({
+      query: () => ({
+        url: "/posts/monthly/admin",
         method: "GET",
       }),
     }),
@@ -48,6 +72,8 @@ export const {
   useCreatePostMutation,
   useGetAllPostsQuery,
   useSchedulePostMutation,
+  useGetAdminStatsQuery,
+  useGetPostsCreatedMonthlyQuery,
 } = PostServices;
 
 interface MediaResponse extends ApiResponse {
@@ -63,10 +89,23 @@ interface PostResposne extends ApiResponse {
     mediaUrl: string;
     isConfirmedByClient: boolean;
     scheduledAt: string;
-    client : {
-      user : {
-        email : string
-      }
-    }
+    client: {
+      user: {
+        email: string;
+      };
+    };
   }[];
+}
+
+interface GetPostStataResponseAdmin extends ApiResponse {
+  result: {
+    totalPostsCreated: number;
+    totalPostsPublished: number;
+    totalMembers: number;
+    totalClients: number;
+  };
+}
+
+interface GetMonthlyPostResponse extends ApiResponse {
+  result: Record<string, number>;
 }

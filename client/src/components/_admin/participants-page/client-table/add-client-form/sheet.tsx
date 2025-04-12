@@ -4,18 +4,18 @@ import * as React from "react";
 import { PlusCircle } from "lucide-react";
 
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
 import ClientCreateForm from "./form";
 
-export default function AddClientSheet() {
+export default function AddClientModal() {
   const [open, setOpen] = React.useState(false);
 
   const handleSuccess = () => {
@@ -23,33 +23,32 @@ export default function AddClientSheet() {
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       {/* Trigger Button */}
-      <SheetTrigger asChild>
+      <DialogTrigger asChild>
         <Button
           variant="outline"
-          size={"sm"}
+          size="sm"
           className="flex items-center gap-x-2 bg-warning text-dark"
         >
-          <PlusCircle className="size-[14px]" /> Add Client
+          <PlusCircle className="size-[14px]" />
+          Add Client
         </Button>
-      </SheetTrigger>
+      </DialogTrigger>
 
-      {/* Sheet Content */}
-      <SheetContent
-        side="right"
-        className="h-full !w-[600px] !max-w-[600px] rounded-l-xl bg-purple sm:!w-[650px]"
-      >
-        <SheetHeader>
-          <SheetTitle className="text-primary">Create New Client</SheetTitle>
-          <SheetDescription>
+      {/* Modal Content */}
+      <DialogContent className="max-w-[600px] sm:max-w-[650px] rounded-xl bg-white">
+        <DialogHeader className="hidden">
+          <DialogTitle className="text-primary">Create New Client</DialogTitle>
+          <DialogDescription>
             Add a new client to your dashboard.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="mt-6 max-h-[calc(100vh-160px)] overflow-y-auto p-5">
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="mt-4 max-h-[calc(100vh-100px)] overflow-y-auto p-2">
           <ClientCreateForm onSuccess={handleSuccess} />
         </div>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

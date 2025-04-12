@@ -124,4 +124,54 @@ export class PostController {
       res.json(new ApiResponse(200, "Post is schedueld succesfully"));
     }
   );
+
+  public static GetAllStatsForAdmin = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const [
+        totalPostsCreated,
+        totalPostsPublished,
+        totalMembers,
+        totalClients,
+      ] = await Promise.all([
+        db.post.count(), // total posts
+        db.post.count({ where: { postStatus: "PUBLISHED" } }),
+        db.member.count(), // total members
+        db.client.count(), // total clients
+      ]);
+
+      res.json(
+        new ApiResponse(200, "Stats fetched", {
+          totalPostsCreated,
+          totalPostsPublished,
+          totalMembers,
+          totalClients,
+        })
+      );
+    }
+  );
+
+  public static PostsCreatedMonthlyForAdmin = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const posts = await db.post.findMany({
+        select: {
+          id: true,
+          createdAt: true,
+        },
+      });
+
+      const postsCreatedMonthly = posts.reduce((acc, post) => {
+        const month = new Intl.DateTimeFormat("en-US", {
+          month: "long",
+          year: "numeric",
+        }).format(post.createdAt);
+
+        acc[month] = (acc[month] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      res.json(
+        new ApiResponse(200, "Posts created per month", postsCreatedMonthly)
+      );
+    }
+  );
 }

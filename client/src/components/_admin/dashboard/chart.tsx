@@ -24,11 +24,14 @@ interface EventStatsChartProps {
   eventData?: Record<string, number>;
 }
 
-export default function EventStatsChart({
-  eventData = {},
-}: EventStatsChartProps) {
-  const formattedData = Object.entries(eventData).map(([month, Created]) => ({
-    month,
+export default function EventStatsChart({ eventData = {} }: EventStatsChartProps) {
+  const rawData = eventData ?? {};
+
+  const formattedData = Object.entries(rawData).map(([month, Created]) => ({
+    month: new Date(month).toLocaleString("default", {
+      month: "short",
+      year: "numeric",
+    }),
     Created,
   }));
 
