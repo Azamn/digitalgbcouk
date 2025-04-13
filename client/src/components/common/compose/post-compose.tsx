@@ -97,12 +97,14 @@ const PostCompose = () => {
   return (
     <div className="p-4">
       {imagePreview && (
-        <div className="relative mb-4 h-[500px] w-full overflow-hidden rounded-lg">
-          <img
-            src={imagePreview}
-            alt="Upload preview"
-            className="h-full w-full object-cover"
-          />
+        <div className="relative mb-4 h-[300px] w-full overflow-hidden rounded-lg border">
+          <div className="h-full w-full overflow-auto">
+            <img
+              src={imagePreview}
+              alt="Upload preview"
+              className="max-h-[600px] w-full object-contain"
+            />
+          </div>
           <button
             className="absolute right-2 top-2 z-10 rounded-full bg-black/60 p-1 text-white hover:bg-black"
             onClick={() => setImagePreview(null)}
@@ -141,7 +143,6 @@ const PostCompose = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="bg-violet-400 p-1 hover:bg-violet-300"
             onClick={handleImageUploadClick}
             aria-label="Upload image"
           >
@@ -157,10 +158,10 @@ const PostCompose = () => {
 
           <EmojiPopover onEmojiSelect={handleEmojiSelect} />
 
-          <Button variant="ghost" className="bg-success p-1" size="icon">
+          <Button variant="ghost" size="icon">
             <MapPinIcon className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" className="bg-warning p-1" size="icon">
+          <Button variant="ghost" size="icon">
             <CalendarIcon className="h-5 w-5" />
           </Button>
         </div>

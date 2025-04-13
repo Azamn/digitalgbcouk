@@ -16,8 +16,12 @@ import {
   MapPinIcon,
   CalendarIcon,
   Component,
+  Pencil,
+  Image,
+  PlusCircle,
 } from "lucide-react";
 import PostCompose from "./post-compose";
+import StoryCompose from "./story-compose";
 
 function Compose() {
   return (
@@ -26,15 +30,14 @@ function Compose() {
         <DialogTrigger asChild>
           <Button
             size="sm"
-            className="bg-blue-400 text-white hover:bg-blue-500"
+            className="flex items-center rounded bg-[#1A73E8] px-4 py-2 font-medium text-white hover:bg-[#1669C1]"
           >
-            <Component className="mr-2 h-4 w-4" />
+            <Pencil className="mr-2 h-4 w-4" />
             Compose
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="p-0 sm:max-w-[600px] max-h-[calc(100vh-4rem)] overflow-y-auto">
-
+        <DialogContent className="max-h-[calc(100vh-4rem)] overflow-y-auto p-0 sm:max-w-[600px]">
           <DialogHeader className="hidden px-4 pb-2">
             <DialogTitle className="hidden text-lg font-semibold">
               Create a post
@@ -43,17 +46,20 @@ function Compose() {
 
           <Tabs defaultValue="post" className="w-full">
             <div className="border-b">
-              <TabsList className="bg-background h-12 w-full justify-start rounded-none px-4">
+              <TabsList className="bg-background h-12 w-full justify-start rounded-none border-b px-4">
                 <TabsTrigger
                   value="post"
-                  className="data-[state=active]:border-b-cyan-400"
+                  className="data-[state=inactive]:text-muted-foreground group relative flex items-center gap-2 text-sm font-medium text-blue-600 data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:h-[2px] data-[state=active]:after:w-full data-[state=active]:after:bg-blue-600"
                 >
+                  <Image className="h-4 w-4" />
                   Post
                 </TabsTrigger>
+
                 <TabsTrigger
                   value="story"
-                  className="data-[state=active]:bg-background"
+                  className="data-[state=inactive]:text-muted-foreground group relative flex items-center gap-2 text-sm font-medium text-blue-600 data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:h-[2px] data-[state=active]:after:w-full data-[state=active]:after:bg-blue-600"
                 >
+                  <PlusCircle className="h-4 w-4" />
                   Story
                 </TabsTrigger>
               </TabsList>
@@ -62,67 +68,8 @@ function Compose() {
             <TabsContent value="post" className="mt-0">
               <PostCompose />
             </TabsContent>
-
             <TabsContent value="story" className="mt-0">
-              <div className="space-y-4 p-4">
-                <div className="relative mx-auto h-[480px] w-[270px] rounded-lg border bg-gradient-to-b from-gray-200 to-slate-800 shadow-md">
-                  {/* Email Header */}
-                  <div className="absolute left-2 top-2 text-xs font-medium text-white">
-                    {"you@example.com"}
-                  </div>
-
-                  {/* Editable text */}
-                  <div
-                    className="absolute inset-x-0 top-1/2 z-10 mx-auto w-fit cursor-pointer rounded bg-black/50 px-2 py-1 text-center text-lg font-bold text-red-500"
-                    contentEditable
-                    suppressContentEditableWarning
-                  >
-                    Double click to edit
-                  </div>
-
-                  {/* Reply input mock */}
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/30 px-4 py-1 text-xs text-white/80">
-                    Reply to {"you@example.com"}...
-                  </div>
-                </div>
-
-                {/* Tool buttons */}
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon">
-                      <ImageIcon className="h-5 w-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <SmileIcon className="h-5 w-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <CalendarIcon className="h-5 w-5" />
-                    </Button>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <input
-                      type="color"
-                      defaultValue="#ffffff"
-                      className="h-6 w-6 rounded-full border"
-                    />
-                    <input
-                      type="color"
-                      defaultValue="#00002a"
-                      className="h-6 w-6 rounded-full border"
-                    />
-                  </div>
-                </div>
-
-                {/* Footer buttons */}
-                <div className="flex items-center justify-between border-t pt-4">
-                  <input
-                    type="datetime-local"
-                    className="text-muted-foreground bg-transparent text-sm outline-none"
-                  />
-                  <Button>Save draft</Button>
-                </div>
-              </div>
+              <StoryCompose />
             </TabsContent>
           </Tabs>
         </DialogContent>

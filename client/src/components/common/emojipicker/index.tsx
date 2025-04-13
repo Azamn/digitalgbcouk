@@ -25,11 +25,11 @@ export function EmojiPopover({ onEmojiSelect }: EmojiPopoverProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost"  className="bg-warning p-1" size="icon">
+        <Button variant="ghost" size="icon">
           <SmileIcon className="h-5 w-5" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="z-50 w-[350px] mt-11 p-0 ">
+      <PopoverContent className="z-50 mt-11 w-[350px] p-0">
         <EmojiPicker onEmojiClick={handleEmojiClick} />
       </PopoverContent>
     </Popover>

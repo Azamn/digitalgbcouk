@@ -88,7 +88,7 @@ export function DateTimePicker12h({
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <button
-         
+         className="text-sm"
         >
           {getFormatted()}
         </button>
