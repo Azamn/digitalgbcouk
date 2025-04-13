@@ -9,6 +9,8 @@ import {
 } from "@src/utils/server-functions";
 import { Request, Response } from "express";
 import fs from "fs";
+import { startOfWeek, endOfWeek } from "date-fns";
+
 export class PostController {
   public static GetAiContent = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
@@ -176,6 +178,143 @@ export class PostController {
       res.json(
         new ApiResponse(200, "Posts created per month", postsCreatedMonthly)
       );
+    }
+  );
+
+  public static GetAllStatsForClient = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const user = await db.user.CheckUserId(req);
+
+      const client = await db.client.findUnique({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!client) throw new ApiError(400, "No client found");
+
+      const [
+        totalPostsDone,
+        totalPendingPosts,
+        totalUpcomingPosts,
+        totalThisWeekPosts,
+      ] = await Promise.all([
+        db.post.count({
+          where: {
+            clientId: client.id,
+            postStatus: "PUBLISHED",
+          },
+        }),
+        db.post.count({
+          where: {
+            clientId: client.id,
+            postStatus: "WORKING",
+          },
+        }),
+        db.post.count({
+          where: {
+            clientId: client.id,
+            scheduledAt: {
+              gt: new Date(),
+            },
+          },
+        }),
+        db.post.count({
+          where: {
+            clientId: client.id,
+            scheduledAt: {
+              gte: startOfWeek(new Date()),
+              lte: endOfWeek(new Date()),
+            },
+          },
+        }),
+      ]);
+
+      res.json(
+        new ApiResponse(200, "Fetched stats", {
+          totalPostsDone,
+          totalPendingPosts,
+          totalUpcomingPosts,
+          totalThisWeekPosts,
+        })
+      );
+    }
+  );
+
+  public static PostsCreatedMonthlyForClient = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const user = await db.user.CheckUserId(req);
+      const posts = await db.post.findMany({
+        where: {
+          clientId: user.id,
+        },
+        select: {
+          id: true,
+          createdAt: true,
+        },
+      });
+
+      const postsCreatedMonthly = posts.reduce((acc, post) => {
+        const month = new Intl.DateTimeFormat("en-US", {
+          month: "long",
+          year: "numeric",
+        }).format(post.createdAt);
+
+        acc[month] = (acc[month] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      res.json(
+        new ApiResponse(200, "Posts created per month", postsCreatedMonthly)
+      );
+    }
+  );
+
+  public static GetAllClientPosts = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const user = await db.user.CheckUserId(req);
+
+      const client = await db.client.findUnique({
+        where: {
+          userId: user.id,
+        },
+      });
+
+      if (!client) throw new ApiError(400, "No client found");
+
+      try {
+        const posts = await db.post.findMany({
+          where: {
+            clientId: client.id,
+          },
+          select: {
+            id: true,
+            content: true,
+            mediaUrl: true,
+            isConfirmedByClient: true,
+            scheduledAt: true,
+            client: {
+              select: {
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+            type: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+
+        // No error thrown if no posts – just return empty array
+        res.json(new ApiResponse(200, "Fetched all posts", posts));
+      } catch (error) {
+        console.error("Error retrieving posts:", error);
+        throw new ApiError(500, "Failed to retrieve posts");
+      }
     }
   );
 }

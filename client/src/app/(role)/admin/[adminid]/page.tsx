@@ -3,10 +3,6 @@
 import ClientStatsChart from "@/components/_admin/dashboard/chart";
 import StatsCards from "@/components/_admin/dashboard/stat-cards";
 import DataLoader from "@/components/shared/loader/data-laoder";
-import {
-  useGetEventsStatsForAdminQuery,
-  useGetMonthlyEventForAdminQuery,
-} from "@/backend/events-api";
 import React from "react";
 import {
   useGetAdminStatsQuery,
@@ -18,7 +14,6 @@ const Page = () => {
   const { data: statsData, isLoading: statsLoading } = useGetAdminStatsQuery();
   const { data: postsData, isLoading: eventsLoading } =
     useGetPostsCreatedMonthlyQuery();
-  console.log("🚀 ~ Page ~ postsData:", postsData);
   if (statsLoading || eventsLoading) return <DataLoader />;
 
   return (

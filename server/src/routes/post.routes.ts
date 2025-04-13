@@ -11,5 +11,8 @@ postRouter
 .get("/schedule",requireAuth(),  PostController.TimeSchedule)
 .get("/stats/admin",requireAuth(),  PostController.GetAllStatsForAdmin)
 .get("/monthly/admin",requireAuth(),  PostController.PostsCreatedMonthlyForAdmin)
+.get("/stats/client",requireAuth(),  PostController.GetAllStatsForClient)
+.get("/monthly/client",requireAuth(),  PostController.PostsCreatedMonthlyForClient)
+.get("/all/clientpost",requireAuth(),  PostController.GetAllClientPosts)
 
 export default postRouter;

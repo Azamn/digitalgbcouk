@@ -50,6 +50,14 @@ const PostServices = ApiServices.enhanceEndpoints({
       providesTags: [{ type: "POST", id: "LISTS" }],
     }),
 
+    GetAllClientPosts: build.query<PostResposne, void>({
+      query: () => ({
+        url: `/posts/all/clientpost`,
+        method: "GET",
+      }),
+      providesTags: [{ type: "POST", id: "LISTS" }],
+    }),
+
     GetAdminStats: build.query<GetPostStataResponseAdmin, void>({
       query: () => ({
         url: "/posts/stats/admin",
@@ -60,6 +68,19 @@ const PostServices = ApiServices.enhanceEndpoints({
     GetPostsCreatedMonthly: build.query<GetMonthlyPostResponse, void>({
       query: () => ({
         url: "/posts/monthly/admin",
+        method: "GET",
+      }),
+    }),
+    GetClientStats: build.query<GetPostStataResponseClient, void>({
+      query: () => ({
+        url: "/posts/stats/client",
+        method: "GET",
+      }),
+    }),
+
+    GetPostsCreatedMonthlyForClient: build.query<GetMonthlyPostResponse, void>({
+      query: () => ({
+        url: "/posts/monthly/client",
         method: "GET",
       }),
     }),
@@ -74,6 +95,9 @@ export const {
   useSchedulePostMutation,
   useGetAdminStatsQuery,
   useGetPostsCreatedMonthlyQuery,
+  useGetClientStatsQuery,
+  useGetPostsCreatedMonthlyForClientQuery,
+  useGetAllClientPostsQuery,
 } = PostServices;
 
 interface MediaResponse extends ApiResponse {
@@ -94,7 +118,7 @@ interface PostResposne extends ApiResponse {
         email: string;
       };
     };
-    type : "POST" | "STORY"
+    type: "POST" | "STORY";
   }[];
 }
 
@@ -104,6 +128,14 @@ interface GetPostStataResponseAdmin extends ApiResponse {
     totalPostsPublished: number;
     totalMembers: number;
     totalClients: number;
+  };
+}
+interface GetPostStataResponseClient extends ApiResponse {
+  result: {
+    totalPostsDone: number;
+    totalPendingPosts: number;
+    totalUpcomingPosts: number;
+    totalThisWeekPosts: number;
   };
 }
 

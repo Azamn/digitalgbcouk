@@ -35,5 +35,5 @@
 }
 
 .rbc-off-range-bg {
-  @apply border-2 bg-purple-300 text-gray-500 opacity-80 dark:bg-gray-700 dark:text-gray-400;
+  @apply border-2 text-gray-500 opacity-80 dark:bg-gray-700 dark:text-gray-400;
 }

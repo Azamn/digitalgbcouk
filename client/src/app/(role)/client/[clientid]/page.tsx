@@ -1,25 +1,22 @@
 "use client";
 import CalendarView from "@/components/_client/dashboard/calendar";
-import { EventChart } from "@/components/_client/dashboard/event-chart";
 import ClientStatsCards from "@/components/_client/dashboard/stats-card";
 import DataLoader from "@/components/shared/loader/data-laoder";
+
 import {
-  useGetMonthlyEventForAdminQuery,
-  useGetEventsStatsForClientQuery,
-  useGetEventsByDateQuery,
-} from "@/backend/events-api";
+  useGetClientStatsQuery,
+  useGetPostsCreatedMonthlyForClientQuery,
+} from "@/backend/post-api";
+import PostMonthlyStatsChart from "@/components/_client/dashboard/post-chart";
 
 const Page = () => {
+  const { data: statsData, isLoading: statsLoading } = useGetClientStatsQuery();
+  console.log("🚀 ~ Page ~ statsData:", statsData)
+
   const { data: monthlyData, isLoading: monthlyLoading } =
-    useGetMonthlyEventForAdminQuery();
+    useGetPostsCreatedMonthlyForClientQuery();
 
-  const { data: statsData, isLoading: statsLoading } =
-    useGetEventsStatsForClientQuery();
-
-  const { data: dailyData, isLoading: dailyDataLoading } =
-    useGetEventsByDateQuery();
-
-  if (monthlyLoading || statsLoading || dailyDataLoading) return <DataLoader />;
+  if (monthlyLoading || statsLoading) return <DataLoader />;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -37,15 +34,7 @@ const Page = () => {
           />
         )}
 
-        <div className="min-h-[700px] rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
-          <CalendarView />
-        </div>
-
-        <EventChart
-          dailyDataLoading={
-            Array.isArray(dailyData?.result) ? dailyData.result : []
-          }
-        />
+        <PostMonthlyStatsChart eventData={monthlyData?.result} />
       </div>
     </div>
   );
