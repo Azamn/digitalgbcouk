@@ -11,7 +11,6 @@ function WorkspacePage() {
   const clientId = searchParams.get("clientId") as string;
   const { data, isLoading } = useGetAllPostsQuery({ clientId });
   const postOnly = data?.result?.filter((item) => item.type === "POST") ?? [];
-  console.log("🚀 ~ WorkspacePage ~ postOnly:", postOnly)
 
   if (isLoading) return <DataLoader />;
 

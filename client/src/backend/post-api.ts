@@ -77,10 +77,22 @@ const PostServices = ApiServices.enhanceEndpoints({
         method: "GET",
       }),
     }),
+    GetMembersStats: build.query<GetPostStataResponseMembers, void>({
+      query: () => ({
+        url: "/posts/stats/member",
+        method: "GET",
+      }),
+    }),
 
     GetPostsCreatedMonthlyForClient: build.query<GetMonthlyPostResponse, void>({
       query: () => ({
         url: "/posts/monthly/client",
+        method: "GET",
+      }),
+    }),
+    GetListofClients: build.query<ListOfClientResposne, void>({
+      query: () => ({
+        url: "/posts/list/clients",
         method: "GET",
       }),
     }),
@@ -98,6 +110,8 @@ export const {
   useGetClientStatsQuery,
   useGetPostsCreatedMonthlyForClientQuery,
   useGetAllClientPostsQuery,
+  useGetMembersStatsQuery,
+  useGetListofClientsQuery,
 } = PostServices;
 
 interface MediaResponse extends ApiResponse {
@@ -138,7 +152,21 @@ interface GetPostStataResponseClient extends ApiResponse {
     totalThisWeekPosts: number;
   };
 }
+interface GetPostStataResponseMembers extends ApiResponse {
+  result: {
+    totalPostsAssigned: number;
+    totalPostsCompleted: number;
+    totalPostsUpcoming: number;
+  };
+}
 
 interface GetMonthlyPostResponse extends ApiResponse {
   result: Record<string, number>;
+}
+
+interface ListOfClientResposne extends ApiResponse {
+  result: {
+    clientId: string;
+    userName: string;
+  }[];
 }

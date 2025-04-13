@@ -3,8 +3,8 @@ import UserProfile from "@/components/shared/user-profile";
 import { Target } from "lucide-react";
 import EventSearchbar from "./event-search-bar";
 import Image from "next/image";
-import { AppSidebarSheet } from "@/components/_admin/sidebar/app-sidebar-sheet";
 import PostCompose from "@/components/common/compose";
+import { AppSidebarSheet } from "@/components/_admin/sidebar/app-sidebar-sheet";
 
 const AppHeader = () => {
   return (

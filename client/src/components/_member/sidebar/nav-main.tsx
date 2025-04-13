@@ -1,12 +1,11 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Users, FolderOpen, Instagram, UserPlus } from "lucide-react";
+import { LayoutDashboard, Users, FolderOpen, Instagram } from "lucide-react";
 import useAuth from "@/hooks/use-auth";
 import Link from "next/link";
 import useMount from "@/hooks/use-mount";
 import { useGetListofClientsQuery } from "@/backend/post-api";
-import { useGetallClientsQuery } from "@/backend/participant.api";
 
 export function NavMain() {
   const [activeItem, setActiveItem] = useState("Dashboard");
@@ -14,18 +13,13 @@ export function NavMain() {
   const [isMemberExpanded, setIsMemberExpanded] = useState(false);
   const user = useAuth();
   const Mount = useMount();
-  const { data } = useGetallClientsQuery();
+  const { data } = useGetListofClientsQuery();
 
   const menuItems = [
     {
       name: "Dashboard",
       icon: <LayoutDashboard size={20} />,
-      path: `/admin/${user?.id}/`,
-    },
-    {
-      name: "Participants",
-      icon: <UserPlus size={20} />,
-      path: `/admin/${user?.id}/participants`,
+      path: `/member/${user?.id}/`,
     },
   ];
 
@@ -83,22 +77,22 @@ export function NavMain() {
           <div className="mt-2 flex flex-col gap-1">
             {data?.result?.map((client) => (
               <Link
-                key={client.id}
-                href={`/admin/${user?.id}/workspace?clientId=${client.id}`}
+                key={client.clientId}
+                href={`/member/${user?.id}/workspace?clientId=${client.clientId}`}
               >
                 <button
-                  onClick={() => setActiveSubItem(client.user.userName)}
+                  onClick={() => setActiveSubItem(client.userName)}
                   className={`flex w-full items-center gap-3 rounded-lg px-4 py-1 text-left transition-all duration-300`}
                 >
                   <Instagram size={20} className="text-pink-500" />
                   <span
                     className={`${
-                      activeSubItem === client.user.userName
+                      activeSubItem === client.userName
                         ? "text-blue-700"
                         : "text-black hover:bg-violet-200"
                     }`}
                   >
-                    {client.user.userName}
+                    {client.userName}
                   </span>
                 </button>
               </Link>

@@ -1,4 +1,3 @@
-import { EditParticipantFormData } from "@/components/common/data-table/participants-edit";
 import ApiServices from "@/store/middleware";
 import { ApiResponse } from "./types/api";
 import { CreateClientType } from "@/components/_admin/participants-page/client-table/add-client-form/schema";

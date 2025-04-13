@@ -1,9 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useAppToasts } from "@/hooks/use-app-toast";
-import useAuth from "@/hooks/use-auth";
+import useClearSessionOnNewTab from "@/hooks/use-clear-cookie";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 const Hero = () => {
@@ -22,8 +20,7 @@ const Hero = () => {
 export default Hero;
 
 function AdvertisementSection() {
-  const router = useRouter();
-  const { ErrorToast } = useAppToasts();
+  useClearSessionOnNewTab();
 
   const handleConnectClick = () => {
     window.open(

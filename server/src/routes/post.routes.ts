@@ -12,7 +12,9 @@ postRouter
 .get("/stats/admin",requireAuth(),  PostController.GetAllStatsForAdmin)
 .get("/monthly/admin",requireAuth(),  PostController.PostsCreatedMonthlyForAdmin)
 .get("/stats/client",requireAuth(),  PostController.GetAllStatsForClient)
+.get("/stats/member",requireAuth(),  PostController.GetMembersStats)
 .get("/monthly/client",requireAuth(),  PostController.PostsCreatedMonthlyForClient)
 .get("/all/clientpost",requireAuth(),  PostController.GetAllClientPosts)
+.get("/list/clients",requireAuth(),  PostController.GetListOfClients)
 
 export default postRouter;

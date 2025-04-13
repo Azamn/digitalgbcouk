@@ -1,17 +1,15 @@
-"use client"
-import { MemberNavMain } from "@/components/_member/sidebar/member-nav-main";
-import AppSidebar from "@/components/app-sidebar";
+import ClientAppHeader from "@/components/_client/sidebar/client-header";
+import MemberHeader from "@/components/_member/sidebar/member-header";
 import AppHeader from "@/components/shared/header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import React, { ReactNode } from "react";
 
-export default function Page({ children }: { children: React.ReactNode }) {
+const layout = ({ children }: { children: ReactNode }) => {
   return (
-    <SidebarProvider>
-      <AppSidebar navmain={MemberNavMain()} />
-      <SidebarInset>
-        <AppHeader />
-        {children}
-      </SidebarInset>
-    </SidebarProvider>
+    <main className="flex min-h-screen w-full flex-col">
+      <MemberHeader />
+      {children}
+    </main>
   );
-}
+};
+
+export default layout;
