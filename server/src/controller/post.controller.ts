@@ -42,7 +42,7 @@ export class PostController {
 
   public static CreatePost = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { content } = req.body;
+      const { content, postType, scheduledAt } = req.body;
       const { clientId } = req.params;
 
       const mediaUrl = await GlobalUtils.getImageUrl(req);
@@ -57,6 +57,8 @@ export class PostController {
             clientId,
             mediaUrl,
             content,
+            type: postType || "POST",
+            scheduledAt,
           },
         });
 
@@ -92,7 +94,9 @@ export class PostController {
                 },
               },
             },
+            type: true,
           },
+
           orderBy: {
             createdAt: "desc",
           },

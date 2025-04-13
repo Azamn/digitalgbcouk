@@ -29,12 +29,12 @@ model User {
 }
 
 model Client {
-  id                String          @id @default(cuid())
+  id                String   @id @default(cuid())
   password          String
   instagramId       String?
   instagramPassword String?
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -46,10 +46,10 @@ model Client {
 }
 
 model Member {
-  id        String            @id @default(cuid())
+  id        String   @id @default(cuid())
   password  String
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -60,17 +60,16 @@ model Member {
 }
 
 model MemberOnClient {
-  id        String   @id @default(cuid())
-  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  clientId  String
-  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  memberId  String
+  id       String @id @default(cuid())
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  memberId String
 
   assignedAt DateTime @default(now())
 
   @@unique([clientId, memberId]) // prevent duplicate assignments
 }
-
 
 model Session {
   id         String   @id @default(cuid())
@@ -96,7 +95,7 @@ model Notification {
 
 model Post {
   id          String    @id @unique @default(cuid())
-  content     String    @db.VarChar(1000)
+  content     String?    @db.VarChar(1000)
   mediaUrl    String    @db.VarChar(300)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -108,17 +107,18 @@ model Post {
   postStatus          PostStatus @default(WORKING)
   isConfirmedByClient Boolean    @default(false)
   Comment             Comment[]
+  type                PostType   @default(POST)
 
   @@map("Posts")
 }
 
 model Comment {
-  id          String      @id @default(cuid())
-  content     String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  userId String
-  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   postId String?
   post   Post?   @relation(fields: [postId], references: [id])
@@ -141,11 +141,15 @@ enum MemberRole {
   MEMBER
 }
 
-
 enum PostStatus {
   PUBLISHED
   UNPUBLISHED
   SCHEDULED
   WORKING
   CONFIRMED
+}
+
+enum PostType {
+  STORY
+  POST
 }

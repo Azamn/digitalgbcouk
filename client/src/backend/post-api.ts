@@ -94,6 +94,7 @@ interface PostResposne extends ApiResponse {
         email: string;
       };
     };
+    type : "POST" | "STORY"
   }[];
 }
 

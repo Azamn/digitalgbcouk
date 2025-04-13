@@ -10,6 +10,7 @@ function WorkspacePage() {
   const searchParams = useSearchParams();
   const clientId = searchParams.get("clientId") as string;
   const { data, isLoading } = useGetAllPostsQuery({ clientId });
+  const postOnly = data?.result.filter((item) => item.type === "POST") ?? [];
 
   if (isLoading) return <DataLoader />;
 
@@ -17,7 +18,7 @@ function WorkspacePage() {
     <div className="mx-auto mt-7 w-[90%] space-y-16">
       <div className="mx-auto w-[85%]">
         <StoryView />
-        {data?.result.map((post) => {
+        {postOnly.map((post) => {
           return (
             <div key={post.id} className="flex">
               <Post postData={post} />

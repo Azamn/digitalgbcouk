@@ -28,7 +28,6 @@ const PostCompose = () => {
   const [CreatePost, { isLoading: createPostLoading }] =
     useCreatePostMutation();
   const { SuccessToast } = useAppToasts();
-
   const searchParams = useSearchParams();
   const clientId = searchParams.get("clientId") as string;
 
@@ -79,8 +78,9 @@ const PostCompose = () => {
 
     const formData = new FormData();
     formData.append("content", text);
+    formData.append("postType", "POST");
+    formData.append("scheduledAt", "");
     if (imageFile) formData.append("image", imageFile);
-
     try {
       const response = await CreatePost({
         formData,

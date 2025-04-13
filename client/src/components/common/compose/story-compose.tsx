@@ -13,18 +13,27 @@ import {
 import ColorPickerBoxes from "./hexcolor";
 import { Button } from "@/components/ui/button";
 import { DateTimePicker12h } from "@/components/date-time-picker";
+import { useCreatePostMutation } from "@/backend/post-api";
+import { useSearchParams } from "next/navigation";
+import Spinner from "@/components/ui/spinner";
+import { useAppToasts } from "@/hooks/use-app-toast";
 
 const StoryComposer = () => {
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [mediaType, setMediaType] = useState<"image" | "video" | "text" | null>(
     null,
   );
+  const [CreateStory, { isLoading }] = useCreatePostMutation();
   const [text, setText] = useState("");
   const [isWriting, setIsWriting] = useState(false);
   const [topColor, setTopColor] = useState("#ffffff");
   const [bottomColor, setBottomColor] = useState("#f0f0f0");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [datetime, setDatetime] = useState<Date | undefined>(undefined);
+  const searchParams = useSearchParams();
+  const clientId = searchParams.get("clientId") as string;
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const { SuccessToast } = useAppToasts();
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -33,6 +42,7 @@ const StoryComposer = () => {
     reader.onloadend = () => {
       const result = reader.result as string;
       setSelectedMedia(result);
+      setImageFile(file); // Save the file
 
       if (file.type.startsWith("image/")) {
         setMediaType("image");
@@ -43,18 +53,37 @@ const StoryComposer = () => {
     reader.readAsDataURL(file);
   };
 
-  const startTextStory = () => {
-    setMediaType("text");
-    setIsWriting(true);
-    setSelectedMedia(null);
-  };
-
   const removeMedia = () => {
     setSelectedMedia(null);
     setMediaType(null);
     setText("");
     setIsWriting(false);
+    setImageFile(null); // Clear the file
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleCreateStory = async () => {
+    try {
+      if (!text && !imageFile) return;
+
+      const formData = new FormData();
+      if (imageFile) formData.append("image", imageFile);
+      if (text) formData.append("content", text);
+      if (datetime) formData.append("scheduledAt", datetime.toISOString());
+      formData.append("postType", "STORY");
+
+      const resp = await CreateStory({ clientId, formData }).unwrap();
+
+      if (resp.status === "success") {
+        SuccessToast({
+          title: "Story craeted Succesfully",
+        });
+      }
+      removeMedia();
+      setDatetime(undefined);
+    } catch (error) {
+      console.error("Failed to create story:", error);
+    }
   };
 
   return (
@@ -160,7 +189,7 @@ const StoryComposer = () => {
         )}
       </div>
       <div className="mt-3 flex w-full justify-between p-2 px-4">
-        <div className="flex items-center justify-between text-sm opacity-90 gap-x-1">
+        <div className="flex items-center justify-between gap-x-1 text-sm opacity-90">
           <Clock1 />
           <DateTimePicker12h
             label="Schedule At"
@@ -169,8 +198,8 @@ const StoryComposer = () => {
           />
           <ChevronDown />
         </div>
-        <Button size={"sm"} className="bg-blue-400">
-          Save as draft
+        <Button onClick={handleCreateStory} size={"sm"} className="bg-blue-400">
+          {isLoading ? <Spinner /> : "Save as draft"}
         </Button>
       </div>
     </div>
