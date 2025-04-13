@@ -13,7 +13,7 @@ const StoryView = () => {
   const clientId = searchParams.get("clientId") as string;
   const { data: storyData } = useGetAllPostsQuery({ clientId });
 
-  const storyOnly = storyData?.result.filter((item) => item.type === "STORY") ?? [];
+  const storyOnly = storyData?.result?.filter((item) => item.type === "STORY") ?? [];
 
   return (
     <div className="mb-9 w-full rounded-2xl border border-gray-200 bg-white p-4">

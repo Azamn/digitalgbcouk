@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   CalendarIcon,
   Check,
+  ChevronDown,
+  Clock1,
   ImageIcon,
   MapPinIcon,
   Sparkle,
@@ -18,6 +20,7 @@ import Spinner from "@/components/ui/spinner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useAppToasts } from "@/hooks/use-app-toast";
+import { DateTimePicker12h } from "@/components/date-time-picker";
 
 const PostCompose = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -30,10 +33,9 @@ const PostCompose = () => {
   const { SuccessToast } = useAppToasts();
   const searchParams = useSearchParams();
   const clientId = searchParams.get("clientId") as string;
-
+  const [datetime, setDatetime] = useState<Date | undefined>(undefined);
   const handleGetContentWithAi = async () => {
     if (!text && !imageFile) return;
-
     const formData = new FormData();
     formData.append("text", text);
     if (imageFile) formData.append("image", imageFile);
@@ -79,16 +81,18 @@ const PostCompose = () => {
     const formData = new FormData();
     formData.append("content", text);
     formData.append("postType", "POST");
-    formData.append("scheduledAt", "");
+    if (datetime) formData.append("scheduledAt", datetime.toISOString());
     if (imageFile) formData.append("image", imageFile);
     try {
       const response = await CreatePost({
         formData,
         clientId,
       }).unwrap();
-      SuccessToast({
-        title: "Post saved succesfully",
-      });
+      if (response.status === "success") {
+        SuccessToast({
+          title: "Post created Successfully",
+        });
+      }
     } catch (error) {
       console.error("Failed to save draft:", error);
     }
@@ -167,20 +171,18 @@ const PostCompose = () => {
         </div>
       </div>
 
-      <div className="mt-2 flex w-full justify-end px-2">
-        <Button
-          size="sm"
-          className="bg-blue-400 text-white hover:bg-blue-500"
-          onClick={handleSaveAsDraft}
-          disabled={createPostLoading}
-        >
-          {createPostLoading ? (
-            <Spinner />
-          ) : (
-            <>
-              Save as Draft <Check className="ml-1" size={16} />
-            </>
-          )}
+      <div className="mt-3 flex w-full justify-between p-2 px-4">
+        <div className="flex items-center justify-between gap-x-1 text-sm opacity-90">
+          <Clock1 />
+          <DateTimePicker12h
+            label="Schedule At"
+            onChange={setDatetime}
+            className="text-sm"
+          />
+          <ChevronDown />
+        </div>
+        <Button onClick={handleSaveAsDraft} size={"sm"} className="bg-blue-400">
+          {createPostLoading ? <Spinner /> : "Save as draft"}
         </Button>
       </div>
     </div>

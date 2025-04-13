@@ -26,7 +26,6 @@ export default function CommentSection({ postId }: { postId: string }) {
   const [input, setInput] = useState("");
   const { data: userInfo } = useGetUserInfoQuery();
   const { data, refetch, isLoading } = useGetCommentsQuery({ postId });
-  console.log("🚀 ~ CommentSection ~ data:", data);
   const [createComment] = useCreateCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
