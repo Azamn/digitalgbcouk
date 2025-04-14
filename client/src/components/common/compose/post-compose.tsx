@@ -25,6 +25,7 @@ import { DateTimePicker12h } from "@/components/date-time-picker";
 const PostCompose = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
+  console.log("🚀 ~ PostCompose ~ text:", text)
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [GetAiHelp, { isLoading: aihelpLoadingState }] = useGetAiHelpMutation();
@@ -42,6 +43,7 @@ const PostCompose = () => {
 
     try {
       const response = await GetAiHelp(formData).unwrap();
+      console.log("🚀 ~ handleGetContentWithAi ~ response:", response)
       if (response.message) {
         setText(response.message);
       }
@@ -110,7 +112,7 @@ const PostCompose = () => {
             />
           </div>
           <button
-            className="absolute right-2 top-2 z-10 rounded-full bg-black/60 p-1 text-white hover:bg-black"
+            className="absolute right-2 top-2 z-10 h-10 w-10 rounded-full bg-black/60 p-1 text-white hover:bg-black"
             onClick={() => setImagePreview(null)}
             aria-label="Remove image"
           >

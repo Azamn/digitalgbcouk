@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { boolean } from "zod";
 
 export interface GlobalState {
   isAuthLoading: boolean;
+  view: "GRID" | "LIST";
 }
 
 const initialState: GlobalState = {
   isAuthLoading: false,
+  view: "LIST",
 };
 
 export const globalSlice = createSlice({
@@ -16,7 +17,10 @@ export const globalSlice = createSlice({
     setIsAuthLoading: (state) => {
       state.isAuthLoading = !state.isAuthLoading;
     },
+    setView: (state, action: PayloadAction<"GRID" | "LIST">) => {
+      state.view = action.payload;
+    },
   },
 });
 
-export const { setIsAuthLoading } = globalSlice.actions;
+export const { setIsAuthLoading, setView } = globalSlice.actions;

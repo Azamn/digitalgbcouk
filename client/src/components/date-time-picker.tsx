@@ -87,7 +87,7 @@ export function DateTimePicker12h({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <button className="text-sm">{getFormatted()}</button>
+        <button className="text-sm whitespace-nowrap">{getFormatted()}</button>
       </PopoverTrigger>
       <PopoverContent className="w-auto rounded-xl border bg-white p-0 shadow-lg">
         <div className="sm:flex">

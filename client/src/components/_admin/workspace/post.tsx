@@ -9,15 +9,13 @@ interface PostProps {
 const Post: FC<PostProps> = ({ postData }) => {
   return (
     <div className="flex">
-      <div className="w-[100px]">
+      <div className="w-[100px] mt-4 space-y-3">
         {/* Social Media Selection */}
-        <div className="mb-6 flex items-center gap-2">
-          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-pink-100 hover:bg-gray-50">
-            <Instagram className="h-5 w-5 text-pink-500" />{" "}
-          </button>
-        </div>
+        <button className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white hover:bg-gray-50">
+          <Instagram className="h-5 w-5 text-dark" />{" "}
+        </button>
         <button
-          className={`flex h-10 w-10 items-center justify-center rounded-full text-black ${postData.isConfirmedByClient ? "bg-green-300" : "bg-purple"}`}
+          className={`flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 text-black ${postData.isConfirmedByClient ? "bg-green-300" : "bg-white"}`}
         >
           <span className="text-xl">✓</span>
         </button>

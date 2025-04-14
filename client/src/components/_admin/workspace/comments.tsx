@@ -54,18 +54,19 @@ export default function CommentSection({ postId }: { postId: string }) {
   };
 
   return (
-    <div className="mx-auto mt-10 w-[500px] space-y-4 rounded-lg bg-white p-4 shadow-sm">
+    <div className="mx-auto mt-10 w-[500px] overflow-y-scroll space-y-4 rounded-lg bg-white p-4">
       {/* Input Box */}
-      <div className="flex items-start gap-2 rounded-md border-2 border-blue-400 px-3 py-2">
-        <div className="flex size-10 items-center justify-center rounded-[20px] bg-blue-300 font-semibold text-black">
+      <div className="flex items-start gap-2 rounded-md border-2 border-slate-300 px-3 py-2">
+        <div className="flex h-10 min-h-10 w-10 min-w-10 items-center justify-center rounded-full bg-blue-300 font-semibold text-black">
           {firstLetter}
         </div>
+
         <Input
           placeholder="Say something..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="shadow-none border-none focus-visible:ring-0"
+          className="border-none shadow-none focus-visible:ring-0"
         />
         <Button
           variant="ghost"

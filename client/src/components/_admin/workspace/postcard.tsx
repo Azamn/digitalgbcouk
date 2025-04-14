@@ -22,7 +22,7 @@ const PostCard: FC<PostProps> = ({ postData }) => {
           />
 
           {/* Hover icons */}
-          <div className="absolute inset-0 flex items-start justify-between bg-black/10 p-4 opacity-0 transition-opacity group-hover:opacity-100">
+          {/* <div className="absolute inset-0 flex items-start justify-between bg-black/10 p-4 opacity-0 transition-opacity group-hover:opacity-100">
             <div className="flex gap-2">
               <Button
                 size="icon"
@@ -46,11 +46,15 @@ const PostCard: FC<PostProps> = ({ postData }) => {
             >
               <X className="h-4 w-4 text-gray-800" />
             </Button>
-          </div>
+          </div> */}
         </div>
 
         {/* Text content */}
-        <div className="space-y-2 p-4 text-sm">{postData.content}</div>
+        <div className="space-y-2 p-4 text-sm">
+          {postData.content.split("\n").map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+        </div>compo
       </div>
     </div>
   );
