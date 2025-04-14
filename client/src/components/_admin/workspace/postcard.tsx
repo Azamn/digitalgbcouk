@@ -54,7 +54,7 @@ const PostCard: FC<PostProps> = ({ postData }) => {
           {postData.content.split("\n").map((line, index) => (
             <p key={index}>{line}</p>
           ))}
-        </div>compo
+        </div>
       </div>
     </div>
   );

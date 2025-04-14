@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 const DataLoader = () => {
   return (
     <motion.div
-      className="flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-br from-pink-300 via-purple-300 to-blue-400 text-white"
+      className="flex min-h-screen w-full flex-col items-center justify-center text-dark"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
