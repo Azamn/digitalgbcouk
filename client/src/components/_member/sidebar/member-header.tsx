@@ -6,6 +6,7 @@ import { AppSidebarSheet } from "./app-sidebar-sheet";
 import Compose from "@/components/common/compose";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
+import SetView from "@/components/common/set-view";
 
 const MemberHeader = () => {
   const [openCompose, setOpenCompose] = useState(false);
@@ -25,6 +26,7 @@ const MemberHeader = () => {
             <span className="ml-2 text-2xl font-bold text-dark">
               Digital GB
             </span>
+            <SetView />
           </div>
         </div>
         {/* <EventSearchbar /> */}

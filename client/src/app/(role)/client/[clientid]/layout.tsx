@@ -1,5 +1,4 @@
 import ClientAppHeader from "@/components/_client/sidebar/client-header";
-import AppHeader from "@/components/shared/header";
 import React, { ReactNode } from "react";
 
 const layout = ({ children }: { children: ReactNode }) => {

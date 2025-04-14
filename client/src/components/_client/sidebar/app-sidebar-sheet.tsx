@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import { NavMain } from "../../_member/sidebar/nav-main";
 import { NavUser } from "@/components/ui/nav-user";
+import { NavMain } from "./nav-main";
 
-export function AppSidebarSheet() {
+export function ClinetAppSidebarSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
