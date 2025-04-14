@@ -17,13 +17,15 @@ const PostView: FC<PostProps> = ({ postData }) => {
     <div className="min-h-screen flex-1 overflow-y-auto">
       <div className="mx-auto max-w-xl">
         <div className="overflow-hidden rounded-xl border border-slate-300 transition-all duration-300">
-          <div className="relative aspect-square overflow-hidden sm:aspect-[4/3]">
+          <div className="relative h-[500px] w-full">
+            {" "}
+            {/* 👈 Added fixed height (you can adjust as needed) */}
             <img
               src={
                 postData.mediaUrl ? postData.mediaUrl : "/digital-market.png"
               }
               alt="Digital marketing image"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute left-0 top-0 h-full w-full object-cover"
             />
           </div>
 
@@ -37,7 +39,7 @@ const PostView: FC<PostProps> = ({ postData }) => {
             <Bookmark className="h-6 w-6 cursor-pointer transition-colors hover:text-yellow-500" />
           </div>
 
-          <div className="text-sm p-4">{postData.content}</div>
+          <div className="p-4 text-sm">{postData.content}</div>
         </div>
       </div>
     </div>

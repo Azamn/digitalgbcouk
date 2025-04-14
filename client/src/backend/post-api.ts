@@ -96,6 +96,13 @@ const PostServices = ApiServices.enhanceEndpoints({
         method: "GET",
       }),
     }),
+    ConfirmPost: build.mutation<ApiResponse, { postId: string }>({
+      query: ({ postId }) => ({
+        url: `/posts//confirm/${postId}`,
+        method: "POST",
+      }),
+      invalidatesTags: [{ type: "POST", id: "LISTS" }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -112,6 +119,7 @@ export const {
   useGetAllClientPostsQuery,
   useGetMembersStatsQuery,
   useGetListofClientsQuery,
+  useConfirmPostMutation,
 } = PostServices;
 
 interface MediaResponse extends ApiResponse {

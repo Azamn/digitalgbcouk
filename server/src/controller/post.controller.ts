@@ -435,4 +435,20 @@ export class PostController {
       res.json(new ApiResponse(200, "Fetched assigned clients", clients));
     }
   );
+
+  public static ConfirmByClient = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { postId } = req.params;
+      await db.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          isConfirmedByClient: true,
+        },
+      });
+
+      res.json(new ApiResponse(200, "Post confirmed by client"));
+    }
+  );
 }

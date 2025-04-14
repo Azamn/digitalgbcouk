@@ -16,5 +16,6 @@ postRouter
 .get("/monthly/client",requireAuth(),  PostController.PostsCreatedMonthlyForClient)
 .get("/all/clientpost",requireAuth(),  PostController.GetAllClientPosts)
 .get("/list/clients",requireAuth(),  PostController.GetListOfClients)
+.post("/confirm/:postId",requireAuth(),  PostController.ConfirmByClient)
 
 export default postRouter;
