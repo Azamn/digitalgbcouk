@@ -87,13 +87,9 @@ export function DateTimePicker12h({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <button
-         className="text-sm"
-        >
-          {getFormatted()}
-        </button>
+        <button className="text-sm">{getFormatted()}</button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto bg-white rounded-xl border p-0 shadow-lg">
+      <PopoverContent className="w-auto rounded-xl border bg-white p-0 shadow-lg">
         <div className="sm:flex">
           <Calendar
             mode="single"
@@ -109,13 +105,8 @@ export function DateTimePicker12h({
                   <Button
                     key={hour}
                     size="icon"
-                    variant={
-                      // @ts-ignore
-                      internalDate?.getHours() % 12 === hour % 12
-                        ? "default"
-                        : "ghost"
-                    }
-                    className="aspect-square shrink-0 sm:w-full"
+                    // @ts-ignore
+                    className={`aspect-square shrink-0 sm:w-full ${internalDate?.getHours() % 12 === hour % 12 ? "bg-blue-200" : "bg-white shadow-none"}`}
                     onClick={() => handleTimeChange("hour", hour.toString())}
                   >
                     {hour}
@@ -132,12 +123,7 @@ export function DateTimePicker12h({
                   <Button
                     key={minute}
                     size="icon"
-                    variant={
-                      internalDate?.getMinutes() === minute
-                        ? "default"
-                        : "ghost"
-                    }
-                    className="aspect-square shrink-0 sm:w-full"
+                    className={`aspect-square shrink-0 sm:w-full ${internalDate?.getMinutes() === minute ? "bg-blue-200" : "bg-white shadow-none"}`}
                     onClick={() =>
                       handleTimeChange("minute", minute.toString())
                     }
@@ -155,14 +141,13 @@ export function DateTimePicker12h({
                 <Button
                   key={ampm}
                   size="icon"
-                  variant={
+                  className={`aspect-square shrink-0 sm:w-full ${
                     internalDate &&
                     ((ampm === "AM" && internalDate.getHours() < 12) ||
                       (ampm === "PM" && internalDate.getHours() >= 12))
-                      ? "default"
-                      : "ghost"
-                  }
-                  className="aspect-square shrink-0 sm:w-full"
+                      ? "bg-blue-200"
+                      : "bg-white shadow-none"
+                  }`}
                   onClick={() => handleTimeChange("ampm", ampm)}
                 >
                   {ampm}
