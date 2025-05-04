@@ -3,6 +3,7 @@ import { ApiResponse } from "./types/api";
 import { CreateClientType } from "@/components/_admin/participants-page/client-list/add-client/schema";
 import { CreateMemberType } from "@/components/_admin/participants-page/member-list/add-member/schema";
 import { EditClientType } from "@/components/_admin/participants-page/client-list/edit-client/schema";
+import { EditMemberType } from "@/components/_admin/participants-page/member-list/edit-member/schema";
 
 //  =========== /participants ============
 const ParticipantServices = ApiServices.injectEndpoints({
@@ -109,6 +110,14 @@ const ParticipantServices = ApiServices.injectEndpoints({
       }),
       invalidatesTags: [{ type: "PARTICIPANTS", id: "CLIENT" }],
     }),
+    editMember: build.mutation<ApiResponse, EditMemberType>({
+      query: (payload) => ({
+        url: `/participants/edit/member`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: [{ type: "PARTICIPANTS", id: "MEMBER" }],
+    }),
   }),
 });
 
@@ -121,6 +130,7 @@ export const {
   useCreateCoreMemberMutation,
   useGetallCoreMembersQuery,
   useEditClientMutation,
+  useEditMemberMutation,
 } = ParticipantServices;
 
 export interface CreatedClient {
@@ -156,6 +166,7 @@ export interface CreatedMember {
     email: string;
     createdAt: string;
     inviteStatus: "PENDING" | "ACCEPTED";
+    role: "MEMBER" | "COREMEMBER";
   };
   clients: {
     client: {

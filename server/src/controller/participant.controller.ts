@@ -204,6 +204,7 @@ export class ParticipantController {
               email: true,
               createdAt: true,
               inviteStatus: true,
+              role: true,
             },
           },
           password: true,
@@ -245,6 +246,7 @@ export class ParticipantController {
               email: true,
               createdAt: true,
               inviteStatus: true,
+              role: true,
             },
           },
           password: true,
@@ -373,7 +375,7 @@ export class ParticipantController {
 
   public static editMember = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { id, email, userName } = req.body;
+      const { id, email, role } = req.body;
 
       const member = await db.member.findFirst({
         where: { id },
@@ -390,7 +392,7 @@ export class ParticipantController {
           },
           data: {
             email,
-            userName,
+            role: role.toUpperCase(),
           },
         });
       });

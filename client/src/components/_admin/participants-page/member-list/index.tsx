@@ -10,15 +10,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  useGetallClientsQuery,
-  useGetallMembersQuery,
-} from "@/backend/participant.api";
-import useAuth from "@/hooks/use-auth";
+import { useGetallMembersQuery } from "@/backend/participant.api";
 import { Badge } from "@/components/ui/badge";
 import { MoreVertical, Plus } from "lucide-react";
 import AddMember from "./add-member/sheet";
 import DataLoader from "@/components/shared/loader/data-laoder";
+import { EditMemberType } from "./edit-member/schema";
+import EditMemberModal from "./edit-member";
 
 const ITEMS_PER_LOAD = 12;
 
@@ -27,9 +25,26 @@ export default function MemberList() {
   const clients = data?.result ?? [];
 
   const [search, setSearch] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<EditMemberType | null>(
+    null,
+  );
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  const handleEdit = (
+    id: string,
+    email: string,
+    role: "MEMBER" | "COREMEMBER",
+  ) => {
+    setSelectedClient({
+      id,
+      email,
+      role,
+    });
+    setEditOpen(true);
+  };
 
   const filteredClients = useMemo(() => {
     return clients.filter((member) =>
@@ -105,9 +120,14 @@ export default function MemberList() {
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                <DropdownMenuContent className="bg-white" align="end">
+                  <DropdownMenuItem
+                    onClick={() =>
+                      handleEdit(member.id, member.user.email, member.user.role)
+                    }
+                  >
+                    Edit
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardHeader>
@@ -134,6 +154,14 @@ export default function MemberList() {
 
       {visibleClients.length < filteredClients.length && (
         <div ref={loadMoreRef} className="h-10 w-full" />
+      )}
+      {selectedClient && (
+        <EditMemberModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          defaultValues={selectedClient}
+          onSuccess={() => {}}
+        />
       )}
     </div>
   );

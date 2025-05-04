@@ -15,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { MoreVertical, Plus } from "lucide-react";
 import AddCoreMember from "./add-member/sheet";
 import DataLoader from "@/components/shared/loader/data-laoder";
+import { EditMemberType } from "../member-list/edit-member/schema";
+import EditMemberModal from "../member-list/edit-member";
 
 const ITEMS_PER_LOAD = 12;
 
@@ -23,7 +25,24 @@ export default function CoreMemberList() {
   const clients = data?.result ?? [];
 
   const [search, setSearch] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<EditMemberType | null>(
+    null,
+  );
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
+
+  const handleEdit = (
+    id: string,
+    email: string,
+    role: "MEMBER" | "COREMEMBER",
+  ) => {
+    setSelectedClient({
+      id,
+      email,
+      role,
+    });
+    setEditOpen(true);
+  };
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -101,9 +120,14 @@ export default function CoreMemberList() {
                     <MoreVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                <DropdownMenuContent className="bg-white" align="end">
+                  <DropdownMenuItem
+                    onClick={() =>
+                      handleEdit(member.id, member.user.email, member.user.role)
+                    }
+                  >
+                    Edit
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardHeader>
@@ -130,6 +154,15 @@ export default function CoreMemberList() {
 
       {visibleClients.length < filteredClients.length && (
         <div ref={loadMoreRef} className="h-10 w-full" />
+      )}
+
+      {selectedClient && (
+        <EditMemberModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          defaultValues={selectedClient}
+          onSuccess={() => {}}
+        />
       )}
     </div>
   );
