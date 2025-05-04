@@ -10,9 +10,7 @@ import {
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useEffect, useState } from "react";
-
 import { SheetFooter, SheetClose } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
 import FormField from "@/components/ui/form-field";
@@ -45,6 +42,7 @@ export default function ClientCreateForm({
   onSuccess: () => void;
 }) {
   const { SuccessToast, ErrorToast } = useAppToasts();
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const {
     register,
@@ -66,7 +64,6 @@ export default function ClientCreateForm({
   const [createParticipant, { isLoading }] = useCreateClientMutation();
   const { data: Members } = useGetallMembersQuery();
 
-  // Update form value when selected members change
   useEffect(() => {
     setValue(
       "memberId",
@@ -88,10 +85,18 @@ export default function ClientCreateForm({
   };
 
   const onSubmit = async (payload: CreateClientType) => {
-    console.log("🚀 ~ onSubmit ~ payload:", payload);
+    const formData = new FormData();
+    formData.append("userName", payload.userName);
+    formData.append("email", payload.email);
+    formData.append("password", payload.password);
+    formData.append("instagramId", payload.instagramId);
+    formData.append("instagramPassword", payload.instagramPassword);
+    payload.memberId.forEach((id) => formData.append("memberId", id));
+    if (payload.logo) {
+      formData.append("logo", payload.logo);
+    }
     try {
-      const resp = await createParticipant(payload).unwrap();
-      console.log("🚀 ~ onSubmit ~ resp:", resp);
+      const resp = await createParticipant(formData).unwrap();
       if (resp.status === "success") {
         SuccessToast({ title: resp.message });
         onSuccess();
@@ -111,27 +116,53 @@ export default function ClientCreateForm({
       className="flex h-full flex-1 flex-col gap-6 px-4"
     >
       {/* Username */}
-      <FormField label="Upload logo">
-        <UserCircle
-          className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
-        />
-        <Input
-          {...register("userName")}
-          placeholder="Username"
-          className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
-        />
-        {errors.userName && (
-          <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
-        )}
+      <FormField label="Upload Logo">
+        <div className="relative mx-auto w-fit">
+          {/* Hidden File Input */}
+          <Input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            id="logoUpload"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setValue("logo", file);
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setLogoPreview(reader.result as string);
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+
+          {/* Upload Box - acts as trigger */}
+          <label
+            htmlFor="logoUpload"
+            className="mx-auto flex h-32 w-32 cursor-pointer items-center justify-center rounded-full border-2 border-dashed border-primary bg-primary/5 transition hover:bg-primary/10"
+          >
+            {logoPreview ? (
+              <img
+                src={logoPreview}
+                alt="Logo Preview"
+                className="h-full w-full rounded-full object-cover"
+              />
+            ) : (
+              <UserCircle className="h-32 w-32 text-violet-400" />
+            )}
+          </label>
+        </div>
       </FormField>
-      <FormField label="Username">
+
+      <FormField label="Username *">
         <UserCircle
           className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
         />
         <Input
           {...register("userName")}
           placeholder="Username"
-           className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
+          className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
         />
         {errors.userName && (
           <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
@@ -140,14 +171,15 @@ export default function ClientCreateForm({
 
       <div className="flex flex-1 gap-x-2">
         {/* Instagram ID */}
-        <FormField className="flex-1" label="Instagram ID">
+        <FormField className="flex-1" label="Instagram ID ">
           <Instagram
             className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
           />
           <Input
             {...register("instagramId")}
             placeholder="@john_instagram"
- className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
+            className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
+            required
           />
           {errors.instagramId && (
             <p className="mt-1 text-sm text-red-500">
@@ -165,7 +197,7 @@ export default function ClientCreateForm({
             type="password"
             {...register("instagramPassword")}
             placeholder="••••••"
- className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
+            className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
           />
           {errors.instagramPassword && (
             <p className="mt-1 text-sm text-red-500">
@@ -182,7 +214,7 @@ export default function ClientCreateForm({
           type="email"
           {...register("email")}
           placeholder="john@example.com"
-         className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
+          className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
         />
         {errors.email && (
           <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
@@ -196,7 +228,7 @@ export default function ClientCreateForm({
           type="password"
           {...register("password")}
           placeholder="••••••"
-         className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
+          className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
         />
         {errors.password && (
           <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>

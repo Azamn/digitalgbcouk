@@ -7,7 +7,7 @@ import { CreateMemberType } from "@/components/_admin/participants-page/member-l
 const ParticipantServices = ApiServices.injectEndpoints({
   endpoints: (build) => ({
     // Create Client
-    CreateClient: build.mutation<ApiResponse, CreateClientType>({
+    CreateClient: build.mutation<ApiResponse, FormData>({
       query: (payload) => ({
         url: "/participants/clients",
         method: "POST",
