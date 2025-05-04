@@ -32,15 +32,6 @@ const AppHeader = () => {
         {/* <EventSearchbar /> */}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-4">
-            <Button
-              size="sm"
-              onClick={() => setOpenCompose(true)}
-              className="flex items-center rounded bg-[#1A73E8] px-4 py-2 font-medium text-white hover:bg-[#1669C1]"
-            >
-              <Pencil className="mr-2 h-4 w-4" />
-              Compose
-            </Button>
-            <Compose open={openCompose} setOpen={setOpenCompose} />
             <UserProfile />
           </div>
         </div>

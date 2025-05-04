@@ -62,7 +62,7 @@ export default {
         "text-gradient-midnight": "linear-gradient(to right, #522546, #001f3f)",
       },
       colors: {
-        primary: "#522546",
+        primary: "#1B1833",
         dark: "#001f3f",
         secondary: "#f2f8ff",
         warning: "#FFE893",

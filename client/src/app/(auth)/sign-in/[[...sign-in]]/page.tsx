@@ -97,8 +97,8 @@ const SignIn = () => {
             </div>
           </FormField>
 
-          <Button type="submit" className="w-full bg-warning text-dark">
-            {isLoading ? <Spinner /> : "LOG-IN"}
+          <Button type="submit" className="w-full bg-primary text-secondary">
+            {isLoading ? <Spinner color="#FFE893" /> : "LOG-IN"}
           </Button>
         </form>
       </CardContent>

@@ -1,3 +1,4 @@
+import { GlobalRole } from "@prisma/client";
 import { appEnvConfigs } from "@src/configs";
 import { db } from "@src/db";
 import { GlobalUtils } from "@src/global";
@@ -12,7 +13,7 @@ import {
 import { Request, Response } from "express";
 
 export class ParticipantController {
-  public static CreateClient = AsyncHandler(
+  public static createClient = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const {
         userName,
@@ -22,6 +23,8 @@ export class ParticipantController {
         password,
         memberId,
       } = req.body;
+
+      const clientLogo = (await GlobalUtils.getImageUrl(req)) || "";
 
       try {
         if (!Array.isArray(memberId) || memberId.length === 0) {
@@ -51,6 +54,7 @@ export class ParticipantController {
               instagramPassword,
               userId: user.id,
               password,
+              clientLogo,
             },
           });
 
@@ -91,9 +95,10 @@ export class ParticipantController {
     }
   );
 
-  public static CreateMember = AsyncHandler(
+  public static createMember = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { userName, email, password } = req.body;
+      const { userName, email, password, role } = req.body;
+      const Role = role as GlobalRole;
 
       if (await db.user.findUnique({ where: { userName } }))
         throw new ApiError(400, "Username already exists");
@@ -102,7 +107,7 @@ export class ParticipantController {
 
       await db.$transaction(async (tx) => {
         const member = await tx.user.create({
-          data: { userName, email, password: hashedPassword, role: "MEMBER" },
+          data: { userName, email, password: hashedPassword, role: Role },
         });
 
         await tx.member.create({
@@ -114,7 +119,7 @@ export class ParticipantController {
     }
   );
 
-  public static GetAllClients = AsyncHandler(
+  public static getAllClients = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const clients = await db.client.findMany({
         where: {
@@ -157,7 +162,7 @@ export class ParticipantController {
     }
   );
 
-  public static GetAllMembers = AsyncHandler(
+  public static getAllMembers = AsyncHandler(
     async (_: Request, res: Response): Promise<void> => {
       const members = await db.member.findMany({
         where: {
@@ -199,7 +204,7 @@ export class ParticipantController {
     }
   );
 
-  public static SendInviteToClient = AsyncHandler(
+  public static sendInviteToClient = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { id, email, password, role } = req.body;
       const Role = role.charAt(0) + role.slice(1).toLowerCase();
@@ -220,7 +225,7 @@ export class ParticipantController {
     }
   );
 
-  public static DeleteMember = AsyncHandler(
+  public static deleteMember = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { id } = req.params;
       const member = await db.member.findFirst({
@@ -240,7 +245,7 @@ export class ParticipantController {
     }
   );
 
-  public static DeleteClient = AsyncHandler(
+  public static deleteClient = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { id } = req.params;
       const member = await db.client.findFirst({

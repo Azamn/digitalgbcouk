@@ -21,10 +21,7 @@ export function AppSidebarSheet() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent
-        side="left"
-        className="ml-4 w-[260px] rounded-xl bg-white p-0 sm:w-[300px]"
-      >
+      <SheetContent side="left" className="w-[260px] bg-white p-0 sm:w-[300px]">
         <div className="flex h-full flex-col justify-between">
           {/* Header with SheetTitle and Logo */}
           <SheetHeader className="border-b px-4 py-4">

@@ -2,9 +2,8 @@
 
 import {
   Users,
-  Calendar,
-  FileText,
   UserPlus,
+  ShieldCheck,
 } from "lucide-react";
 import {
   Card,
@@ -16,31 +15,17 @@ import { NumberTicker } from "@/components/ui/magicui/number-ticker";
 import { MagicCard } from "@/components/magicui/magic-card";
 
 interface StatsProps {
-  totalPostsCreated: number;
-  totalPostsPublished: number;
   totalMembers: number;
   totalClients: number;
+  totalCoreMembers: number;
 }
 
 export default function StatsCards({
-  totalPostsCreated,
-  totalPostsPublished,
   totalMembers,
   totalClients,
+  totalCoreMembers,
 }: StatsProps) {
   const stats = [
-    {
-      title: "Total Posts Created",
-      value: totalPostsCreated,
-      icon: FileText,
-      gradient: "bg-gradient-to-r from-[#E9D5FF] to-[#D8B4FE]", // Light Purple → Soft Violet
-    },
-    {
-      title: "Total Posts Published",
-      value: totalPostsPublished,
-      icon: Calendar,
-      gradient: "bg-gradient-to-r from-[#FEE2E2] to-[#FBCFE8]", // Light Red → Soft Pink
-    },
     {
       title: "Total Clients",
       value: totalClients,
@@ -53,10 +38,16 @@ export default function StatsCards({
       icon: UserPlus,
       gradient: "bg-gradient-to-r from-[#DBEAFE] to-[#BFDBFE]", // Light Blue → Soft Cyan
     },
+    {
+      title: "Total Core Members",
+      value: totalCoreMembers,
+      icon: ShieldCheck,
+      gradient: "bg-gradient-to-r from-[#E0F2F1] to-[#B2DFDB]", // Light Teal → Soft Mint
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {stats.map(({ title, value, icon: Icon, gradient }) => (
         <Card
           key={title}

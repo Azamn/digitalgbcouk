@@ -146,10 +146,9 @@ interface PostResposne extends ApiResponse {
 
 interface GetPostStataResponseAdmin extends ApiResponse {
   result: {
-    totalPostsCreated: number;
-    totalPostsPublished: number;
     totalMembers: number;
     totalClients: number;
+    totalCoreMembers: number;
   };
 }
 interface GetPostStataResponseClient extends ApiResponse {

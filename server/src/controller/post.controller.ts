@@ -130,27 +130,19 @@ export class PostController {
       res.json(new ApiResponse(200, "Post is schedueld succesfully"));
     }
   );
-
   public static GetAllStatsForAdmin = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const [
-        totalPostsCreated,
-        totalPostsPublished,
-        totalMembers,
-        totalClients,
-      ] = await Promise.all([
-        db.post.count(), // total posts
-        db.post.count({ where: { postStatus: "PUBLISHED" } }),
-        db.member.count(), // total members
-        db.client.count(), // total clients
+      const [totalMembers, totalClients, totalCoreMembers] = await Promise.all([
+        db.user.count({ where: { role: "MEMBER" } }),
+        db.user.count({ where: { role: "CLIENT" } }),
+        db.user.count({ where: { role: "COREMEMBER" } }),
       ]);
 
       res.json(
         new ApiResponse(200, "Stats fetched", {
-          totalPostsCreated,
-          totalPostsPublished,
           totalMembers,
           totalClients,
+          totalCoreMembers,
         })
       );
     }
