@@ -267,7 +267,9 @@ export class ParticipantController {
         },
       });
 
-      res.json(new ApiResponse(200, "Core Members retrieved successfully", members));
+      res.json(
+        new ApiResponse(200, "Core Members retrieved successfully", members)
+      );
     }
   );
 
@@ -329,6 +331,71 @@ export class ParticipantController {
         },
       });
       res.json(new ApiResponse(200, "Member deleted successfully"));
+    }
+  );
+
+  public static editClient = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { id, email, instagramId, instagramPassword } = req.body;
+
+      const client = await db.client.findFirst({
+        where: { id },
+      });
+
+      if (!client) {
+        throw new ApiError(404, "Client not found");
+      }
+
+      await db.$transaction(async (tx) => {
+        await tx.user.update({
+          where: {
+            id: client.userId,
+          },
+          data: {
+            email,
+          },
+        });
+
+        await tx.client.update({
+          where: {
+            id: client.id,
+          },
+          data: {
+            instagramId,
+            instagramPassword,
+          },
+        });
+      });
+
+      res.json(new ApiResponse(200, "Client updated successfully"));
+    }
+  );
+
+  public static editMember = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { id, email, userName } = req.body;
+
+      const member = await db.member.findFirst({
+        where: { id },
+      });
+
+      if (!member) {
+        throw new ApiError(404, "Member not found");
+      }
+
+      await db.$transaction(async (tx) => {
+        await tx.user.update({
+          where: {
+            id: member.userId,
+          },
+          data: {
+            email,
+            userName,
+          },
+        });
+      });
+
+      res.json(new ApiResponse(200, "Member updated successfully"));
     }
   );
 }

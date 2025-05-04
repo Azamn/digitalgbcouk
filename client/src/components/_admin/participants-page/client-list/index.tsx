@@ -16,6 +16,8 @@ import { Badge } from "@/components/ui/badge";
 import { MoreVertical, Plus } from "lucide-react";
 import AddClient from "./add-client/sheet";
 import DataLoader from "@/components/shared/loader/data-laoder";
+import { EditClientType } from "./edit-client/schema";
+import EditClientModal from "./edit-client";
 
 const ITEMS_PER_LOAD = 12;
 
@@ -24,6 +26,11 @@ export default function ClientList() {
   const clients = data?.result ?? [];
 
   const [search, setSearch] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<EditClientType | null>(
+    null,
+  );
+
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -37,6 +44,22 @@ export default function ClientList() {
   const visibleClients = useMemo(() => {
     return filteredClients.slice(0, visibleCount);
   }, [filteredClients, visibleCount]);
+
+  const handleEdit = (
+    id: string,
+    email: string,
+    password: string,
+    instagramId: string,
+    instagramPassword: string,
+  ) => {
+    setSelectedClient({
+      id,
+      email,
+      instagramId,
+      instagramPassword,
+    });
+    setEditOpen(true);
+  };
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -103,8 +126,19 @@ export default function ClientList() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      handleEdit(
+                        client.id,
+                        client.user.email,
+                        client.user.password,
+                        client.instagramId,
+                        client.instagramPassword,
+                      )
+                    }
+                  >
+                    Edit
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardHeader>
@@ -132,6 +166,15 @@ export default function ClientList() {
 
       {visibleClients.length < filteredClients.length && (
         <div ref={loadMoreRef} className="h-10 w-full" />
+      )}
+
+      {selectedClient && (
+        <EditClientModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          defaultValues={selectedClient}
+          onSuccess={() => {}}
+        />
       )}
     </div>
   );

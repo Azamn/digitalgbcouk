@@ -11,38 +11,6 @@ export const inviteMembersSchema = z.object({
 
 export type InviteMembersType = z.infer<typeof inviteMembersSchema>;
 
-export const acceptEventSchema = z.object({
-  instagramId: z.string(),
-  instagramIdPassword: z.string(),
-  orgId: z.string().optional(),
-  eventId: z.string().optional(),
-});
-
-export type AcceptEventType = z.infer<typeof acceptEventSchema>;
-
-export const createEventSchema = z
-  .object({
-    title: z.string().min(2, {
-      message: "Title must be at least 2 characters.",
-    }),
-    description: z.string().min(10, {
-      message: "Description must be at least 10 characters.",
-    }),
-    additional: z.string().optional(),
-    startTime: z.string().min(1, {
-      message: "Start time is required.",
-    }),
-    endTime: z.string().min(1, {
-      message: "End time is required.",
-    }),
-  })
-  .refine((data) => new Date(data.endTime) > new Date(data.startTime), {
-    message: "End time must be later than start time.",
-    path: ["endTime"],
-  });
-
-export type CreateEventType = z.infer<typeof createEventSchema>;
-
 export const PostEditSchema = z.object({
   title: z.string().min(1, "Title is required"),
   subtitle: z.string().optional(),
@@ -75,3 +43,4 @@ export const changePasswordSchema = z.object({
 });
 
 export type ChangePasswordType = z.infer<typeof changePasswordSchema>;
+

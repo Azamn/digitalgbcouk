@@ -13,5 +13,7 @@ participantRouter
   .post("/core-members", requireAuth(), ParticipantController.createCoreMember)
   .get("/core-members", requireAuth(), ParticipantController.getAllCoreMembers)
   .post("/invite/client", requireAuth(), ParticipantController.sendInviteToClient)
+  .post("/edit/client", requireAuth(), ParticipantController.editClient)
+  .post("/edit/member", requireAuth(), ParticipantController.editMember)
 
 export default participantRouter;

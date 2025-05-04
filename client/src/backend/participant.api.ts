@@ -2,6 +2,7 @@ import ApiServices from "@/store/middleware";
 import { ApiResponse } from "./types/api";
 import { CreateClientType } from "@/components/_admin/participants-page/client-list/add-client/schema";
 import { CreateMemberType } from "@/components/_admin/participants-page/member-list/add-member/schema";
+import { EditClientType } from "@/components/_admin/participants-page/client-list/edit-client/schema";
 
 //  =========== /participants ============
 const ParticipantServices = ApiServices.injectEndpoints({
@@ -100,6 +101,14 @@ const ParticipantServices = ApiServices.injectEndpoints({
         { type: "PARTICIPANTS", id: role },
       ],
     }),
+    editClient: build.mutation<ApiResponse, EditClientType>({
+      query: (payload) => ({
+        url: `/participants/edit/client`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: [{ type: "PARTICIPANTS", id: "CLIENT" }],
+    }),
   }),
 });
 
@@ -111,6 +120,7 @@ export const {
   useSendInviteToClientMutation,
   useCreateCoreMemberMutation,
   useGetallCoreMembersQuery,
+  useEditClientMutation,
 } = ParticipantServices;
 
 export interface CreatedClient {
