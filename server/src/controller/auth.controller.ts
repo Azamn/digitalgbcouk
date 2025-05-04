@@ -1,7 +1,6 @@
 import { db } from "@src/db";
 import { GlobalUtils } from "@src/global";
 import AuthServices from "@src/services/auth";
-import { getAuthUser } from "@src/utils/get-auth-user";
 import {
   ApiError,
   ApiResponse,

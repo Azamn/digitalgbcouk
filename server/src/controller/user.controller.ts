@@ -30,7 +30,7 @@ export class UserController {
         if (!acc[user.role]) {
           acc[user.role] = [];
         }
-        acc[user.role].push(user.email);
+        acc[user.role].push(user.email as string);
         return acc;
       }, {} as Record<string, string[]>);
 

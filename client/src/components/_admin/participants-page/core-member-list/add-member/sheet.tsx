@@ -13,11 +13,9 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import ParticipantCreate from "./form";
-import ClientCreateForm from "./form";
 import MemberCreateForm from "./form";
 
-export default function AddMemberDialog() {
+export default function AddCoreMember() {
   const [open, setOpen] = React.useState(false);
 
   const handleSuccess = () => {
@@ -31,14 +29,14 @@ export default function AddMemberDialog() {
         <Button
           size="sm"
           variant="outline"
-          className="flex items-center gap-x-2 bg-warning text-dark"
+          className="flex items-center gap-x-2 bg-primary text-secondary"
         >
-          <PlusCircle className="size-[14px]" /> Add Member
+          <PlusCircle className="size-[14px]" /> Add Core Member
         </Button>
       </DialogTrigger>
 
       {/* Modal Content */}
-      <DialogContent className="to max-w-lg rounded-lg border-2 border-dark  bg-white">
+      <DialogContent className="to max-w-lg rounded-lg border-2 border-dark bg-white">
         <DialogHeader>
           <DialogTitle className="text-primary">Create New Client</DialogTitle>
           <DialogDescription>Add a new Client.</DialogDescription>

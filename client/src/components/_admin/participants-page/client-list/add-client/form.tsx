@@ -88,10 +88,10 @@ export default function ClientCreateForm({
   };
 
   const onSubmit = async (payload: CreateClientType) => {
-    console.log("🚀 ~ onSubmit ~ payload:", payload)
+    console.log("🚀 ~ onSubmit ~ payload:", payload);
     try {
       const resp = await createParticipant(payload).unwrap();
-      console.log("🚀 ~ onSubmit ~ resp:", resp)
+      console.log("🚀 ~ onSubmit ~ resp:", resp);
       if (resp.status === "success") {
         SuccessToast({ title: resp.message });
         onSuccess();
@@ -111,6 +111,19 @@ export default function ClientCreateForm({
       className="flex h-full flex-1 flex-col gap-6 px-4"
     >
       {/* Username */}
+      <FormField label="Upload logo">
+        <UserCircle
+          className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
+        />
+        <Input
+          {...register("userName")}
+          placeholder="Username"
+          className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
+        />
+        {errors.userName && (
+          <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
+        )}
+      </FormField>
       <FormField label="Username">
         <UserCircle
           className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
@@ -118,7 +131,7 @@ export default function ClientCreateForm({
         <Input
           {...register("userName")}
           placeholder="Username"
-          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60"
+           className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
         />
         {errors.userName && (
           <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
@@ -134,7 +147,7 @@ export default function ClientCreateForm({
           <Input
             {...register("instagramId")}
             placeholder="@john_instagram"
-            className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+ className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
           />
           {errors.instagramId && (
             <p className="mt-1 text-sm text-red-500">
@@ -152,7 +165,7 @@ export default function ClientCreateForm({
             type="password"
             {...register("instagramPassword")}
             placeholder="••••••"
-            className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+ className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
           />
           {errors.instagramPassword && (
             <p className="mt-1 text-sm text-red-500">
@@ -169,7 +182,7 @@ export default function ClientCreateForm({
           type="email"
           {...register("email")}
           placeholder="john@example.com"
-          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+         className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
         />
         {errors.email && (
           <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
@@ -183,7 +196,7 @@ export default function ClientCreateForm({
           type="password"
           {...register("password")}
           placeholder="••••••"
-          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+         className="focus:border-primary border-2 border-slate-300 rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2"
         />
         {errors.password && (
           <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
@@ -194,7 +207,7 @@ export default function ClientCreateForm({
       <FormField label="Members">
         <User className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
         <Select onValueChange={handleMemberSelect} value="">
-          <SelectTrigger className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark">
+          <SelectTrigger className="focus:border-2-primary rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:ring-dark">
             <SelectValue placeholder="Select a member to add" />
           </SelectTrigger>
           <SelectContent>
@@ -241,7 +254,7 @@ export default function ClientCreateForm({
       {/* Actions */}
       <SheetFooter className="flex justify-end gap-4 pt-6">
         <SheetClose asChild>
-          <Button className="w-[140px] rounded-md border border-primary bg-transparent px-6 py-2 text-primary">
+          <Button className="border-2-primary w-[140px] rounded-md border-2 bg-transparent px-6 py-2 text-primary">
             Cancel
           </Button>
         </SheetClose>

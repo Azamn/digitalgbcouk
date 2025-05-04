@@ -97,8 +97,7 @@ export class ParticipantController {
 
   public static createMember = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { userName, email, password, role } = req.body;
-      const Role = role as GlobalRole;
+      const { userName, email, password } = req.body;
 
       if (await db.user.findUnique({ where: { userName } }))
         throw new ApiError(400, "Username already exists");
@@ -107,7 +106,34 @@ export class ParticipantController {
 
       await db.$transaction(async (tx) => {
         const member = await tx.user.create({
-          data: { userName, email, password: hashedPassword, role: Role },
+          data: { userName, email, password: hashedPassword, role: "MEMBER" },
+        });
+
+        await tx.member.create({
+          data: { userId: member.id, password },
+        });
+      });
+
+      res.json(new ApiResponse(201, "Member created successfully"));
+    }
+  );
+  public static createCoreMember = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { userName, email, password } = req.body;
+
+      if (await db.user.findUnique({ where: { userName } }))
+        throw new ApiError(400, "Username already exists");
+
+      const hashedPassword = await AuthServices.hashPassword(password);
+
+      await db.$transaction(async (tx) => {
+        const member = await tx.user.create({
+          data: {
+            userName,
+            email,
+            password: hashedPassword,
+            role: "COREMEMBER",
+          },
         });
 
         await tx.member.create({
@@ -201,6 +227,47 @@ export class ParticipantController {
       });
 
       res.json(new ApiResponse(200, "Members retrieved successfully", members));
+    }
+  );
+  public static getAllCoreMembers = AsyncHandler(
+    async (_: Request, res: Response): Promise<void> => {
+      const members = await db.member.findMany({
+        where: {
+          user: {
+            role: "COREMEMBER",
+          },
+        },
+        select: {
+          id: true,
+          user: {
+            select: {
+              userName: true,
+              email: true,
+              createdAt: true,
+              inviteStatus: true,
+            },
+          },
+          password: true,
+          clients: {
+            select: {
+              client: {
+                select: {
+                  user: {
+                    select: {
+                      userName: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      res.json(new ApiResponse(200, "Core Members retrieved successfully", members));
     }
   );
 

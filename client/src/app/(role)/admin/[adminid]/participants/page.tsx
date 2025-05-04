@@ -2,28 +2,13 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ClientTable from "@/components/_admin/participants-page/client-table/table";
-import MemberTable from "@/components/_admin/participants-page/member-table/table";
-import DataLoader from "@/components/shared/loader/data-laoder";
-import {
-  useGetallClientsQuery,
-  useGetallMembersQuery,
-} from "@/backend/participant.api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ClientList from "@/components/_admin/participants-page/client-list";
+import MemberList from "@/components/_admin/participants-page/member-list";
+import CoreMemberList from "@/components/_admin/participants-page/core-member-list";
 
 const Participants = () => {
-  const { data: clientData, isLoading: clientLoading } =
-    useGetallClientsQuery();
-
-  const { data: memberData, isLoading: memberLoading } =
-    useGetallMembersQuery();
-
   const [activeTab, setActiveTab] = React.useState("client");
-
-  if (clientLoading || memberLoading) return <DataLoader />;
-
-  const clientRes = clientData?.result ?? [];
-  const memberRes = memberData?.result ?? [];
 
   const variants = {
     initial: { opacity: 0, y: 10 },
@@ -32,63 +17,87 @@ const Participants = () => {
   };
 
   return (
-    <Tabs
-      defaultValue="client"
-      value={activeTab}
-      onValueChange={setActiveTab}
-      className="m-4 w-full"
-    >
-      <TabsList className="grid w-[300px] grid-cols-2 px-4">
-        <TabsTrigger
-          value="client"
-          className={`transition-colors ${
-            activeTab === "client" ? "bg-primary text-white" : ""
-          }`}
-        >
-          Client
-        </TabsTrigger>
-        <TabsTrigger
-          value="member"
-          className={`transition-colors ${
-            activeTab === "member" ? "bg-primary text-white" : ""
-          }`}
-        >
-          Member
-        </TabsTrigger>
-      </TabsList>
+    <div className="">
+      <Tabs
+        defaultValue="client"
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full"
+      >
+        <TabsList className="m-4 grid w-[30%] grid-cols-3 px-4">
+          <TabsTrigger
+            value="client"
+            className={`transition-colors ${
+              activeTab === "client" ? "bg-primary text-white" : ""
+            }`}
+          >
+            Client
+          </TabsTrigger>
+          <TabsTrigger
+            value="member"
+            className={`transition-colors ${
+              activeTab === "member" ? "bg-primary text-white" : ""
+            }`}
+          >
+            Member
+          </TabsTrigger>
+          <TabsTrigger
+            value="coreMember"
+            className={`transition-colors ${
+              activeTab === "coreMember" ? "bg-primary text-white" : ""
+            }`}
+          >
+            Core-Member
+          </TabsTrigger>
+        </TabsList>
 
-      <AnimatePresence mode="wait">
-        {activeTab === "client" && (
-          <TabsContent value="client" forceMount>
-            <motion.div
-              key="client"
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              variants={variants}
-              transition={{ duration: 0.3 }}
-            >
-              <ClientTable data={clientRes} />
-            </motion.div>
-          </TabsContent>
-        )}
+        <AnimatePresence mode="wait">
+          {activeTab === "client" && (
+            <TabsContent value="client" forceMount>
+              <motion.div
+                key="client"
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={variants}
+                transition={{ duration: 0.3 }}
+              >
+                <ClientList />
+              </motion.div>
+            </TabsContent>
+          )}
 
-        {activeTab === "member" && (
-          <TabsContent value="member" forceMount>
-            <motion.div
-              key="member"
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              variants={variants}
-              transition={{ duration: 0.3 }}
-            >
-              <MemberTable data={memberRes} />
-            </motion.div>
-          </TabsContent>
-        )}
-      </AnimatePresence>
-    </Tabs>
+          {activeTab === "member" && (
+            <TabsContent value="member" forceMount>
+              <motion.div
+                key="member"
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={variants}
+                transition={{ duration: 0.3 }}
+              >
+                <MemberList />
+              </motion.div>
+            </TabsContent>
+          )}
+          {activeTab === "coreMember" && (
+            <TabsContent value="member" forceMount>
+              <motion.div
+                key="member"
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={variants}
+                transition={{ duration: 0.3 }}
+              >
+                <CoreMemberList />
+              </motion.div>
+            </TabsContent>
+          )}
+        </AnimatePresence>
+      </Tabs>
+    </div>
   );
 };
 

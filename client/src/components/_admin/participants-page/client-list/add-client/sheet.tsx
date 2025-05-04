@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import ClientCreateForm from "./form";
 
-export default function AddClientModal() {
+export default function AddClient() {
   const [open, setOpen] = React.useState(false);
 
   const handleSuccess = () => {
@@ -29,7 +29,7 @@ export default function AddClientModal() {
         <Button
           variant="outline"
           size="sm"
-          className="flex items-center gap-x-2 bg-warning text-dark"
+          className="flex items-center gap-x-2 bg-primary text-secondary"
         >
           <PlusCircle className="size-[14px]" />
           Add Client

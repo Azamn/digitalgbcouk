@@ -35,7 +35,7 @@ export interface SendInviteEmailOptions {
 export interface UserType {
   id: string;
   password: string;
-  role: "ADMIN" | "CLIENT" | "MEMBER";
+  role: "ADMIN" | "CLIENT" | "MEMBER" | "COREMEMBER";
 }
 
 interface NotificationPayloadType {

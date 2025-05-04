@@ -9,7 +9,7 @@ import { GlobalUtils } from "@src/global";
 
 export interface SessionUser {
   id: string;
-  role: "ADMIN" | "CLIENT" | "MEMBER";
+  role: "ADMIN" | "CLIENT" | "MEMBER" | "COREMEMBER";
 }
 
 class AuthServices {
@@ -86,13 +86,18 @@ class AuthServices {
     });
 
     const now = new Date();
-    const isSessionInvalid = !session || !session.user || now > session.expiresAt;
-    
+    const isSessionInvalid =
+      !session || !session.user || now > session.expiresAt;
+
     if (isSessionInvalid) {
-      GlobalUtils.clearMultipleCookies(res, ["sessionToken", "UserRole", "UserId"]);
+      GlobalUtils.clearMultipleCookies(res, [
+        "sessionToken",
+        "UserRole",
+        "UserId",
+      ]);
       return null;
     }
-    
+
     return {
       id: session.user.id,
       role: session.user.role,

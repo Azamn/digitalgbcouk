@@ -1,7 +1,7 @@
 import ApiServices from "@/store/middleware";
 import { ApiResponse } from "./types/api";
-import { CreateClientType } from "@/components/_admin/participants-page/client-table/add-client-form/schema";
-import { CreateMemberType } from "@/components/_admin/participants-page/member-table/add-member-form/schema";
+import { CreateClientType } from "@/components/_admin/participants-page/client-list/add-client/schema";
+import { CreateMemberType } from "@/components/_admin/participants-page/member-list/add-member/schema";
 
 //  =========== /participants ============
 const ParticipantServices = ApiServices.injectEndpoints({
@@ -20,6 +20,14 @@ const ParticipantServices = ApiServices.injectEndpoints({
     CreateMember: build.mutation<ApiResponse, CreateMemberType>({
       query: (payload) => ({
         url: "/participants/members",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: [{ type: "PARTICIPANTS", id: "MEMBER" }],
+    }),
+    CreateCoreMember: build.mutation<ApiResponse, CreateMemberType>({
+      query: (payload) => ({
+        url: "/participants/core-members",
         method: "POST",
         body: payload,
       }),
@@ -61,6 +69,22 @@ const ParticipantServices = ApiServices.injectEndpoints({
             ]
           : [{ type: "PARTICIPANTS", id: "MEMBER" }],
     }),
+    GetallCoreMembers: build.query<GetAllMemberApiResponse, void>({
+      query: () => ({
+        url: "/participants/core-members",
+        method: "GET",
+      }),
+      providesTags: (data) =>
+        data?.result
+          ? [
+              { type: "PARTICIPANTS", id: "MEMBER" },
+              ...data.result.map(({ id }) => ({
+                type: "PARTICIPANTS" as const,
+                id,
+              })),
+            ]
+          : [{ type: "PARTICIPANTS", id: "MEMBER" }],
+    }),
 
     // Send Invite to Client
     SendInviteToClient: build.mutation<
@@ -85,6 +109,8 @@ export const {
   useGetallClientsQuery,
   useGetallMembersQuery,
   useSendInviteToClientMutation,
+  useCreateCoreMemberMutation,
+  useGetallCoreMembersQuery,
 } = ParticipantServices;
 
 export interface CreatedClient {
