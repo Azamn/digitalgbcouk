@@ -22,7 +22,7 @@ const ITEMS_PER_LOAD = 12;
 
 export default function CoreMemberList() {
   const { data, isLoading } = useGetallCoreMembersQuery();
-  const clients = data?.result ?? [];
+  const coreMembers = data?.result ?? [];
 
   const [search, setSearch] = useState("");
   const [editOpen, setEditOpen] = useState(false);
@@ -47,10 +47,10 @@ export default function CoreMemberList() {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const filteredClients = useMemo(() => {
-    return clients.filter((member) =>
+    return coreMembers.filter((member) =>
       member.user.userName.toLowerCase().includes(search.toLowerCase()),
     );
-  }, [search, clients]);
+  }, [search, coreMembers]);
 
   const visibleClients = useMemo(() => {
     return filteredClients.slice(0, visibleCount);
