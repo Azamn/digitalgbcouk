@@ -29,7 +29,6 @@ import {
   useGetallMembersQuery,
 } from "@/backend/participant.api";
 import { createClientSchema, CreateClientType } from "./schema";
-import { getRandomColor } from "@/helpers";
 import PasswordViewToggle from "@/components/password-toggle";
 
 interface SelectedMembersType {

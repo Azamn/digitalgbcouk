@@ -21,11 +21,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import { DateTimePicker12h } from "@/components/date-time-picker";
+import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 
 const PostCompose = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
-  console.log("🚀 ~ PostCompose ~ text:", text)
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [GetAiHelp, { isLoading: aihelpLoadingState }] = useGetAiHelpMutation();
@@ -43,7 +43,7 @@ const PostCompose = () => {
 
     try {
       const response = await GetAiHelp(formData).unwrap();
-      console.log("🚀 ~ handleGetContentWithAi ~ response:", response)
+      console.log("🚀 ~ handleGetContentWithAi ~ response:", response);
       if (response.message) {
         setText(response.message);
       }
@@ -122,7 +122,7 @@ const PostCompose = () => {
       )}
 
       <Textarea
-        placeholder="Write something... or type :balloon: to insert a 🎈"
+        placeholder="Write something.."
         className="min-h-[100px] resize-none border-none shadow-none focus-visible:ring-0"
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -164,29 +164,34 @@ const PostCompose = () => {
 
           <EmojiPopover onEmojiSelect={handleEmojiSelect} />
 
-          <Button variant="ghost" size="icon">
-            <MapPinIcon className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <CalendarIcon className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-x-2">
+            <CalendarIcon className="h-4 w-4" />
+            <DateTimePicker12h onChange={setDatetime} className="text-sm" />
+          </div>
         </div>
       </div>
 
-      <div className="mt-3 flex w-full justify-between p-2 px-4">
-        <div className="flex items-center justify-between gap-x-1 text-sm opacity-90">
-          <Clock1 />
-          <DateTimePicker12h
-            label="Schedule At"
-            onChange={setDatetime}
-            className="text-sm"
-          />
-          <ChevronDown />
-        </div>
-        <Button onClick={handleSaveAsDraft} size={"sm"} className="bg-blue-400">
-          {createPostLoading ? <Spinner /> : "Save as draft"}
+      <SheetFooter className="flex justify-end gap-4 pt-6">
+        <SheetClose asChild>
+          <Button
+            size="sm"
+            className="w-[140px] rounded-md border-2 border-primary bg-transparent px-4 text-primary"
+          >
+            Cancel
+          </Button>
+        </SheetClose>
+        <Button
+          size="sm"
+          type="submit"
+          className="w-[140px] rounded-md bg-primary px-4 text-white"
+        >
+          {createPostLoading ? (
+            <Spinner color="#FFF6E9" size={12} />
+          ) : (
+            "Save as Draft"
+          )}
         </Button>
-      </div>
+      </SheetFooter>
     </div>
   );
 };

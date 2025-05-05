@@ -1,14 +1,12 @@
-import React from "react";
-import Navbar from "./navbar";
-import Hero from "./hero";
-import Cta from "./cta";
-import HelpSection from "./help";
-import TestimonialsMarquee from "./testimonial-marquee";
-import Footer from "./footer";
-import ClientMarquee from "./client-marquee";
+import ClientMarquee from "@/components/_home/client-marquee";
+import Cta from "@/components/_home/cta";
+import Footer from "@/components/_home/footer";
+import HelpSection from "@/components/_home/help";
+import Hero from "@/components/_home/hero";
+import Navbar from "@/components/_home/navbar";
+import TestimonialsMarquee from "@/components/_home/testimonial-marquee";
 
 function HomePage() {
- 
   return (
     <div className="min-h-screen bg-white">
       <Navbar />

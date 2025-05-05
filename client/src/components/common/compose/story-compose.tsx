@@ -91,7 +91,7 @@ const StoryComposer = () => {
       <div className="flex w-full gap-8 border-b p-3">
         {/* Preview / Media Box */}
         <div
-          className="relative mx-auto h-[600px] w-[350px] flex-shrink-0 overflow-hidden rounded-2xl border shadow-xl"
+          className="relative mx-auto aspect-[9/16] w-[350px] flex-shrink-0 overflow-hidden rounded-2xl border shadow-xl"
           style={{
             background:
               selectedMedia || mediaType === "text"
@@ -198,8 +198,14 @@ const StoryComposer = () => {
           />
           <ChevronDown />
         </div>
-        <Button onClick={handleCreateStory} size={"sm"} className="bg-blue-400">
-          {isLoading ? <Spinner /> : "Save as draft"}
+
+        <Button
+          onClick={handleCreateStory}
+          size="sm"
+          type="submit"
+          className="w-[140px] rounded-md bg-primary px-4 text-white"
+        >
+          {isLoading ? <Spinner color="#FFF6E9" size={12} /> : "Save as Draft"}
         </Button>
       </div>
     </div>

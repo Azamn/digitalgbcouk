@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +7,10 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Image, Pencil, PlusCircle } from "lucide-react";
 import PostCompose from "./post-compose";
 import StoryCompose from "./story-compose";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ComposeProps {
   open: boolean;
@@ -18,42 +18,78 @@ interface ComposeProps {
 }
 
 function Compose({ open, setOpen }: ComposeProps) {
+  const [activeTab, setActiveTab] = useState("client");
+
+  const variants = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[calc(100vh-4rem)] overflow-y-auto p-0 sm:max-w-[600px]">
+      <DialogContent className="max-h-[calc(100vh-4rem)] overflow-y-auto bg-white p-0 sm:max-w-[600px]">
         <DialogHeader className="hidden px-4 pb-2">
           <DialogTitle className="hidden text-lg font-semibold">
             Create a post
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="post" className="w-full">
-          <div className="border-b">
-            <TabsList className="bg-background h-12 w-full justify-start rounded-none border-b px-4">
-              <TabsTrigger
-                value="post"
-                className="data-[state=inactive]:text-muted-foreground group relative flex items-center gap-2 text-sm font-medium text-blue-600 data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:h-[2px] data-[state=active]:after:w-full data-[state=active]:after:bg-blue-600"
-              >
-                <Image className="h-4 w-4" />
-                Post
-              </TabsTrigger>
+        <Tabs
+          defaultValue="client"
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full"
+        >
+          <TabsList className="m-4 grid w-[40%] space-x-3 grid-cols-3 px-4">
+            <TabsTrigger
+              value="post"
+              className={`transition-colors ${
+                activeTab === "post" ? "bg-primary text-white" : ""
+              }`}
+            >
+              Posts
+            </TabsTrigger>
+            <TabsTrigger
+              value="story"
+              className={`transition-colors ml-12 ${
+                activeTab === "story" ? "bg-primary text-white" : ""
+              }`}
+            >
+              Story
+            </TabsTrigger>
+          </TabsList>
 
-              <TabsTrigger
-                value="story"
-                className="data-[state=inactive]:text-muted-foreground group relative flex items-center gap-2 text-sm font-medium text-blue-600 data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:h-[2px] data-[state=active]:after:w-full data-[state=active]:after:bg-blue-600"
-              >
-                <PlusCircle className="h-4 w-4" />
-                Story
-              </TabsTrigger>
-            </TabsList>
-          </div>
+          <AnimatePresence mode="wait">
+            {activeTab === "post" && (
+              <TabsContent value="post" forceMount>
+                <motion.div
+                  key="client"
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  variants={variants}
+                  transition={{ duration: 0.3 }}
+                >
+                  <PostCompose />
+                </motion.div>
+              </TabsContent>
+            )}
 
-          <TabsContent value="post" className="mt-0">
-            <PostCompose />
-          </TabsContent>
-          <TabsContent value="story" className="mt-0">
-            <StoryCompose />
-          </TabsContent>
+            {activeTab === "story" && (
+              <TabsContent value="story" forceMount>
+                <motion.div
+                  key="story"
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  variants={variants}
+                  transition={{ duration: 0.3 }}
+                >
+                  <StoryCompose />
+                </motion.div>
+              </TabsContent>
+            )}
+          </AnimatePresence>
         </Tabs>
       </DialogContent>
     </Dialog>
