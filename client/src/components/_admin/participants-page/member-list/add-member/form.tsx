@@ -6,13 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SheetFooter, SheetClose } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
 import FormField from "@/components/ui/form-field";
 import { createMemberSchema, CreateMemberType } from "./schema";
 import { useCreateMemberMutation } from "@/backend/participant.api";
 import { getRandomColor } from "@/helpers";
+import PasswordViewToggle from "@/components/password-toggle";
+import { useState } from "react";
 
 export default function MemberCreateForm({
   onSuccess,
@@ -31,6 +32,7 @@ export default function MemberCreateForm({
   });
 
   const [createParticipant, { isLoading }] = useCreateMemberMutation();
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (payload: CreateMemberType) => {
     try {
@@ -54,13 +56,11 @@ export default function MemberCreateForm({
     >
       {/* Username */}
       <FormField label="Username">
-        <UserCircle
-          className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
-        />
+        <UserCircle className={`absolute left-3 top-2 h-5 w-5`} />
         <Input
           {...register("userName")}
           placeholder="Username"
-          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="text-dark placeholder:text-dark/60 rounded-full border-2 border-primary/50 bg-white pl-12 focus:border-2 focus:border-primary"
         />
         {errors.userName && (
           <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
@@ -69,12 +69,12 @@ export default function MemberCreateForm({
 
       {/* Email */}
       <FormField label="Email">
-        <Mail className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Mail className={`absolute left-3 top-2 h-5 w-5`} />
         <Input
           type="email"
           {...register("email")}
           placeholder="example@email.com"
-          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="text-dark placeholder:text-dark/60 rounded-full border-2 border-primary/50 bg-white pl-12 focus:border-2 focus:border-primary"
         />
         {errors.email && (
           <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
@@ -83,12 +83,16 @@ export default function MemberCreateForm({
 
       {/* Password */}
       <FormField label="Password">
-        <Lock className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <Lock className={`absolute left-3 top-2 h-5 w-5`} />
         <Input
-          type="password"
           {...register("password")}
+          type={showPassword ? "text" : "password"}
           placeholder="••••••••"
-          className="rounded-full border-2 border-green-700 bg-white pl-12 text-dark placeholder:text-dark/60 focus:ring-dark"
+          className="text-dark placeholder:text-dark/60 rounded-full border-2 border-primary/50 bg-white pl-12 focus:border-2 focus:border-primary"
+        />
+        <PasswordViewToggle
+          setShowPassword={setShowPassword}
+          showPassword={showPassword}
         />
         {errors.password && (
           <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>

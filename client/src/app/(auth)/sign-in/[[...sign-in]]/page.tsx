@@ -5,21 +5,18 @@ import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Lock, User } from "lucide-react";
-
+import { Lock, User } from "lucide-react";
 import FormField from "@/components/ui/form-field";
 import { useSignInMutation } from "@/backend/auth-api";
 import { useAppToasts } from "@/hooks/use-app-toast";
 import Spinner from "@/components/ui/spinner";
-import DataLoader from "@/components/shared/loader/data-laoder";
-import Link from "next/link";
 import { useAppDispatch } from "@/store";
 import { setIsAuthLoading } from "@/store/states";
 import { loginSchema, LoginType } from "../schema";
+import PasswordViewToggle from "@/components/password-toggle";
 
 const SignIn = () => {
   const {
@@ -30,7 +27,7 @@ const SignIn = () => {
     resolver: zodResolver(loginSchema),
     defaultValues: { userName: "", password: "" },
   });
-
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
   const { ErrorToast, SuccessToast } = useAppToasts();
   const [Signin, { isLoading }] = useSignInMutation();
@@ -40,7 +37,7 @@ const SignIn = () => {
       const resp = await Signin(data).unwrap();
 
       if (resp.status === "success") {
-        SuccessToast({ title: "Login successful!" });
+        SuccessToast({ title: resp.message });
         dispatch(setIsAuthLoading());
         setTimeout(() => {
           const userRole = Cookies.get("UserRole");
@@ -63,7 +60,7 @@ const SignIn = () => {
   return (
     <Card className="w-full max-w-md bg-white py-8 shadow-none">
       <CardHeader className="space-y-1 pb-8">
-        <CardTitle className="bg-text-gradient-midnight whitespace-nowrap bg-clip-text text-center text-3xl font-bold tracking-tight text-transparent">
+        <CardTitle className="whitespace-nowrap bg-text-gradient-midnight bg-clip-text text-center text-3xl font-bold tracking-tight text-transparent">
           Welcome back to DigitalGb
         </CardTitle>
         <p className="text-muted-foreground text-center">
@@ -78,7 +75,7 @@ const SignIn = () => {
               <User className="absolute left-3 top-3 h-4 w-4 text-primary" />
               <Input
                 {...register("userName")}
-                className="rounded-full bg-white pl-9 focus:ring-1 focus:ring-dark focus:transition-all"
+                className="rounded-full bg-white pl-9 focus:ring-1 focus:ring-primary focus:transition-all"
                 type="email"
                 placeholder="john@example"
               />
@@ -87,12 +84,16 @@ const SignIn = () => {
 
           <FormField label="Password" error={errors.password?.message}>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-primary" />
+              <Lock className="absolute left-3 top-2 h-4 w-4 text-primary" />
               <Input
                 {...register("password")}
-                type="password"
-                className="rounded-full bg-white pl-9 focus:ring-1 focus:ring-dark focus:transition-all"
+                type={showPassword ? "text" : "password"}
+                className="rounded-full bg-white pl-9 focus:ring-1 focus:ring-primary focus:transition-all"
                 placeholder="••••••••"
+              />
+              <PasswordViewToggle
+                setShowPassword={setShowPassword}
+                showPassword={showPassword}
               />
             </div>
           </FormField>

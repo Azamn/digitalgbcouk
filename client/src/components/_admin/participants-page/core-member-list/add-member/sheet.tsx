@@ -36,7 +36,7 @@ export default function AddCoreMember() {
       </DialogTrigger>
 
       {/* Modal Content */}
-      <DialogContent className="to max-w-lg rounded-lg border-2 border-dark bg-white">
+      <DialogContent className="to max-w-lg rounded border-2 border-primary bg-white ">
         <DialogHeader>
           <DialogTitle className="text-primary">Create New Client</DialogTitle>
           <DialogDescription>Add a new Client.</DialogDescription>

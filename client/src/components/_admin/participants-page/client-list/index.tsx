@@ -108,7 +108,7 @@ export default function ClientList() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {visibleClients.map((client) => (
-          <Card className="border border-slate-200 bg-white" key={client.id}>
+          <Card className="border border-primary/60 bg-white" key={client.id}>
             <CardHeader className="flex flex-row items-start justify-between">
               <div>
                 <CardTitle className="text-lg">
@@ -145,19 +145,8 @@ export default function ClientList() {
 
             <CardContent className="text-muted-foreground space-y-1 text-sm">
               <p>Email: {client.user.email}</p>
-              <div>
-                Status:{" "}
-                <Badge
-                  variant="outline"
-                  className={`rounded-full px-2 py-1 text-xs font-medium ${
-                    client.user.inviteStatus === "ACCEPTED"
-                      ? "border-green-300 bg-green-100 text-green-800"
-                      : "border-yellow-300 bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  {client.user.inviteStatus}
-                </Badge>
-              </div>
+              <p>Instagram ID: {client.instagramId}</p>
+              <p>Instagram Password: {client.instagramPassword}</p>
               <p>Members: {client.members.length}</p>
             </CardContent>
           </Card>

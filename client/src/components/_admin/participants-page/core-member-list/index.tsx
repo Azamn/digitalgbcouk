@@ -103,7 +103,7 @@ export default function CoreMemberList() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {visibleClients.map((member) => (
-          <Card className="border border-slate-200 bg-white" key={member.id}>
+          <Card  className="border border-primary/60 bg-white"key={member.id}>
             <CardHeader className="flex flex-row items-start justify-between">
               <div>
                 <CardTitle className="text-lg">
@@ -134,19 +134,6 @@ export default function CoreMemberList() {
 
             <CardContent className="text-muted-foreground space-y-1 text-sm">
               <p>Email: {member.user.email}</p>
-              <div>
-                Status:{" "}
-                <Badge
-                  variant="outline"
-                  className={`rounded-full px-2 py-1 text-xs font-medium ${
-                    member.user.inviteStatus === "ACCEPTED"
-                      ? "border-green-300 bg-green-100 text-green-800"
-                      : "border-yellow-300 bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  {member.user.inviteStatus}
-                </Badge>
-              </div>
             </CardContent>
           </Card>
         ))}

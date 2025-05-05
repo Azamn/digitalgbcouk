@@ -5,7 +5,6 @@ import { LayoutDashboard, Users, FolderOpen, Instagram, UserPlus } from "lucide-
 import useAuth from "@/hooks/use-auth";
 import Link from "next/link";
 import useMount from "@/hooks/use-mount";
-import { useGetListofClientsQuery } from "@/backend/post-api";
 import { useGetallClientsQuery } from "@/backend/participant.api";
 
 export function NavMain() {
@@ -42,10 +41,10 @@ export function NavMain() {
                 setActiveItem(name);
                 setActiveSubItem("");
               }}
-              className={`flex w-full items-center gap-3 rounded-lg px-4 py-2 text-left transition-all duration-300 ${
+              className={`flex  w-[200px] text-sm items-center gap-3 rounded-lg px-4 py-2 text-left transition-all duration-300 ${
                 activeItem === name
-                  ? "bg-green-300 text-black"
-                  : "text-black hover:bg-violet-200"
+                  ? "bg-primary text-white"
+                  : "text-primary hover:bg-violet-200"
               }`}
             >
               {icon}
@@ -60,10 +59,10 @@ export function NavMain() {
             setActiveItem("Member");
             setIsMemberExpanded((prev) => !prev);
           }}
-          className={`flex items-center gap-3 rounded-lg px-4 py-2 text-left transition-all duration-300 ${
+          className={`flex items-center w-[200px] text-sm gap-3 rounded-lg px-4 py-2 text-left transition-all duration-300 ${
             activeItem === "Member"
-              ? "bg-green-300 text-black"
-              : "text-black hover:bg-violet-200"
+              ? "bg-primary text-secondary"
+              : "text-primary hover:bg-violet-200"
           }`}
         >
           <FolderOpen size={20} />
@@ -88,14 +87,14 @@ export function NavMain() {
               >
                 <button
                   onClick={() => setActiveSubItem(client.user.userName)}
-                  className={`flex w-full items-center gap-3 rounded-lg px-4 py-1 text-left transition-all duration-300`}
+                  className={`flex  w-[200px] text-sm items-center gap-3 rounded-lg px-4 py-1 text-left transition-all duration-300`}
                 >
                   <Instagram size={20} className="text-pink-500" />
                   <span
                     className={`${
                       activeSubItem === client.user.userName
                         ? "text-blue-700"
-                        : "text-black hover:bg-violet-200"
+                        : "text-primary hover:bg-violet-200"
                     }`}
                   >
                     {client.user.userName}

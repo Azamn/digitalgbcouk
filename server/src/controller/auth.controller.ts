@@ -74,7 +74,7 @@ export class UserAuthController {
       );
 
       if (!isPasswordCorrect) {
-        throw new ApiError(401, "Incorrect password");
+        throw new ApiError(401, "You have enetred incorrect password !");
       }
 
       await db.user.update({

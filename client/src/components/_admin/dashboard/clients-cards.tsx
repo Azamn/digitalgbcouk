@@ -44,8 +44,10 @@ export default function ClientCards() {
   );
 
   return (
-    <div className="space-y-4 border border-slate-200 bg-slate-50 p-4 rounded-md">
-      <h5 className="font-spaceGrotesk font-bold underline underline-offset-2 text-base ">ALL CLIENTS</h5>
+    <div className="space-y-4 rounded-md border border-slate-200 bg-slate-50 p-4">
+      <h5 className="font-spaceGrotesk text-base font-bold underline underline-offset-2">
+        ALL CLIENTS
+      </h5>
       <Input
         placeholder="Search clients..."
         value={search}
@@ -53,31 +55,18 @@ export default function ClientCards() {
           setSearch(e.target.value);
           setPage(1); // reset on search
         }}
-        className="max-w-sm bg-white"
+        className="max-w-sm focus:ring-1 focus:ring-primary bg-white"
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {paginatedClients.map((client) => (
-          <Card className="bg-white border border-slate-200" key={client.id}>
+          <Card className="border border-primary/25 bg-white" key={client.id}>
             <CardHeader>
               <CardTitle className="text-lg">{client.user.userName}</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground space-y-1 text-sm">
               <p>Email: {client.user.email}</p>
-              <div>
-                Status:{" "}
-                <Badge
-                  variant="outline"
-                  className={`rounded-full px-2 py-1 text-xs font-medium ${
-                    client.user.inviteStatus === "ACCEPTED"
-                      ? "border-green-300 bg-green-100 text-green-800"
-                      : "border-yellow-300 bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  {client.user.inviteStatus}
-                </Badge>
-              </div>
-              <p>Members: {client.members.length}</p>
+              <p>Members assigned: {client.members.length}</p>
             </CardContent>
           </Card>
         ))}

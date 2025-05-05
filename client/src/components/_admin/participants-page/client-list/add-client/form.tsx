@@ -30,6 +30,7 @@ import {
 } from "@/backend/participant.api";
 import { createClientSchema, CreateClientType } from "./schema";
 import { getRandomColor } from "@/helpers";
+import PasswordViewToggle from "@/components/password-toggle";
 
 interface SelectedMembersType {
   id: string;
@@ -63,6 +64,8 @@ export default function ClientCreateForm({
   );
   const [createParticipant, { isLoading }] = useCreateClientMutation();
   const { data: Members } = useGetallMembersQuery();
+  const [showInstagramPassword, setShowInstagramPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     setValue(
@@ -82,6 +85,18 @@ export default function ClientCreateForm({
       }
       return [...prev, { id: memberId, name: member.user.userName }];
     });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setValue("logo", file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const onSubmit = async (payload: CreateClientType) => {
@@ -122,25 +137,15 @@ export default function ClientCreateForm({
           <Input
             type="file"
             accept="image/*"
+            id="uploadLogo"
             className="hidden"
-            id="logoUpload"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                setValue("logo", file);
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  setLogoPreview(reader.result as string);
-                };
-                reader.readAsDataURL(file);
-              }
-            }}
+            onChange={handleFileChange}
           />
 
-          {/* Upload Box - acts as trigger */}
-          <label
-            htmlFor="logoUpload"
-            className="mx-auto flex h-32 w-32 cursor-pointer items-center justify-center rounded-full border-2 border-dashed border-primary bg-primary/5 transition hover:bg-primary/10"
+          {/* Upload Circle UI */}
+          <div
+            onClick={() => document.getElementById("uploadLogo")?.click()}
+            className="relative flex h-32 w-32 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary bg-primary/5 transition hover:bg-primary/10"
           >
             {logoPreview ? (
               <img
@@ -149,20 +154,18 @@ export default function ClientCreateForm({
                 className="h-full w-full rounded-full object-cover"
               />
             ) : (
-              <UserCircle className="h-32 w-32 text-violet-400" />
+              <h5 className="text-base text-primary">Upload Logo</h5>
             )}
-          </label>
+          </div>
         </div>
       </FormField>
 
-      <FormField label="Username *">
-        <UserCircle
-          className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
-        />
+      <FormField label="Username">
+        <UserCircle className={`absolute left-3 top-2 h-5 w-5 text-primary`} />
         <Input
           {...register("userName")}
           placeholder="Username"
-          className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
+          className="text-dark placeholder:text-dark/60 rounded-full border-2 border-primary/50 bg-white pl-12 focus:border-2 focus:border-primary"
         />
         {errors.userName && (
           <p className="mt-1 text-sm text-red-500">{errors.userName.message}</p>
@@ -172,14 +175,11 @@ export default function ClientCreateForm({
       <div className="flex flex-1 gap-x-2">
         {/* Instagram ID */}
         <FormField className="flex-1" label="Instagram ID ">
-          <Instagram
-            className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
-          />
+          <Instagram className={`absolute left-3 top-2 h-5 w-5 text-primary`} />
           <Input
             {...register("instagramId")}
             placeholder="@john_instagram"
-            className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
-            required
+            className="text-dark placeholder:text-dark/60 rounded-full border-2 border-primary/50 bg-white pl-12 focus:border-2 focus:border-primary"
           />
           {errors.instagramId && (
             <p className="mt-1 text-sm text-red-500">
@@ -190,14 +190,16 @@ export default function ClientCreateForm({
 
         {/* Instagram Password */}
         <FormField className="flex-1" label="Instagram Password">
-          <Key
-            className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`}
-          />
+          <Key className={`absolute left-3 top-2 h-5 w-5 text-primary`} />
           <Input
-            type="password"
+            type={showInstagramPassword ? "text" : "password"}
             {...register("instagramPassword")}
             placeholder="••••••"
-            className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
+            className="text-dark placeholder:text-dark/60 rounded-full border-2 border-primary/50 bg-white pl-12 focus:border-2 focus:border-primary"
+          />
+          <PasswordViewToggle
+            setShowPassword={setShowInstagramPassword}
+            showPassword={showInstagramPassword}
           />
           {errors.instagramPassword && (
             <p className="mt-1 text-sm text-red-500">
@@ -207,39 +209,47 @@ export default function ClientCreateForm({
         </FormField>
       </div>
 
-      {/* Email */}
-      <FormField label="Email">
-        <Mail className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
-        <Input
-          type="email"
-          {...register("email")}
-          placeholder="john@example.com"
-          className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
-        />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-        )}
-      </FormField>
+      <div className="flex flex-1 gap-x-2">
+        {/* Email */}
+        <FormField className="flex-1" label="Email">
+          <Mail className={`absolute left-3 top-2 h-5 w-5 text-primary`} />
+          <Input
+            type="email"
+            {...register("email")}
+            placeholder="john@example.com"
+            className="text-dark placeholder:text-dark/60 rounded-full border-2 border-primary/50 bg-white pl-12 focus:border-2 focus:border-primary"
+          />
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+          )}
+        </FormField>
 
-      {/* Password */}
-      <FormField label="Password">
-        <Lock className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
-        <Input
-          type="password"
-          {...register("password")}
-          placeholder="••••••"
-          className="rounded-full border-2 border-slate-300 bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:border-primary"
-        />
-        {errors.password && (
-          <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
-        )}
-      </FormField>
+        {/* Password */}
+        <FormField className="flex-1" label="Password">
+          <Lock className={`absolute left-3 top-2 h-5 w-5 text-primary`} />
+          <Input
+            {...register("password")}
+            type={showPassword ? "text" : "password"}
+            placeholder="••••••"
+            className="text-dark placeholder:text-dark/60 rounded-full border-2 border-primary/50 bg-white pl-12 focus:border-2 focus:border-primary"
+          />
+          <PasswordViewToggle
+            setShowPassword={setShowPassword}
+            showPassword={showPassword}
+          />
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.password.message}
+            </p>
+          )}
+        </FormField>
+      </div>
 
       {/* Members */}
       <FormField label="Members">
-        <User className={`absolute left-3 top-2 h-5 w-5 ${getRandomColor()}`} />
+        <User className={`absolute left-3 top-2 h-5 w-5 text-primary`} />
         <Select onValueChange={handleMemberSelect} value="">
-          <SelectTrigger className="focus:border-2-primary rounded-full bg-white pl-12 text-dark placeholder:text-dark/60 focus:border-2 focus:ring-dark">
+          <SelectTrigger className="focus:border-2-primary text-dark placeholder:text-dark/60 focus:ring-dark rounded-full bg-white pl-12 focus:border-2">
             <SelectValue placeholder="Select a member to add" />
           </SelectTrigger>
           <SelectContent>

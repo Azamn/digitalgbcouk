@@ -39,8 +39,8 @@ export default function AddMember() {
       {/* Modal Content */}
       <DialogContent className="to max-w-lg rounded-lg border-2 border-dark bg-white">
         <DialogHeader>
-          <DialogTitle className="text-primary">Create New Client</DialogTitle>
-          <DialogDescription>Add a new Client.</DialogDescription>
+          <DialogTitle className="text-primary">Create New Member</DialogTitle>
+          <DialogDescription>Add a new Member.</DialogDescription>
         </DialogHeader>
 
         <div className="h-auto overflow-y-auto pb-4">
