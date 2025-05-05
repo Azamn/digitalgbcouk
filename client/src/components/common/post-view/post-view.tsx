@@ -1,11 +1,5 @@
 import { PostTypeProps } from "@/types/global.types";
-import {
-  Bookmark,
-  Heart,
-  ImageIcon,
-  MessageCircle,
-  Share2,
-} from "lucide-react";
+import { Bookmark, Heart, MessageCircle, Share2 } from "lucide-react";
 import { FC } from "react";
 
 interface PostProps {
@@ -16,10 +10,9 @@ const PostView: FC<PostProps> = ({ postData }) => {
   return (
     <div className="min-h-screen flex-1 overflow-y-auto">
       <div className="mx-auto max-w-xl">
-        <div className="overflow-hidden rounded-xl border border-slate-300 transition-all duration-300">
-          <div className="relative h-[500px] w-full">
-            {" "}
-            {/* 👈 Added fixed height (you can adjust as needed) */}
+        <div className="overflow-hidden rounded-xl border-2 border-dotted border-primary/45 bg-white transition-all duration-300">
+          {/* 👇 Instagram-style 1:1 Aspect Ratio */}
+          <div className="relative aspect-square w-full">
             <img
               src={
                 postData.mediaUrl ? postData.mediaUrl : "/digital-market.png"
@@ -39,7 +32,12 @@ const PostView: FC<PostProps> = ({ postData }) => {
             <Bookmark className="h-6 w-6 cursor-pointer transition-colors hover:text-yellow-500" />
           </div>
 
-          <div className="p-4 text-sm">{postData.content}</div>
+          {/* Caption */}
+          <div className="space-y-2 p-4 text-sm">
+            {postData.content.split("\n").map((line, index) => (
+              <p key={index}>{line}</p>
+            ))}
+          </div>
         </div>
       </div>
     </div>

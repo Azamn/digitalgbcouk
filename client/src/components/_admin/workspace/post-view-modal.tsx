@@ -20,7 +20,7 @@ const PostViewModal: React.FC<FullScreenModalProps> = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex !h-screen !w-[90%] !max-w-full flex-col rounded-none !p-0 overflow-hidden">
+      <DialogContent className="flex !h-screen bg-white !w-[90%] !max-w-full flex-col rounded-none !p-0 overflow-hidden">
         {/* Hidden title for accessibility */}
         <DialogHeader className="sr-only">
           <DialogTitle>Post Details</DialogTitle>

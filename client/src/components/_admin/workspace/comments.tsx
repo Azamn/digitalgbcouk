@@ -54,10 +54,10 @@ export default function CommentSection({ postId }: { postId: string }) {
   };
 
   return (
-    <div className="mx-auto mt-10 w-[500px] overflow-y-scroll space-y-4 rounded-lg bg-white p-4">
+    <div className="mx-auto mt-10 max-h-[690px] w-[500px] space-y-4 overflow-y-scroll rounded-lg bg-white p-4">
       {/* Input Box */}
-      <div className="flex items-start gap-2 rounded-md border-2 border-slate-300 px-3 py-2">
-        <div className="flex h-10 min-h-10 w-10 min-w-10 items-center justify-center rounded-full bg-blue-300 font-semibold text-black">
+      <div className="flex sticky w-full items-start gap-2 rounded-lg border-2 border-primary px-3 py-2 shadow-none focus:border-primary focus-visible:ring-1">
+        <div className="flex h-10 min-h-10 w-10 min-w-10 items-center justify-center rounded-full bg-primary font-semibold text-white">
           {firstLetter}
         </div>
 
@@ -66,7 +66,7 @@ export default function CommentSection({ postId }: { postId: string }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="border-none shadow-none focus-visible:ring-0"
+          className="border-none"
         />
         <Button
           variant="ghost"
@@ -74,7 +74,7 @@ export default function CommentSection({ postId }: { postId: string }) {
           onClick={handleAddComment}
           className="text-muted-foreground h-8 w-8"
         >
-          <SendHorizonal className="h-4 w-4" />
+          <SendHorizonal className="h-6 w-6" />
         </Button>
       </div>
 
@@ -91,7 +91,7 @@ export default function CommentSection({ postId }: { postId: string }) {
             return (
               <div key={comment.id} className="rounded-md border p-3">
                 <div className="flex items-start gap-3">
-                  <div className="text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full bg-secondary font-semibold">
+                  <div className="text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full bg-primary font-semibold text-white">
                     {initial}
                   </div>
                   <div className="flex-1">

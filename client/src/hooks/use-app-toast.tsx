@@ -29,19 +29,19 @@ export const useAppToasts = () => {
           transition={{ duration: 0.3 }}
           className="flex items-start gap-3"
         >
-          <CheckCircle className="mt-1 size-6 text-green-400" />
+          <CheckCircle className="mt-1 size-6 text-white" />
           <div>
-            <span className="font-semibold text-base text-green-300">
+            <span className="text-base font-semibold text-white">
               {title}
             </span>
             {description && (
-              <p className="text-sm text-green-400 mt-1">{description}</p>
+              <p className="mt-1 text-sm text-white">{description}</p>
             )}
           </div>
         </motion.div>
       ),
       className:
-        "bg-green-950 border border-green-800 text-green-300 shadow-lg rounded-lg p-4 backdrop-blur-md",
+        "bg-green-700 border border-green-800 text-green-300 shadow-lg rounded-lg p-4 backdrop-blur-md",
     });
   };
 
@@ -56,19 +56,17 @@ export const useAppToasts = () => {
           transition={{ duration: 0.3 }}
           className="flex items-start gap-3"
         >
-          <XCircle className="mt-1 size-6 text-red-400" />
+          <XCircle className="mt-1 size-6 text-white" />
           <div>
-            <span className="font-semibold text-base text-red-300">
-              {title}
-            </span>
+            <span className="text-base font-semibold text-white">{title}</span>
             {description && (
-              <p className="text-sm text-red-400 mt-1">{description}</p>
+              <p className="mt-1 text-sm text-white">{description}</p>
             )}
           </div>
         </motion.div>
       ),
       className:
-        "bg-red-950 border border-red-800 text-red-300 shadow-lg rounded-lg p-4 backdrop-blur-md",
+        "bg-red-500 border border-red-800 text-red-300 shadow-lg rounded p-4 backdrop-blur-md",
     });
   };
 
@@ -85,11 +83,11 @@ export const useAppToasts = () => {
         >
           <AlertTriangle className="mt-1 size-6 text-yellow-400" />
           <div>
-            <span className="font-semibold text-base text-yellow-300">
+            <span className="text-base font-semibold text-yellow-300">
               {title}
             </span>
             {description && (
-              <p className="text-sm text-yellow-400 mt-1">{description}</p>
+              <p className="mt-1 text-sm text-yellow-400">{description}</p>
             )}
           </div>
         </motion.div>
