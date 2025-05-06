@@ -69,7 +69,7 @@ model MemberOnClient {
 
   assignedAt DateTime @default(now())
 
-  @@unique([clientId, memberId]) // prevent duplicate assignments
+  @@unique([clientId, memberId])
 }
 
 model Session {

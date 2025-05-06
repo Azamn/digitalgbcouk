@@ -1,11 +1,11 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { appEnvConfigs } from "@src/configs";
-import axios from "axios";
 
 const Ai = new GoogleGenerativeAI(appEnvConfigs.AI_PUBLISHABLE_KEY as string);
 
 type InstagramPost = {
   content: string;
+  hashtags: string;
 };
 
 export const ScanImage = async (
@@ -25,22 +25,49 @@ export const ScanImage = async (
     });
 
     const prompt = `
-You are an Instagram post generation AI. Analyze the uploaded user image and create a highly engaging, complete Instagram post with all necessary components:
+    You are an Instagram post generation AI. Analyze the uploaded user image and create a highly engaging, complete Instagram post with all necessary components. 
+    Your response MUST be in the following exact format between the triple dashes:
 
-- A catchy and relevant title (concise and impactful).
-- A detailed description of the image, elaborating on its theme, content, or context (2-3 sentences).
-- 5-8 relevant, trending hashtags.
-- Add emojis to enhance the engagement and tone of the post.
-- Additional engaging content such as tips, facts, or a call-to-action.
+    ---
+    {
+      "content": "Your engaging Instagram post content here including caption, description, and emojis",
+      "hashtags": "#first #second #third #fourth #fifth"
+    }
+    ---
 
-Please respond with the full post content as a single string, including all components, hashtags, and emojis in a human-friendly and natural style. Your response should not be in JSON format but should directly represent the content that will be posted on Instagram.
+    Guidelines:
+    1. CONTENT:
+    - Start with a catchy, relevant title (concise and impactful)
+    - Include a detailed description of the image (2-3 sentences)
+    - Add emojis to enhance engagement
+    - Include additional engaging content like tips, facts, or call-to-action
+    
+    2. HASHTAGS:
+    - Provide exactly 5-8 relevant, trending hashtags
+    - Separate hashtags with spaces only
+    - Place them at the end of the content
+    
+    3. FORMAT:
+    - The response must be valid JSON format between the triple dashes
+    - Do not include any additional text outside the JSON object
+    - Do not use markdown formatting
+    
+    Example response:
+    ---
+    {
+      "content": "🌟 Sunset Magic 🌅\nThis breathtaking sunset reminds us to appreciate nature's beauty. Perfect end to a perfect day! ✨\n\nWhat's your favorite time of day? Share below! 👇",
+      "hashtags": "#sunset #nature #goldenhour #photography #travel #sunsetlovers #instagood #peaceful"
+    }
+    ---
 
-Example of what the response should look like:
-"🌟 Title: Amazing Sunset Vibes
-This stunning sunset 🌅 reminds us to appreciate the beauty around us. Whether you're relaxing by the beach or enjoying a quiet evening, take a moment to pause and reflect. 🌊✨ #sunsetlove #naturevibes #oceanview #peaceful #sunsetdreams 🌞"
-
-If the image is not suitable for generating content or content extraction fails, respond with an empty string.
-`;
+    If the image is not suitable for generating content, return empty strings for both fields:
+    ---
+    {
+      "content": "",
+      "hashtags": ""
+    }
+    ---
+    `;
 
     const result = await model.generateContent([
       {
@@ -55,14 +82,30 @@ If the image is not suitable for generating content or content extraction fails,
     const resp = await result.response;
     const rawText = resp.text();
 
-    const cleanedText = rawText.trim();
-
-    if (!cleanedText || cleanedText.length === 0) {
-      console.warn("No post content generated.");
+    // Extract JSON from between the triple dashes
+    const jsonMatch = rawText.match(/---\s*({[\s\S]*?})\s*---/);
+    if (!jsonMatch) {
+      console.warn("Failed to extract JSON response");
       return null;
     }
 
-    return { content: cleanedText };
+    try {
+      const postData = JSON.parse(jsonMatch[1]);
+
+      if (
+        typeof postData.content === "string" &&
+        typeof postData.hashtags === "string"
+      ) {
+        return {
+          content: postData.content.trim(),
+          hashtags: postData.hashtags.trim(),
+        };
+      }
+      return null;
+    } catch (e) {
+      console.error("Failed to parse AI response:", e);
+      return null;
+    }
   } catch (error) {
     console.error("Failed to scan image:", error);
     return null;

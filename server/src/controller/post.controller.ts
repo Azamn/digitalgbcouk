@@ -25,13 +25,18 @@ export class PostController {
 
         console.log("File buffer successfully read");
 
-        const postContent = await ScanImage(fileBuffer, req.file.mimetype);
+        const postInfo = await ScanImage(fileBuffer, req.file.mimetype);
 
-        if (!postContent) {
+        if (!postInfo) {
           throw new ApiError(500, "Failed to generate Instagram post content");
         }
 
-        res.json(new ApiResponse(200, postContent.content));
+        res.json(
+          new ApiResponse(200, "", {
+            content: postInfo.content,
+            hastags: postInfo.hashtags,
+          })
+        );
       } catch (error) {
         console.error("Error reading the file:", error);
         throw new ApiError(
@@ -44,7 +49,7 @@ export class PostController {
 
   public static CreatePost = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const { content, postType, scheduledAt } = req.body;
+      const { content, postType, scheduledAt, hanstags } = req.body;
       const { clientId } = req.params;
 
       const mediaUrl = await GlobalUtils.getImageUrl(req);

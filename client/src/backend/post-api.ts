@@ -125,6 +125,7 @@ export const {
 interface MediaResponse extends ApiResponse {
   result: {
     content: string;
+    hastags: string;
   };
 }
 

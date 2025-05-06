@@ -26,8 +26,12 @@ import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 const PostCompose = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
+  const [hashtags, setHashtags] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [showAiSuggestions, setShowAiSuggestions] = useState(false);
+  const [aiContent, setAiContent] = useState("");
+  const [aiHashtags, setAiHashtags] = useState("");
   const [GetAiHelp, { isLoading: aihelpLoadingState }] = useGetAiHelpMutation();
   const [CreatePost, { isLoading: createPostLoading }] =
     useCreatePostMutation();
@@ -35,6 +39,7 @@ const PostCompose = () => {
   const searchParams = useSearchParams();
   const clientId = searchParams.get("clientId") as string;
   const [datetime, setDatetime] = useState<Date | undefined>(undefined);
+
   const handleGetContentWithAi = async () => {
     if (!text && !imageFile) return;
     const formData = new FormData();
@@ -43,16 +48,35 @@ const PostCompose = () => {
 
     try {
       const response = await GetAiHelp(formData).unwrap();
-      console.log("🚀 ~ handleGetContentWithAi ~ response:", response);
-      if (response.message) {
-        setText(response.message);
+      if (response.result) {
+        const content = response.result.content;
+        const hashtags = response.result.hastags;
+        setAiContent(content as string);
+        setAiHashtags(hashtags);
+        setShowAiSuggestions(true);
       }
       SuccessToast({
-        title: "Ai content generated",
+        title: "AI content generated",
       });
     } catch (error) {
       console.error("AI content generation failed:", error);
     }
+  };
+
+  const handleAcceptContent = () => {
+    setText(aiContent);
+    setShowAiSuggestions(false);
+  };
+
+  const handleAcceptHashtags = () => {
+    setHashtags(aiHashtags);
+    setShowAiSuggestions(false);
+  };
+
+  const handleAcceptAll = () => {
+    setText(aiContent);
+    setHashtags(aiHashtags);
+    setShowAiSuggestions(false);
   };
 
   const handleImageUploadClick = () => {
@@ -81,7 +105,9 @@ const PostCompose = () => {
     if (!text && !imageFile) return;
 
     const formData = new FormData();
-    formData.append("content", text);
+    // Combine content and hashtags
+    const fullContent = `${text}\n\n${hashtags}`;
+    formData.append("content", fullContent);
     formData.append("postType", "POST");
     if (datetime) formData.append("scheduledAt", datetime.toISOString());
     if (imageFile) formData.append("image", imageFile);
@@ -127,6 +153,57 @@ const PostCompose = () => {
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
+
+      <Textarea
+        className="mt-2 min-h-[50px] resize-none border-none shadow-none focus-visible:ring-0"
+        value={hashtags}
+        onChange={(e) => setHashtags(e.target.value)}
+      />
+
+      {showAiSuggestions && (
+        <div className="my-4 rounded-lg border border-gray-200 p-4">
+          <h3 className="mb-2 font-medium">AI Suggestions</h3>
+          <div className="mb-3 rounded bg-gray-50 p-3">
+            <p className="whitespace-pre-line">{aiContent}</p>
+          </div>
+          <div className="rounded bg-gray-50 p-3">
+            <p className="text-sm text-gray-600">{aiHashtags}</p>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              className="bg-primary text-secondary"
+              variant="outline"
+              size="sm"
+              onClick={handleAcceptContent}
+            >
+              Accept Content
+            </Button>
+            <Button
+              className="bg-primary text-secondary"
+              variant="outline"
+              size="sm"
+              onClick={handleAcceptHashtags}
+            >
+              Accept Hashtags
+            </Button>
+            <Button
+              className="bg-primary text-secondary"
+              size="sm"
+              onClick={handleAcceptAll}
+            >
+              Accept All
+            </Button>
+            <Button
+              className="bg-primary text-secondary"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowAiSuggestions(false)}
+            >
+              Discard
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="my-1">
         <button
@@ -184,6 +261,7 @@ const PostCompose = () => {
           size="sm"
           type="submit"
           className="w-[140px] rounded-md bg-primary px-4 text-white"
+          onClick={handleSaveAsDraft}
         >
           {createPostLoading ? (
             <Spinner color="#FFF6E9" size={12} />
