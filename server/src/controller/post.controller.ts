@@ -77,6 +77,41 @@ export class PostController {
     }
   );
 
+  public static PostEdit = AsyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      const { postId } = req.params;
+      const { content } = req.body;
+      let mediaUrl: string | undefined;
+
+      if (!content && !req.file) {
+        throw new ApiError(400, "No changes provided");
+      }
+
+      const existingPost = await db.post.findUnique({
+        where: { id: postId },
+      });
+
+      if (!existingPost) {
+        throw new ApiError(404, "Post not found");
+      }
+
+      if (req.file) {
+        mediaUrl = (await GlobalUtils.getImageUrl(req)) as string;
+      }
+
+      await db.post.update({
+        where: { id: postId },
+        data: {
+          ...(content && { content }),
+          ...(mediaUrl && { mediaUrl }),
+          updatedAt: new Date(),
+        },
+      });
+
+      res.json(new ApiResponse(200, "Post edited successfully"));
+    }
+  );
+
   public static GetAllposts = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const { clientId } = req.params;

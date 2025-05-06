@@ -17,5 +17,6 @@ postRouter
 .get("/all/clientpost",requireAuth(),  PostController.GetAllClientPosts)
 .get("/list/clients",requireAuth(),  PostController.GetListOfClients)
 .post("/confirm/:postId",requireAuth(),  PostController.ConfirmByClient)
+.post("/edit/:postId",requireAuth(), upload.single("image"),  PostController.PostEdit)
 
 export default postRouter;

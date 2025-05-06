@@ -28,6 +28,18 @@ const PostServices = ApiServices.enhanceEndpoints({
       invalidatesTags: [{ type: "POST", id: "LISTS" }],
     }),
 
+    UpdatePost: build.mutation<
+      ApiResponse,
+      { postId: string; formData: FormData }
+    >({
+      query: ({ postId, formData }) => ({
+        url: `/posts/edit/${postId}`,
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: [{ type: "POST", id: "LISTS" }],
+    }),
+
     // 📅 Schedule Post
     SchedulePost: build.mutation<
       ApiResponse,
@@ -120,6 +132,7 @@ export const {
   useGetMembersStatsQuery,
   useGetListofClientsQuery,
   useConfirmPostMutation,
+  useUpdatePostMutation,
 } = PostServices;
 
 interface MediaResponse extends ApiResponse {
