@@ -8,6 +8,7 @@ import { useGetallClientsQuery } from "@/backend/participant.api";
 import useAuth from "@/hooks/use-auth";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, User, Mail, Users } from "lucide-react";
+import Link from "next/link";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -60,42 +61,47 @@ export default function ClientCards() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {paginatedClients.map((client) => (
-          <Card
+          <Link
             key={client.id}
-            className="group relative overflow-hidden border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md"
+            href={`/admin/${user?.id}/workspace?clientId=${client.id}`}
           >
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-secondary" />
+            <Card
+              key={client.id}
+              className="group relative overflow-hidden border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md"
+            >
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-secondary" />
 
-            <CardHeader className="pb-2">
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                  <User className="h-5 w-5 text-primary" />
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-semibold text-gray-900">
+                      {client.user.userName}
+                    </CardTitle>
+                    <Badge
+                      variant="outline"
+                      className="mt-1 border-primary/30 bg-primary text-white"
+                    >
+                      Client ID: {client.id.slice(0, 6)}
+                    </Badge>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">
-                    {client.user.userName}
-                  </CardTitle>
-                  <Badge
-                    variant="outline"
-                    className="mt-1 border-primary/30 bg-primary text-white"
-                  >
-                    Client ID: {client.id.slice(0, 6)}
-                  </Badge>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-gray-400" />
+                  <span>{client.user.email}</span>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-gray-400" />
-                <span>{client.user.email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-gray-400" />
-                <span>{client.members.length} team members</span>
-              </div>
-            </CardContent>
-            <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-l from-primary to-secondary" />
-          </Card>
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-gray-400" />
+                  <span>{client.members.length} team members</span>
+                </div>
+              </CardContent>
+              <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-l from-primary to-secondary" />
+            </Card>
+          </Link>
         ))}
       </div>
 
