@@ -151,10 +151,30 @@ export interface CreatedClient {
   password: string;
   instagramId: string;
   instagramPassword: string;
+  avatar?: string;
 }
 
 export interface GetAllClientApiResponse extends ApiResponse {
-  result: CreatedClient[];
+  result: {
+    id: string;
+    user: {
+      userName: string;
+      email: string;
+      inviteStatus: "PENDING" | "ACCEPTED";
+      password: string;
+    };
+    members: {
+      member: {
+        user: {
+          userName: string;
+        };
+      };
+    }[];
+    password: string;
+    instagramId: string;
+    instagramPassword: string;
+    avatar?: string;
+  }[];
 }
 
 // ================= MEMBER =====================

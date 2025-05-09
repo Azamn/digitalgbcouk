@@ -6,6 +6,7 @@ import {
   Space_Grotesk,
   Manrope,
   Geist,
+  Mulish,
 } from "next/font/google";
 
 const inter = Inter({

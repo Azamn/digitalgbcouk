@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useGetallClientsQuery } from "@/backend/participant.api";
 import useAuth from "@/hooks/use-auth";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, User, Mail, Users } from "lucide-react";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -44,52 +44,91 @@ export default function ClientCards() {
   );
 
   return (
-    <div className="space-y-4 rounded-md border border-slate-200 bg-slate-50 p-4">
-      <h5 className="font-spaceGrotesk text-base font-bold underline underline-offset-2">
-        ALL CLIENTS
-      </h5>
-      <Input
-        placeholder="Search clients..."
-        value={search}
-        onChange={(e) => {
-          setSearch(e.target.value);
-          setPage(1); // reset on search
-        }}
-        className="max-w-sm focus:ring-1 focus:ring-primary bg-white"
-      />
+    <div className="space-y-6 rounded-lg bg-white p-6 shadow-sm">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <h2 className="text-2xl font-bold text-gray-900">Client Directory</h2>
+        <Input
+          placeholder="Search clients..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
+          className="max-w-md bg-gray-50 focus:ring-2 focus:ring-primary"
+        />
+      </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {paginatedClients.map((client) => (
-          <Card className="border border-primary/25 bg-white" key={client.id}>
-            <CardHeader>
-              <CardTitle className="text-lg">{client.user.userName}</CardTitle>
+          <Card
+            key={client.id}
+            className="group relative overflow-hidden border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md"
+          >
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-secondary" />
+
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                  <User className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg font-semibold text-gray-900">
+                    {client.user.userName}
+                  </CardTitle>
+                  <Badge
+                    variant="outline"
+                    className="mt-1 border-primary/30 bg-primary text-white"
+                  >
+                    Client ID: {client.id.slice(0, 6)}
+                  </Badge>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="text-muted-foreground space-y-1 text-sm">
-              <p>Email: {client.user.email}</p>
-              <p>Members assigned: {client.members.length}</p>
+            <CardContent className="space-y-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-gray-400" />
+                <span>{client.user.email}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-gray-400" />
+                <span>{client.members.length} team members</span>
+              </div>
             </CardContent>
+            <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-l from-primary to-secondary" />
           </Card>
         ))}
       </div>
 
-      <div className="flex items-center justify-between">
-        <Button
-          variant="outline"
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}
-          className="bg-black text-secondary"
-        >
-          <ChevronLeft /> Previous
-        </Button>
+      {filteredClients.length === 0 && (
+        <div className="flex h-40 items-center justify-center rounded-lg border border-dashed bg-gray-50">
+          <p className="text-gray-500">No clients found</p>
+        </div>
+      )}
 
-        <Button
-          variant="outline"
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}
-          className="bg-black text-secondary"
-        >
-          Next <ChevronRight />
-        </Button>
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-gray-500">
+          Showing {(page - 1) * ITEMS_PER_PAGE + 1}-
+          {Math.min(page * ITEMS_PER_PAGE, filteredClients.length)} of{" "}
+          {filteredClients.length} clients
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="flex items-center gap-1 border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+          >
+            <ChevronLeft className="h-4 w-4" /> Previous
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="flex items-center gap-1 border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+          >
+            Next <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

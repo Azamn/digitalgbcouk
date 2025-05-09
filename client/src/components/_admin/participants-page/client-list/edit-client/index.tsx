@@ -23,7 +23,7 @@ export default function EditClientModal({
 }: EditClientModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-6 sm:max-w-lg">
+      <DialogContent className="max-w-md bg-white p-6 sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Edit Client</DialogTitle>
         </DialogHeader>

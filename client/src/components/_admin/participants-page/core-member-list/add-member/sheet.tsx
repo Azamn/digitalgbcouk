@@ -38,8 +38,8 @@ export default function AddCoreMember() {
       {/* Modal Content */}
       <DialogContent className="to max-w-lg rounded border-2 border-primary bg-white ">
         <DialogHeader>
-          <DialogTitle className="text-primary">Create New Client</DialogTitle>
-          <DialogDescription>Add a new Client.</DialogDescription>
+          <DialogTitle className="text-primary">Create Core Member</DialogTitle>
+          <DialogDescription>Add a Core Member.</DialogDescription>
         </DialogHeader>
 
         <div className="h-auto overflow-y-auto pb-4">

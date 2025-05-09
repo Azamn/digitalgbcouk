@@ -23,7 +23,7 @@ const AppHeader = () => {
               height={32}
               className="h-8 w-8"
             />
-            <span className="ml-2 text-2xl font-bold text-dark">
+            <span className="text-dark ml-2 text-2xl font-bold">
               Digital GB
             </span>
             <SetView />
@@ -32,6 +32,7 @@ const AppHeader = () => {
         {/* <EventSearchbar /> */}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-4">
+            <Compose open={openCompose} setOpen={setOpenCompose} />
             <UserProfile />
           </div>
         </div>
