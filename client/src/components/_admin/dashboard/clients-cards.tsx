@@ -8,7 +8,7 @@ import { useGetallClientsQuery } from "@/backend/participant.api";
 import useAuth from "@/hooks/use-auth";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, User, Mail, Users } from "lucide-react";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 
 const ITEMS_PER_PAGE = 8;
 

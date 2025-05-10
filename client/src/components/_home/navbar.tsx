@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import useClearSessionOnNewTab from "@/hooks/use-clear-cookie";
 import { Target } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 
 const Navbar = () => {
   return (
-    <nav className="flex h-[70px] w-full items-center justify-between border-b border-secondary px-8">
+    <nav className="flex h-[70px] w-full border-dashed items-center border-2 justify-between border-b border-secondary px-8">
       <div className="inline-flex items-center">
         <Image
           src="https://www.digitalgb.co.uk/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.4ebfc4d4.png&w=2048&q=75"

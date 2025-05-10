@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Event } from "@/backend/types/api";
 import { FC } from "react";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 import { useAppDispatch } from "@/store";
 import { setPostId } from "@/store/states";
 

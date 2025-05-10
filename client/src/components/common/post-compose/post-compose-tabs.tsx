@@ -33,7 +33,6 @@ function PostComposeTabs({ open, setOpen }: ComposeProps) {
             Create a post
           </DialogTitle>
         </DialogHeader>
-
         <Tabs
           defaultValue="client"
           value={activeTab}

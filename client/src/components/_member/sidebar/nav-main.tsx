@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { LayoutDashboard, Users, FolderOpen, Instagram } from "lucide-react";
 import useAuth from "@/hooks/use-auth";
-import Link from "next/link";
+import { Link } from 'next-view-transitions'
 import useMount from "@/hooks/use-mount";
 import { useGetListofClientsQuery } from "@/backend/post-api";
 

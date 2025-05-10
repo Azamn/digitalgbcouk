@@ -21,7 +21,7 @@ const SetView = () => {
 
   return (
     <Select onValueChange={handleChange} defaultValue={currentView}>
-      <SelectTrigger className="w-[180px] ml-6 border-none shadow-none">
+      <SelectTrigger className="border-none focus: shadow-none">
         <SelectValue placeholder="Select view mode" />
       </SelectTrigger>
       <SelectContent>

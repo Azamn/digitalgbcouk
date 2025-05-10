@@ -66,7 +66,7 @@ export default function CommentSection({ postId }: { postId: string }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="border-none"
+          className="border-none shadow-none"
         />
         <Button
           variant="ghost"
