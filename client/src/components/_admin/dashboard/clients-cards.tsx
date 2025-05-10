@@ -7,8 +7,15 @@ import { Button } from "@/components/ui/button";
 import { useGetallClientsQuery } from "@/backend/participant.api";
 import useAuth from "@/hooks/use-auth";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, User, Mail, Users } from "lucide-react";
-import { Link } from 'next-view-transitions'
+import {
+  ChevronLeft,
+  ChevronRight,
+  User,
+  Mail,
+  Users,
+  KeyIcon,
+} from "lucide-react";
+import { Link } from "next-view-transitions";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -97,6 +104,10 @@ export default function ClientCards() {
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-gray-400" />
                   <span>{client.members.length} team members</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <KeyIcon className="h-4 w-4 text-gray-400" />
+                  <span>{client.password}</span>
                 </div>
               </CardContent>
               <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-l from-primary to-secondary" />

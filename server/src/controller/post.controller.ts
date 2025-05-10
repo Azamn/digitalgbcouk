@@ -137,8 +137,8 @@ export class PostController {
               },
             },
             type: true,
+            createdAt: true,
           },
-
           orderBy: {
             createdAt: "desc",
           },

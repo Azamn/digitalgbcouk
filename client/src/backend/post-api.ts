@@ -142,20 +142,23 @@ interface MediaResponse extends ApiResponse {
   };
 }
 
-interface PostResposne extends ApiResponse {
-  result: {
-    id: string;
-    content: string;
-    mediaUrl: string;
-    isConfirmedByClient: boolean;
-    scheduledAt: string;
-    client: {
-      user: {
-        email: string;
-      };
+export interface PostType {
+  id: string;
+  content: string;
+  mediaUrl: string;
+  isConfirmedByClient: boolean;
+  scheduledAt: string;
+  client: {
+    user: {
+      email: string;
     };
-    type: "POST" | "STORY";
-  }[];
+  };
+  type: "POST" | "STORY";
+  createdAt: string;
+}
+
+interface PostResposne extends ApiResponse {
+  result: PostType[];
 }
 
 interface GetPostStataResponseAdmin extends ApiResponse {

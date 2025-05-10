@@ -1,6 +1,7 @@
 "use client";
 
 import DataLoader from "@/components/shared/loader/data-laoder";
+import useClearSessionOnNewTab from "@/hooks/use-clear-cookie";
 import { useAppSelector } from "@/store";
 import Image from "next/image";
 
@@ -9,6 +10,7 @@ export default function RootAuthLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useClearSessionOnNewTab();
   const { isAuthLoading } = useAppSelector((state) => state.global);
   if (isAuthLoading) return <DataLoader />;
 
@@ -27,15 +29,15 @@ export default function RootAuthLayout({
       </div>
 
       {/* Responsive Grid */}
-      <div className="grid w-full min-h-screen grid-cols-1 lg:grid-cols-2">
+      <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-2">
         {/* Left Side - Image Section */}
-        <div className="hidden lg:flex items-center justify-center">
+        <div className="hidden items-center justify-center lg:flex">
           <Image
             src="/auth.png"
             alt="Authentication Background"
             height={600}
             width={600}
-            className="dark:brightness-[0.2]  object-cover"
+            className="object-cover dark:brightness-[0.2]"
             priority
           />
         </div>

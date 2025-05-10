@@ -54,7 +54,6 @@ export class ParticipantController {
               instagramPassword,
               userId: user.id,
               password,
-              clientLogo,
             },
           });
 
@@ -172,6 +171,7 @@ export class ParticipantController {
                   user: {
                     select: {
                       userName: true,
+                      password: true,
                     },
                   },
                 },
