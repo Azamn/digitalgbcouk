@@ -424,47 +424,32 @@ export class PostController {
     }
   );
 
-  public static GetListOfClients = AsyncHandler(
+  public static GetAssignedClients = AsyncHandler(
     async (req: Request, res: Response): Promise<void> => {
       const user = await db.user.CheckUserId(req);
-
       const member = await db.member.findUnique({
         where: {
           userId: user.id,
         },
       });
-
       if (!member) throw new ApiError(400, "No member found");
 
-      // Get all clients the member is assigned to
       const assignedClients = await db.memberOnClient.findMany({
         where: {
           memberId: member.id,
         },
         select: {
-          client: {
-            select: {
-              id: true,
-              createdAt: true,
-              updatedAt: true,
-              user: {
-                select: {
-                  userName: true,
-                  email: true,
-                },
-              },
-            },
-          },
-          assignedAt: true,
+          clientId: true,
         },
       });
 
-      const clients = assignedClients.map((relation) => ({
-        clientId: relation.client.id,
-        userName: relation.client.user.userName,
-      }));
-
-      res.json(new ApiResponse(200, "Fetched assigned clients", clients));
+      res.json(
+        new ApiResponse(
+          200,
+          "Fetched posts for assigned clients",
+          assignedClients
+        )
+      );
     }
   );
 

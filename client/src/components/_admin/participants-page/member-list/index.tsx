@@ -19,6 +19,7 @@ import {
   User,
   Loader2,
   Loader2Icon,
+  KeyRound,
 } from "lucide-react";
 import DataLoader from "@/components/shared/loader/data-laoder";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -228,6 +229,12 @@ export default function MemberList() {
                       </TooltipTrigger>
                       <TooltipContent>{member.user.email}</TooltipContent>
                     </Tooltip>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <KeyRound className="h-4 w-4 flex-shrink-0 text-gray-400" />
+                    <span className="truncate text-gray-600">
+                      {member.password}
+                    </span>
                   </div>
                 </CardContent>{" "}
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-l from-primary to-secondary" />

@@ -57,7 +57,6 @@ export class ParticipantController {
             },
           });
 
-          // ✅ Create many MemberOnClient entries for the relationship
           await Promise.all(
             memberId.map(async (id: string) => {
               await tx.memberOnClient.create({

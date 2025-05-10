@@ -15,7 +15,7 @@ postRouter
 .get("/stats/member",requireAuth(),  PostController.GetMembersStats)
 .get("/monthly/client",requireAuth(),  PostController.PostsCreatedMonthlyForClient)
 .get("/all/clientpost",requireAuth(),  PostController.GetAllClientPosts)
-.get("/list/clients",requireAuth(),  PostController.GetListOfClients)
+.get("/list/clients",requireAuth(),  PostController.GetAssignedClients)
 .post("/confirm/:postId",requireAuth(),  PostController.ConfirmByClient)
 .post("/edit/:postId",requireAuth(), upload.single("image"),  PostController.PostEdit)
 
