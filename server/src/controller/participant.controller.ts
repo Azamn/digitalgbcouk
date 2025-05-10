@@ -230,6 +230,55 @@ export class ParticipantController {
       res.json(new ApiResponse(200, "Members retrieved successfully", members));
     }
   );
+  public static getAllMembersSuggestion = AsyncHandler(
+    async (_: Request, res: Response): Promise<void> => {
+      const members = await db.member.findMany({
+        where: {
+          user: {
+            OR: [
+              {
+                role: "COREMEMBER",
+              },
+              {
+                role: "MEMBER",
+              },
+            ],
+          },
+        },
+        select: {
+          id: true,
+          user: {
+            select: {
+              userName: true,
+              email: true,
+              createdAt: true,
+              inviteStatus: true,
+              role: true,
+            },
+          },
+          password: true,
+          clients: {
+            select: {
+              client: {
+                select: {
+                  user: {
+                    select: {
+                      userName: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      res.json(new ApiResponse(200, "Members retrieved successfully", members));
+    }
+  );
   public static getAllCoreMembers = AsyncHandler(
     async (_: Request, res: Response): Promise<void> => {
       const members = await db.member.findMany({

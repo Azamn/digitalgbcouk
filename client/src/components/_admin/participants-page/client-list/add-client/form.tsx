@@ -27,6 +27,7 @@ import FormField from "@/components/ui/form-field";
 import {
   useCreateClientMutation,
   useGetallMembersQuery,
+  useGetallMembersSuggestionQuery,
 } from "@/backend/participant.api";
 import { createClientSchema, CreateClientType } from "./schema";
 import PasswordViewToggle from "@/components/password-toggle";
@@ -62,7 +63,7 @@ export default function ClientCreateForm({
     [],
   );
   const [createParticipant, { isLoading }] = useCreateClientMutation();
-  const { data: Members } = useGetallMembersQuery();
+  const { data: Members } = useGetallMembersSuggestionQuery();
   const [showInstagramPassword, setShowInstagramPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 

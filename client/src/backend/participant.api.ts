@@ -71,6 +71,22 @@ const ParticipantServices = ApiServices.injectEndpoints({
             ]
           : [{ type: "PARTICIPANTS", id: "MEMBER" }],
     }),
+    GetallMembersSuggestion: build.query<GetAllMemberApiResponse, void>({
+      query: () => ({
+        url: "/participants/members/suggestion",
+        method: "GET",
+      }),
+      providesTags: (data) =>
+        data?.result
+          ? [
+              { type: "PARTICIPANTS", id: "MEMBER" },
+              ...data.result.map(({ id }) => ({
+                type: "PARTICIPANTS" as const,
+                id,
+              })),
+            ]
+          : [{ type: "PARTICIPANTS", id: "MEMBER" }],
+    }),
     GetallCoreMembers: build.query<GetAllMemberApiResponse, void>({
       query: () => ({
         url: "/participants/core-members",
@@ -131,6 +147,7 @@ export const {
   useGetallCoreMembersQuery,
   useEditClientMutation,
   useEditMemberMutation,
+  useGetallMembersSuggestionQuery,
 } = ParticipantServices;
 
 export interface CreatedClient {

@@ -9,6 +9,7 @@ participantRouter
   .post("/clients",requireAuth(), upload.single("logo"), ParticipantController.createClient)
   .get("/clients", requireAuth(), ParticipantController.getAllClients)
   .get("/members", requireAuth(), ParticipantController.getAllMembers)
+  .get("/members/suggestion", requireAuth(), ParticipantController.getAllMembersSuggestion)
   .post("/members", requireAuth(), ParticipantController.createMember)
   .post("/core-members", requireAuth(), ParticipantController.createCoreMember)
   .get("/core-members", requireAuth(), ParticipantController.getAllCoreMembers)
