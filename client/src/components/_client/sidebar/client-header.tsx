@@ -5,28 +5,32 @@ import SetView from "@/components/common/set-view";
 
 const ClientAppHeader = () => {
   return (
-    <header className="sticky left-0 top-0 z-[30] w-full border-b bg-white font-lexend">
-      <div className="flex items-center justify-between rounded-lg p-3 px-5">
+    <header className="sticky top-0 z-30 w-full border-b bg-white font-lexend shadow-sm">
+      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-3 md:px-6">
+        {/* Left Side: Logo and View Toggle */}
         <div className="flex items-center gap-4">
-          <ClinetAppSidebarSheet />
-          <div className="inline-flex items-center">
+          {/* Logo */}
+          <div className="flex items-center gap-2">
             <Image
               src="/logo.png"
               alt="DigitalLab Logo"
               width={32}
               height={32}
-              className="h-8 w-8"
+              className="h-9 w-9 object-contain"
             />
-            <span className="ml-2 text-2xl font-bold text-dark">
-              Digital GB
-            </span>
+            <span className="text-xl font-bold text-gray-900">Digital GB</span>
+          </div>
+
+          {/* View Toggle or Custom Component */}
+          <div className="hidden sm:block">
             <SetView />
           </div>
         </div>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-4">
-            <UserProfile />
-          </div>
+
+        {/* Right Side: Profile and More */}
+        <div className="flex items-center gap-4">
+          {/* User Profile */}
+          <UserProfile />
         </div>
       </div>
     </header>
