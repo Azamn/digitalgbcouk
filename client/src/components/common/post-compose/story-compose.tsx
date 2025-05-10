@@ -9,6 +9,8 @@ import {
   X,
   Type,
   Clock1,
+  CalendarIcon,
+  Save,
 } from "lucide-react";
 import ColorPickerBoxes from "./hexcolor";
 import { Button } from "@/components/ui/button";
@@ -26,7 +28,7 @@ const StoryComposer = () => {
   const [CreateStory, { isLoading }] = useCreatePostMutation();
   const [text, setText] = useState("");
   const [isWriting, setIsWriting] = useState(false);
-  const [topColor, setTopColor] = useState("#ffffff");
+  const [topColor, setTopColor] = useState("#2A4759");
   const [bottomColor, setBottomColor] = useState("#f0f0f0");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [datetime, setDatetime] = useState<Date | undefined>(undefined);
@@ -42,7 +44,7 @@ const StoryComposer = () => {
     reader.onloadend = () => {
       const result = reader.result as string;
       setSelectedMedia(result);
-      setImageFile(file); // Save the file
+      setImageFile(file);
 
       if (file.type.startsWith("image/")) {
         setMediaType("image");
@@ -58,7 +60,7 @@ const StoryComposer = () => {
     setMediaType(null);
     setText("");
     setIsWriting(false);
-    setImageFile(null); // Clear the file
+    setImageFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -88,10 +90,10 @@ const StoryComposer = () => {
 
   return (
     <div className="flex flex-col items-center justify-center bg-white">
-      <div className="flex w-full gap-8 border-b p-3">
+      <div className="flex w-full border-b p-3">
         {/* Preview / Media Box */}
         <div
-          className="relative mx-auto aspect-[9/16] w-[350px] flex-shrink-0 overflow-hidden rounded-2xl border shadow-xl"
+          className="relative mx-auto aspect-[9/16] w-[350px] flex-shrink-0 overflow-hidden rounded-2xl border border-dashed border-primary"
           style={{
             background:
               selectedMedia || mediaType === "text"
@@ -178,7 +180,7 @@ const StoryComposer = () => {
 
         {/* Color Picker - Only show when no media is selected and not in text mode */}
         {!selectedMedia && mediaType !== "text" && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 h-auto">
             <ColorPickerBoxes
               topColor={topColor}
               setTopColor={setTopColor}
@@ -190,13 +192,10 @@ const StoryComposer = () => {
       </div>
       <div className="mt-3 flex w-full justify-between p-2 px-4">
         <div className="flex items-center justify-between gap-x-1 text-sm opacity-90">
-          <Clock1 />
-          <DateTimePicker12h
-            label="Schedule At"
-            onChange={setDatetime}
-            className="text-sm"
-          />
-          <ChevronDown />
+          <div className="flex items-center gap-x-2">
+            <CalendarIcon className="h-4 w-4" />
+            <DateTimePicker12h onChange={setDatetime} className="text-sm" />
+          </div>
         </div>
 
         <Button
@@ -205,7 +204,17 @@ const StoryComposer = () => {
           type="submit"
           className="w-[140px] rounded-md bg-primary px-4 text-white"
         >
-          {isLoading ? <Spinner color="#FFF6E9" size={12} /> : "Save as Draft"}
+          {isLoading ? (
+            <div className="flex items-center">
+              <Spinner color="#FFF6E9" size={12} />
+              Saving...
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <Save className="mr-2 h-4 w-4" />
+              Save as Draft
+            </div>
+          )}
         </Button>
       </div>
     </div>

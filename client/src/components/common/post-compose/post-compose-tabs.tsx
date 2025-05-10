@@ -17,7 +17,7 @@ interface ComposeProps {
   setOpen: (open: boolean) => void;
 }
 
-function Compose({ open, setOpen }: ComposeProps) {
+function PostComposeTabs({ open, setOpen }: ComposeProps) {
   const [activeTab, setActiveTab] = useState("client");
 
   const variants = {
@@ -27,7 +27,7 @@ function Compose({ open, setOpen }: ComposeProps) {
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[calc(100vh-4rem)] overflow-y-auto bg-white p-0 sm:max-w-[600px]">
+      <DialogContent className="max-h-[calc(100vh-4rem)] overflow-y-auto bg-white p-0 sm:max-w-[450px]">
         <DialogHeader className="hidden px-4 pb-2">
           <DialogTitle className="hidden text-lg font-semibold">
             Create a post
@@ -40,25 +40,10 @@ function Compose({ open, setOpen }: ComposeProps) {
           onValueChange={setActiveTab}
           className="w-full"
         >
-          <TabsList className="m-4 grid w-[40%] space-x-3 grid-cols-3 px-4">
-            <TabsTrigger
-              value="post"
-              className={`transition-colors ${
-                activeTab === "post" ? "bg-primary text-white" : ""
-              }`}
-            >
-              Posts
-            </TabsTrigger>
-            <TabsTrigger
-              value="story"
-              className={`transition-colors ml-12 ${
-                activeTab === "story" ? "bg-primary text-white" : ""
-              }`}
-            >
-              Story
-            </TabsTrigger>
+          <TabsList className="grid w-[70%] mx-auto my-2 grid-cols-2">
+            <TabsTrigger value="post">Post Create</TabsTrigger>
+            <TabsTrigger value="story">Story Create</TabsTrigger>
           </TabsList>
-
           <AnimatePresence mode="wait">
             {activeTab === "post" && (
               <TabsContent value="post" forceMount>
@@ -96,4 +81,4 @@ function Compose({ open, setOpen }: ComposeProps) {
   );
 }
 
-export default Compose;
+export default PostComposeTabs;

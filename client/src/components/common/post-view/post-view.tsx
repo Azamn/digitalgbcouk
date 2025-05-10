@@ -1,5 +1,5 @@
 import { PostTypeProps } from "@/types/global.types";
-import { Bookmark, Heart, MessageCircle, Share2 } from "lucide-react";
+import Image from "next/image";
 import { FC } from "react";
 
 interface PostProps {
@@ -8,36 +8,45 @@ interface PostProps {
 
 const PostView: FC<PostProps> = ({ postData }) => {
   return (
-    <div className="min-h-screen flex-1 overflow-y-auto">
-      <div className="mx-auto max-w-xl">
-        <div className="overflow-hidden rounded-xl border-2 border-dotted border-primary/45 bg-white transition-all duration-300">
-          {/* 👇 Instagram-style 1:1 Aspect Ratio */}
-          <div className="relative aspect-square w-full">
-            <img
-              src={
-                postData.mediaUrl ? postData.mediaUrl : "/digital-market.png"
-              }
-              alt="Digital marketing image"
-              className="absolute left-0 top-0 h-full w-full object-cover"
-            />
+    <div className="mx-auto flex h-[600px] max-w-[400px] flex-col overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm">
+      {/* Header Section */}
+      <div className="flex items-center justify-between border-b border-gray-200 p-4">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-full bg-gray-200"></div>
+          <div>
+            <p className="text-sm font-medium">shivam850anand@gmail.com</p>
           </div>
+        </div>
+      </div>
 
-          {/* Post Actions */}
-          <div className="flex items-center justify-between border-b p-4">
-            <div className="flex items-center space-x-4">
-              <Heart className="h-6 w-6 cursor-pointer transition-colors hover:text-red-500" />
-              <MessageCircle className="h-6 w-6 cursor-pointer transition-colors hover:text-blue-500" />
-              <Share2 className="h-6 w-6 cursor-pointer transition-colors hover:text-green-500" />
-            </div>
-            <Bookmark className="h-6 w-6 cursor-pointer transition-colors hover:text-yellow-500" />
-          </div>
+      {/* Image Section */}
+      <div className="relative mx-auto h-[400px] w-full max-w-[400px] bg-gray-50">
+        <Image
+          src={postData.mediaUrl || "/digital-market.png"}
+          alt="Post media"
+          fill
+          className="object-contain"
+          sizes="(max-width: 768px) 100vw, 400px"
+        />
+      </div>
 
-          {/* Caption */}
-          <div className="space-y-2 p-4 text-sm">
-            {postData.content.split("\n").map((line, index) => (
-              <p key={index}>{line}</p>
-            ))}
-          </div>
+      {/* Scrollable Content Section */}
+      <div className="flex-1 overflow-y-auto px-4 py-4">
+        <h3 className="mb-2 text-lg font-semibold">Welcome</h3>
+        <div className="space-y-2 text-sm leading-relaxed text-gray-800">
+          {postData.content?.split("\n").map((line, index) => (
+            <p key={index}>
+              {line.split(" ").map((word, i) =>
+                word.startsWith("#") ? (
+                  <span key={i} className="font-medium text-blue-600">
+                    {word}{" "}
+                  </span>
+                ) : (
+                  `${word} `
+                ),
+              )}
+            </p>
+          ))}
         </div>
       </div>
     </div>

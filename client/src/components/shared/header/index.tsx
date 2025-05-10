@@ -6,7 +6,7 @@ import Image from "next/image";
 import { AppSidebarSheet } from "@/components/_admin/sidebar/app-sidebar-sheet";
 import SetView from "@/components/common/set-view";
 import { Button } from "@/components/ui/button";
-import Compose from "@/components/common/compose";
+import Compose from "@/components/common/post-compose/post-compose-tabs";
 
 const AppHeader = () => {
   const [openCompose, setOpenCompose] = useState(false);

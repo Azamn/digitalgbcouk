@@ -5,11 +5,15 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   CalendarIcon,
   Check,
+  CheckCircle,
   ChevronDown,
   Clock1,
   ImageIcon,
   MapPinIcon,
+  Save,
   Sparkle,
+  X,
+  XCircle,
 } from "lucide-react";
 import { EmojiPopover } from "../emojipicker";
 import {
@@ -29,7 +33,10 @@ const PostCompose = () => {
   const [hashtags, setHashtags] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [showAiSuggestions, setShowAiSuggestions] = useState(false);
+  const [showAiSuggestions, setShowAiSuggestions] = useState({
+    isCaption: false,
+    isHastags: false,
+  });
   const [aiContent, setAiContent] = useState("");
   const [aiHashtags, setAiHashtags] = useState("");
   const [GetAiHelp, { isLoading: aihelpLoadingState }] = useGetAiHelpMutation();
@@ -40,6 +47,9 @@ const PostCompose = () => {
   const clientId = searchParams.get("clientId") as string;
   const [datetime, setDatetime] = useState<Date | undefined>(undefined);
 
+  const captionRef = useRef<HTMLTextAreaElement>(null);
+  const hastagRef = useRef<HTMLTextAreaElement>(null);
+
   const handleGetContentWithAi = async () => {
     if (!text && !imageFile) return;
     const formData = new FormData();
@@ -48,12 +58,16 @@ const PostCompose = () => {
 
     try {
       const response = await GetAiHelp(formData).unwrap();
-      if (response.result) {
+      console.log("🚀 ~ handleGetContentWithAi ~ response:", response);
+      if (response.result.content) {
         const content = response.result.content;
         const hashtags = response.result.hastags;
-        setAiContent(content as string);
+        setAiContent(content);
         setAiHashtags(hashtags);
-        setShowAiSuggestions(true);
+        setShowAiSuggestions(() => ({
+          isCaption: true,
+          isHastags: true,
+        }));
       }
       SuccessToast({
         title: "AI content generated",
@@ -63,20 +77,35 @@ const PostCompose = () => {
     }
   };
 
+  const adjustTextareaHeight = (textarea: HTMLTextAreaElement) => {
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+
   const handleAcceptContent = () => {
     setText(aiContent);
-    setShowAiSuggestions(false);
+    setShowAiSuggestions((prev) => ({
+      ...prev,
+      isCaption: false,
+    }));
+    setTimeout(() => {
+      if (captionRef.current) {
+        adjustTextareaHeight(captionRef.current);
+      }
+    }, 0);
   };
 
   const handleAcceptHashtags = () => {
     setHashtags(aiHashtags);
-    setShowAiSuggestions(false);
-  };
-
-  const handleAcceptAll = () => {
-    setText(aiContent);
-    setHashtags(aiHashtags);
-    setShowAiSuggestions(false);
+    setShowAiSuggestions((prev) => ({
+      ...prev,
+      isHastags: false,
+    }));
+    setTimeout(() => {
+      if (hastagRef.current) {
+        adjustTextareaHeight(hastagRef.current);
+      }
+    }, 0);
   };
 
   const handleImageUploadClick = () => {
@@ -105,7 +134,6 @@ const PostCompose = () => {
     if (!text && !imageFile) return;
 
     const formData = new FormData();
-    // Combine content and hashtags
     const fullContent = `${text}\n\n${hashtags}`;
     formData.append("content", fullContent);
     formData.append("postType", "POST");
@@ -129,7 +157,7 @@ const PostCompose = () => {
   return (
     <div className="p-4">
       {imagePreview && (
-        <div className="relative mb-4 h-[300px] w-full overflow-hidden rounded-lg border">
+        <div className="relative mb-4 w-full overflow-hidden rounded-lg border">
           <div className="h-full w-full overflow-auto">
             <img
               src={imagePreview}
@@ -148,66 +176,106 @@ const PostCompose = () => {
       )}
 
       <Textarea
+        ref={captionRef}
         placeholder="Write something.."
-        className="min-h-[100px] resize-none border-none shadow-none focus-visible:ring-0"
+        className="min-h-[20px] w-full resize-none border-none text-sm shadow-none focus-visible:ring-0"
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          adjustTextareaHeight(e.target);
+        }}
+        style={{ overflow: "hidden" }}
       />
-
       <Textarea
-        className="mt-2 min-h-[50px] resize-none border-none shadow-none focus-visible:ring-0"
+        ref={hastagRef}
+        className="mt-2 min-h-[20px] w-full resize-none border-none shadow-none focus-visible:ring-0"
         value={hashtags}
-        onChange={(e) => setHashtags(e.target.value)}
+        onChange={(e) => {
+          setHashtags(e.target.value);
+          adjustTextareaHeight(e.target);
+        }}
       />
 
-      {showAiSuggestions && (
-        <div className="my-4 rounded-lg border border-gray-200 p-4">
-          <h3 className="mb-2 font-medium">AI Suggestions</h3>
-          <div className="mb-3 rounded bg-gray-50 p-3">
-            <p className="whitespace-pre-line">{aiContent}</p>
-          </div>
-          <div className="rounded bg-gray-50 p-3">
-            <p className="text-sm text-gray-600">{aiHashtags}</p>
-          </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button
-              className="bg-primary text-secondary"
-              variant="outline"
-              size="sm"
-              onClick={handleAcceptContent}
-            >
-              Accept Content
-            </Button>
-            <Button
-              className="bg-primary text-secondary"
-              variant="outline"
-              size="sm"
-              onClick={handleAcceptHashtags}
-            >
-              Accept Hashtags
-            </Button>
-            <Button
-              className="bg-primary text-secondary"
-              size="sm"
-              onClick={handleAcceptAll}
-            >
-              Accept All
-            </Button>
-            <Button
-              className="bg-primary text-secondary"
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowAiSuggestions(false)}
-            >
-              Discard
-            </Button>
-          </div>
+      {(showAiSuggestions.isCaption || showAiSuggestions.isHastags) && (
+        <div className="my-4 space-y-3 rounded-lg">
+          {showAiSuggestions.isCaption && (
+            <div className="space-y-2 rounded border-2 border-purple-500 bg-gray-50 pb-2">
+              <div className="rounded bg-gray-50 p-3">
+                <p className="whitespace-pre-line text-sm">
+                  <span>Ai-Content</span> <br /> {aiContent}
+                </p>
+              </div>
+              <div className="space-x-2 px-2">
+                <Button
+                  className="rounded-full border-2 border-pink-400 text-primary"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAcceptContent}
+                >
+                  <CheckCircle className="mr-1 h-4 w-4 text-green-500" />
+                  Accept Caption
+                </Button>
+                <Button
+                  className="rounded-full border-2 border-pink-400 text-primary"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setAiContent("");
+                    setShowAiSuggestions((prev) => ({
+                      ...prev,
+                      isCaption: false,
+                    }));
+                  }}
+                >
+                  <XCircle className="mr-1 h-4 w-4 text-red-500" />
+                  Reject Caption
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* ==== AI Hashtags Section ==== */}
+          {showAiSuggestions.isHastags && aiHashtags && (
+            <div className="space-y-2 rounded border-2 border-purple-500 bg-gray-50 pb-2">
+              <div className="rounded bg-gray-50 p-3">
+                <p className="whitespace-pre-line text-sm">
+                  <span>Ai-Hashtags</span> : {aiHashtags}
+                </p>
+              </div>
+              <div className="space-x-2 px-2">
+                <Button
+                  className="rounded-full border-2 border-pink-400 text-primary"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAcceptHashtags}
+                >
+                  <CheckCircle className="mr-1 h-4 w-4 text-green-500" />
+                  Accept Hashtags
+                </Button>
+                <Button
+                  className="rounded-full border-2 border-pink-400 text-primary"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setAiHashtags("");
+                    setShowAiSuggestions((prev) => ({
+                      ...prev,
+                      isHastags: false,
+                    }));
+                  }}
+                >
+                  <XCircle className="mr-1 h-4 w-4 text-red-500" />
+                  Reject Hashtags
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       <div className="my-1">
         <button
-          className="flex items-center gap-x-2 rounded-full border border-pink-400 px-3 py-1 text-[12px]"
+          className="flex items-center gap-x-2 rounded-full border-2 border-pink-400 px-3 py-1 text-[12px]"
           onClick={handleGetContentWithAi}
           disabled={aihelpLoadingState}
         >
@@ -215,7 +283,7 @@ const PostCompose = () => {
             <Spinner />
           ) : (
             <>
-              <Sparkle className="text-pink-400" /> Generate With AI
+              <Sparkle size={17} className="text-pink-400" /> Generate With AI
             </>
           )}
         </button>
@@ -252,8 +320,9 @@ const PostCompose = () => {
         <SheetClose asChild>
           <Button
             size="sm"
-            className="w-[140px] rounded-md border-2 border-primary bg-transparent px-4 text-primary"
+            className="w-[140px] rounded-md border-2 border-primary bg-red-400 px-4 text-primary"
           >
+            <X className="mr-2 h-4 w-4" />
             Cancel
           </Button>
         </SheetClose>
@@ -262,11 +331,18 @@ const PostCompose = () => {
           type="submit"
           className="w-[140px] rounded-md bg-primary px-4 text-white"
           onClick={handleSaveAsDraft}
+          disabled={createPostLoading}
         >
           {createPostLoading ? (
-            <Spinner color="#FFF6E9" size={12} />
+            <div className="flex items-center">
+              <Spinner color="#FFF6E9" size={12} />
+              Saving...
+            </div>
           ) : (
-            "Save as Draft"
+            <div className="flex items-center">
+              <Save className="mr-2 h-4 w-4" />
+              Save as Draft
+            </div>
           )}
         </Button>
       </SheetFooter>

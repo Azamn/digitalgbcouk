@@ -3,7 +3,7 @@ import React, { FC, useState } from "react";
 import UserProfile from "@/components/shared/user-profile";
 import Image from "next/image";
 import { AppSidebarSheet } from "./app-sidebar-sheet";
-import Compose from "@/components/common/compose";
+import Compose from "@/components/common/post-compose/post-compose-tabs";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import SetView from "@/components/common/set-view";

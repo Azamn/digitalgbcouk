@@ -6,7 +6,7 @@ import { Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetAllPostsQuery } from "@/backend/post-api";
 import { useSearchParams } from "next/navigation";
-import Compose from "@/components/common/compose";
+import Compose from "@/components/common/post-compose/post-compose-tabs";
 
 const StoryView = () => {
   const [isOpen, setIsOpen] = useState(true);

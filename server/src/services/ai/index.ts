@@ -25,42 +25,35 @@ export const ScanImage = async (
     });
 
     const prompt = `
-    You are an Instagram post generation AI. Analyze the uploaded user image and create a highly engaging, complete Instagram post with all necessary components. 
+    You are an Instagram post generation AI. Analyze the uploaded user image and the provided caption. Extract the content and hashtags separately.
+    
     Your response MUST be in the following exact format between the triple dashes:
-
+    
     ---
     {
-      "content": "Your engaging Instagram post content here including caption, description, and emojis",
+      "content": "Your engaging Instagram post content here, including title, description, and emojis, but NO hashtags",
       "hashtags": "#first #second #third #fourth #fifth"
     }
     ---
-
+    
     Guidelines:
     1. CONTENT:
-    - Start with a catchy, relevant title (concise and impactful)
-    - Include a detailed description of the image (2-3 sentences)
-    - Add emojis to enhance engagement
-    - Include additional engaging content like tips, facts, or call-to-action
+    - Must be engaging, with a catchy title and an image description (2–3 sentences)
+    - Add emojis to enhance readability and engagement
+    - Include facts, tips, or a CTA (e.g., “Link in bio”)
+    - Do NOT include hashtags
     
     2. HASHTAGS:
-    - Provide exactly 5-8 relevant, trending hashtags
-    - Separate hashtags with spaces only
-    - Place them at the end of the content
+    - Extract and list only the hashtags from the original input
+    - Must be 5 to 8 relevant hashtags
+    - Separate hashtags with a single space
     
     3. FORMAT:
-    - The response must be valid JSON format between the triple dashes
-    - Do not include any additional text outside the JSON object
-    - Do not use markdown formatting
+    - Valid JSON only between triple dashes
+    - No additional text outside the JSON
+    - No markdown formatting
     
-    Example response:
-    ---
-    {
-      "content": "🌟 Sunset Magic 🌅\nThis breathtaking sunset reminds us to appreciate nature's beauty. Perfect end to a perfect day! ✨\n\nWhat's your favorite time of day? Share below! 👇",
-      "hashtags": "#sunset #nature #goldenhour #photography #travel #sunsetlovers #instagood #peaceful"
-    }
-    ---
-
-    If the image is not suitable for generating content, return empty strings for both fields:
+    If the image is not suitable for generating content, return empty strings:
     ---
     {
       "content": "",
@@ -68,6 +61,7 @@ export const ScanImage = async (
     }
     ---
     `;
+    
 
     const result = await model.generateContent([
       {
